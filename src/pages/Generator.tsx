@@ -334,7 +334,7 @@ export default function Generator() {
                                     </div>
 
                                     <div className="space-y-3">
-                                        {result.shot_list?.map((shot, idx) => (
+                                        {Array.isArray(result.shot_list) ? result.shot_list.map((shot, idx) => (
                                             <div key={idx} className="flex gap-4 p-3 bg-zinc-950/50 rounded border border-zinc-800">
                                                 <div className="flex flex-col items-center min-w-[60px] pt-1">
                                                     <span className="text-xl font-bold text-zinc-600">#{idx + 1}</span>
@@ -353,7 +353,11 @@ export default function Generator() {
                                                     <p className="text-sm text-zinc-400 italic">🗣️ "{shot.audio}"</p>
                                                 </div>
                                             </div>
-                                        ))}
+                                        )) : (
+                                            <div className="text-zinc-500 italic p-4 text-center">
+                                                No shot list generated.
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
 
