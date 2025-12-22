@@ -85,7 +85,7 @@ export default function Generator() {
                     github,
                     website,
                     description,
-                    mode, // Pass the selected mode
+                    mode,
                 }),
             });
 
@@ -95,6 +95,31 @@ export default function Generator() {
             setError("Something went wrong.");
         } finally {
             setLoading(false);
+        }
+    }
+
+    async function handleRegenerate(sectionKey: keyof LaunchResult, currentContent: string, instruction: string) {
+        if (!result) return;
+
+        // Optimistic or loading state could go here if we tracked it per section
+        try {
+            const res = await fetch(`${API_URL}/regenerate`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    section: sectionKey,
+                    currentContent,
+                    instruction,
+                    context: { github, website, description }
+                })
+            });
+
+            const data = await res.json();
+            if (data.newContent) {
+                setResult(prev => prev ? ({ ...prev, [sectionKey]: data.newContent }) : null);
+            }
+        } catch (err) {
+            console.error("Regeneration failed", err);
         }
     }
 
@@ -167,7 +192,7 @@ export default function Generator() {
                             <select
                                 onChange={(e) => {
                                     setGithub(e.target.value);
-                                    setMyRepos([]);
+                                    setMyRepos([]); // Hide dropdown after selection
                                 }}
                                 className="w-full p-2 bg-zinc-900 border border-zinc-800 text-zinc-300"
                             >
@@ -221,8 +246,17 @@ export default function Generator() {
                         {/* Text Mode Results */}
                         {mode === 'text' && (
                             <>
-                                <Section title="🎯 Product Positioning" text={result.positioning || ''} />
-                                <Section title="🪝 Core Hook" text={result.core_hook || ''} />
+                                <Section
+                                    title="🎯 Product Positioning"
+                                    text={result.positioning || ''}
+                                    onRegenerate={(instr) => handleRegenerate('positioning', result.positioning || '', instr)}
+                                />
+
+                                <Section
+                                    title="🪝 Core Hook"
+                                    text={result.core_hook || ''}
+                                    onRegenerate={(instr) => handleRegenerate('core_hook', result.core_hook || '', instr)}
+                                />
 
                                 <Section
                                     title="🐱 Product Hunt Description"
@@ -233,6 +267,7 @@ export default function Generator() {
                                                 ? `Headline: ${result.product_hunt.headline}\nTagline: ${result.product_hunt.tagline}\n\n${result.product_hunt.description}\n\nMaker's Comment:\n${result.product_hunt.makers_comment}`
                                                 : ''
                                     }
+                                    onRegenerate={(instr) => handleRegenerate('product_hunt', JSON.stringify(result.product_hunt), instr)}
                                 />
 
                                 <Section
@@ -242,16 +277,26 @@ export default function Generator() {
                                             ? result.x_threads.map(t => typeof t === 'string' ? t : JSON.stringify(t)).join("\n\n---\n\n")
                                             : String(result.x_threads || '')
                                     }
+                                    onRegenerate={(instr) => handleRegenerate('x_threads', JSON.stringify(result.x_threads), instr)}
                                 />
 
-                                <Section title="💼 LinkedIn Post" text={result.linkedin || ''} />
+                                <Section
+                                    title="💼 LinkedIn Post"
+                                    text={result.linkedin || ''}
+                                    onRegenerate={(instr) => handleRegenerate('linkedin', result.linkedin || '', instr)}
+                                />
 
                                 <Section
                                     title="📅 7-Day Follow-up Plan"
                                     text={result.followups?.join("\n\n") || ''}
+                                    onRegenerate={(instr) => handleRegenerate('followups', JSON.stringify(result.followups), instr)}
                                 />
 
-                                <Section title="📣 Call to Action" text={result.cta || ''} />
+                                <Section
+                                    title="📣 Call to Action"
+                                    text={result.cta || ''}
+                                    onRegenerate={(instr) => handleRegenerate('cta', result.cta || '', instr)}
+                                />
                             </>
                         )}
 
@@ -261,16 +306,19 @@ export default function Generator() {
                                 <Section
                                     title="📱 60s TikTok/Reels Script"
                                     text={result.shorts_script || "No script generated."}
+                                    onRegenerate={(instr) => handleRegenerate('shorts_script', result.shorts_script || '', instr)}
                                 />
 
                                 <Section
                                     title="📺 3-5 Min YouTube Script"
                                     text={result.youtube_script || "No script generated."}
+                                    onRegenerate={(instr) => handleRegenerate('youtube_script', result.youtube_script || '', instr)}
                                 />
 
                                 <Section
                                     title="🔦 Bullet Teleprompter (Founders Only)"
                                     text={result.teleprompter || "No content generated."}
+                                    onRegenerate={(instr) => handleRegenerate('teleprompter', result.teleprompter || '', instr)}
                                 />
                             </>
                         )}
@@ -282,20 +330,75 @@ export default function Generator() {
     );
 }
 
-function Section({ title, text }: { title: string; text: string }) {
+function Section({ title, text, onRegenerate }: { title: string; text: string; onRegenerate?: (instruction: string) => void }) {
+    const [isRegenerating, setIsRegenerating] = useState(false);
+    const [instruction, setInstruction] = useState("");
+    const [loading, setLoading] = useState(false);
+
     if (!text) return null;
+
+    function handleSubmit() {
+        if (!instruction.trim() || !onRegenerate) return;
+        setLoading(true);
+        onRegenerate(instruction);
+        // We assume parent updates state and re-renders. We can reset local state:
+        setLoading(false);
+        setIsRegenerating(false);
+        setInstruction("");
+    }
+
     return (
-        <div className="bg-zinc-900 border border-zinc-800 p-4 space-y-2">
+        <div className="bg-zinc-900 border border-zinc-800 p-4 space-y-2 group">
             <div className="flex justify-between items-center">
-                <h2 className="font-semibold">{title}</h2>
-                <button
-                    onClick={() => navigator.clipboard.writeText(text)}
-                    className="text-xs text-blue-500 hover:text-blue-400 transition-colors"
-                >
-                    Copy
-                </button>
+                <h2 className="font-semibold text-zinc-200">{title}</h2>
+                <div className="flex gap-2">
+
+                    {/* Regenerate Trigger */}
+                    {onRegenerate && !isRegenerating && (
+                        <button
+                            onClick={() => setIsRegenerating(true)}
+                            className="text-xs text-zinc-500 hover:text-white transition-colors flex items-center gap-1 opacity-0 group-hover:opacity-100"
+                        >
+                            Refine
+                        </button>
+                    )}
+
+                    <button
+                        onClick={() => navigator.clipboard.writeText(text)}
+                        className="text-xs text-blue-500 hover:text-blue-400 transition-colors"
+                    >
+                        Copy
+                    </button>
+                </div>
             </div>
-            <pre className="whitespace-pre-wrap text-sm text-zinc-300 font-sans">
+
+            {isRegenerating && (
+                <div className="flex gap-2 mb-2 animate-in fade-in slide-in-from-top-1 duration-200">
+                    <input
+                        autoFocus
+                        className="flex-1 bg-zinc-800 border-zinc-700 text-xs p-1.5 rounded text-white focus:outline-none focus:ring-1 focus:ring-zinc-600"
+                        placeholder="Ex: Make it shorter, add more humor..."
+                        value={instruction}
+                        onChange={e => setInstruction(e.target.value)}
+                        onKeyDown={e => e.key === 'Enter' && handleSubmit()}
+                    />
+                    <button
+                        onClick={handleSubmit}
+                        disabled={loading}
+                        className="bg-zinc-100 text-black text-xs px-3 py-1.5 rounded font-medium hover:bg-zinc-200"
+                    >
+                        {loading ? "..." : "Go"}
+                    </button>
+                    <button
+                        onClick={() => setIsRegenerating(false)}
+                        className="text-zinc-500 text-xs px-2 hover:text-zinc-300"
+                    >
+                        ✕
+                    </button>
+                </div>
+            )}
+
+            <pre className="whitespace-pre-wrap text-sm text-zinc-300 font-sans leading-relaxed">
                 {text}
             </pre>
         </div>
