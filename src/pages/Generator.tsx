@@ -1,5 +1,12 @@
 import { useState, useEffect } from "react";
 
+interface Shot {
+    type: "Talking Head" | "Screen Record";
+    duration: string;
+    visual: string;
+    audio: string;
+}
+
 interface LaunchResult {
     // Text Mode Results
     positioning?: string;
@@ -10,10 +17,12 @@ interface LaunchResult {
     followups?: string[];
     cta?: string;
 
-    // Video Mode Results
+    // Record Mode Results
+    shot_list?: Shot[];
+    teleprompter?: string[];
+    total_estimated_duration?: string;
     shorts_script?: string;
     youtube_script?: string;
-    teleprompter?: string;
 }
 
 interface User {
@@ -101,7 +110,6 @@ export default function Generator() {
     async function handleRegenerate(sectionKey: keyof LaunchResult, currentContent: string, instruction: string) {
         if (!result) return;
 
-        // Optimistic or loading state could go here if we tracked it per section
         try {
             const res = await fetch(`${API_URL}/regenerate`, {
                 method: "POST",
@@ -116,7 +124,17 @@ export default function Generator() {
 
             const data = await res.json();
             if (data.newContent) {
-                setResult(prev => prev ? ({ ...prev, [sectionKey]: data.newContent }) : null);
+                let contentToSet = data.newContent;
+                try {
+                    // Basic attempt to keep JSON structure if needed, though regenerate primarily returns text
+                    if (typeof result[sectionKey] === 'object') {
+                        contentToSet = JSON.parse(data.newContent);
+                    }
+                } catch (e) {
+                    // Ignore JSON parse error, use text
+                }
+
+                setResult(prev => prev ? ({ ...prev, [sectionKey]: contentToSet }) : null);
             }
         } catch (err) {
             console.error("Regeneration failed", err);
@@ -169,7 +187,7 @@ export default function Generator() {
                                 : "text-zinc-400 hover:text-zinc-200"
                             }`}
                     >
-                        Talk It Out (Video)
+                        Record Mode (Execution)
                     </button>
                 </div>
 
@@ -234,8 +252,8 @@ export default function Generator() {
                     className="w-full py-3 bg-white text-black font-bold rounded hover:bg-zinc-200 disabled:opacity-50 transition-colors"
                 >
                     {loading
-                        ? "Generating Strategy..."
-                        : mode === 'video' ? "Generate Video Scripts" : "Generate Launch Strategy"
+                        ? "Generating Plan..."
+                        : mode === 'video' ? "Generate Recording Plan" : "Generate Launch Strategy"
                     }
                 </button>
 
@@ -300,26 +318,69 @@ export default function Generator() {
                             </>
                         )}
 
-                        {/* Video Mode Results */}
+                        {/* Record Mode Results */}
                         {mode === 'video' && (
                             <>
+                                {/* SHOT LIST RENDERER */}
+                                <div className="bg-zinc-900 border border-zinc-800 p-4 space-y-4">
+                                    <div className="flex justify-between items-center">
+                                        <h2 className="font-semibold text-white">1️⃣ Shot List ({result.total_estimated_duration || '60s'})</h2>
+                                        <button
+                                            onClick={() => navigator.clipboard.writeText(JSON.stringify(result.shot_list, null, 2))}
+                                            className="text-xs text-blue-500 hover:text-blue-400 transition-colors"
+                                        >
+                                            Copy JSON
+                                        </button>
+                                    </div>
+
+                                    <div className="space-y-3">
+                                        {result.shot_list?.map((shot, idx) => (
+                                            <div key={idx} className="flex gap-4 p-3 bg-zinc-950/50 rounded border border-zinc-800">
+                                                <div className="flex flex-col items-center min-w-[60px] pt-1">
+                                                    <span className="text-xl font-bold text-zinc-600">#{idx + 1}</span>
+                                                    <span className="text-xs font-mono text-zinc-500 bg-zinc-900 px-1.5 py-0.5 rounded mt-1 border border-zinc-800">
+                                                        {shot.duration}
+                                                    </span>
+                                                </div>
+                                                <div className="space-y-1 flex-1">
+                                                    <div className="flex items-center gap-2">
+                                                        <span className={`text-xs font-bold uppercase px-2 py-0.5 rounded ${shot.type.includes('Head') ? 'bg-purple-900/30 text-purple-400' : 'bg-blue-900/30 text-blue-400'
+                                                            }`}>
+                                                            {shot.type}
+                                                        </span>
+                                                    </div>
+                                                    <p className="text-sm text-zinc-300 font-medium">👁️ {shot.visual}</p>
+                                                    <p className="text-sm text-zinc-400 italic">🗣️ "{shot.audio}"</p>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                {/* TELEPROMPTER RENDERER */}
                                 <Section
-                                    title="📱 60s TikTok/Reels Script"
-                                    text={result.shorts_script || "No script generated."}
-                                    onRegenerate={(instr) => handleRegenerate('shorts_script', result.shorts_script || '', instr)}
+                                    title="2️⃣ Teleprompter Bullets"
+                                    text={result.teleprompter?.map(b => `• ${b}`).join("\n\n") || "No bullets generated."}
+                                    onRegenerate={(instr) => handleRegenerate('teleprompter', JSON.stringify(result.teleprompter), instr)}
                                 />
 
-                                <Section
-                                    title="📺 3-5 Min YouTube Script"
-                                    text={result.youtube_script || "No script generated."}
-                                    onRegenerate={(instr) => handleRegenerate('youtube_script', result.youtube_script || '', instr)}
-                                />
+                                {/* SCRIPTS RENDERER */}
+                                <div className="mt-8 pt-8 border-t border-zinc-800">
+                                    <h2 className="text-zinc-500 text-sm font-semibold mb-4 uppercase tracking-wider">Reference Scripts</h2>
 
-                                <Section
-                                    title="🔦 Bullet Teleprompter (Founders Only)"
-                                    text={result.teleprompter || "No content generated."}
-                                    onRegenerate={(instr) => handleRegenerate('teleprompter', result.teleprompter || '', instr)}
-                                />
+                                    <Section
+                                        title="📱 60s TikTok/Reels Script"
+                                        text={result.shorts_script || "No script generated."}
+                                        onRegenerate={(instr) => handleRegenerate('shorts_script', result.shorts_script || '', instr)}
+                                    />
+
+                                    <Section
+                                        title="📺 3-5 Min YouTube Script"
+                                        text={result.youtube_script || "No script generated."}
+                                        onRegenerate={(instr) => handleRegenerate('youtube_script', result.youtube_script || '', instr)}
+                                    />
+                                </div>
+
                             </>
                         )}
 
@@ -341,7 +402,6 @@ function Section({ title, text, onRegenerate }: { title: string; text: string; o
         if (!instruction.trim() || !onRegenerate) return;
         setLoading(true);
         onRegenerate(instruction);
-        // We assume parent updates state and re-renders. We can reset local state:
         setLoading(false);
         setIsRegenerating(false);
         setInstruction("");
