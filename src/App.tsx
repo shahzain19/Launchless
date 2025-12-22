@@ -31,7 +31,7 @@ export default function App() {
   const [myRepos, setMyRepos] = useState<Repo[]>([]);
   const [loadingRepos, setLoadingRepos] = useState(false);
 
-  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001";
+  const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     fetch(`${API_URL}/auth/current-user`, { credentials: "include" })
