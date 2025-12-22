@@ -174,8 +174,8 @@ export default function Generator() {
                     <button
                         onClick={() => setMode('text')}
                         className={`flex-1 py-2 text-sm font-medium rounded-md transition-all ${mode === 'text'
-                                ? "bg-zinc-800 text-white shadow-sm"
-                                : "text-zinc-400 hover:text-zinc-200"
+                            ? "bg-zinc-800 text-white shadow-sm"
+                            : "text-zinc-400 hover:text-zinc-200"
                             }`}
                     >
                         Text Launch
@@ -183,8 +183,8 @@ export default function Generator() {
                     <button
                         onClick={() => setMode('video')}
                         className={`flex-1 py-2 text-sm font-medium rounded-md transition-all ${mode === 'video'
-                                ? "bg-zinc-800 text-white shadow-sm"
-                                : "text-zinc-400 hover:text-zinc-200"
+                            ? "bg-zinc-800 text-white shadow-sm"
+                            : "text-zinc-400 hover:text-zinc-200"
                             }`}
                     >
                         Record Mode (Execution)
@@ -360,7 +360,11 @@ export default function Generator() {
                                 {/* TELEPROMPTER RENDERER */}
                                 <Section
                                     title="2️⃣ Teleprompter Bullets"
-                                    text={result.teleprompter?.map(b => `• ${b}`).join("\n\n") || "No bullets generated."}
+                                    text={
+                                        Array.isArray(result.teleprompter)
+                                            ? result.teleprompter.map(b => `• ${b}`).join("\n\n")
+                                            : (typeof result.teleprompter === 'string' ? result.teleprompter : "No bullets generated.")
+                                    }
                                     onRegenerate={(instr) => handleRegenerate('teleprompter', JSON.stringify(result.teleprompter), instr)}
                                 />
 
