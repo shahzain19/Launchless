@@ -1,13 +1,19 @@
 import { useState, useEffect } from "react";
 
 interface LaunchResult {
-    positioning: string;
-    core_hook: string;
-    product_hunt: string | { headline: string; tagline: string; description: string; makers_comment: string };
-    x_threads: (string | object)[];
-    linkedin: string;
-    followups: string[];
-    cta: string;
+    // Text Mode Results
+    positioning?: string;
+    core_hook?: string;
+    product_hunt?: string | { headline: string; tagline: string; description: string; makers_comment: string };
+    x_threads?: (string | object)[];
+    linkedin?: string;
+    followups?: string[];
+    cta?: string;
+
+    // Video Mode Results
+    shorts_script?: string;
+    youtube_script?: string;
+    teleprompter?: string;
 }
 
 interface User {
@@ -30,8 +36,9 @@ export default function Generator() {
     const [error, setError] = useState("");
     const [myRepos, setMyRepos] = useState<Repo[]>([]);
     const [loadingRepos, setLoadingRepos] = useState(false);
+    const [mode, setMode] = useState<'text' | 'video'>('text');
 
-    const API_URL = import.meta.env.VITE_API_URL;
+    const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001";
 
     useEffect(() => {
         fetch(`${API_URL}/auth/current-user`, { credentials: "include" })
@@ -78,6 +85,7 @@ export default function Generator() {
                     github,
                     website,
                     description,
+                    mode, // Pass the selected mode
                 }),
             });
 
@@ -94,6 +102,7 @@ export default function Generator() {
         <div className="min-h-screen bg-zinc-950 text-zinc-100 p-6">
             <div className="max-w-3xl mx-auto space-y-6">
 
+                {/* Header & Auth */}
                 <div className="flex justify-between items-center border-b border-zinc-800 pb-4">
                     <h1 className="text-2xl font-bold">Launch Generator</h1>
                     {user ? (
@@ -117,6 +126,29 @@ export default function Generator() {
                     )}
                 </div>
 
+                {/* Mode Toggle */}
+                <div className="flex bg-zinc-900 p-1 rounded-lg border border-zinc-800">
+                    <button
+                        onClick={() => setMode('text')}
+                        className={`flex-1 py-2 text-sm font-medium rounded-md transition-all ${mode === 'text'
+                                ? "bg-zinc-800 text-white shadow-sm"
+                                : "text-zinc-400 hover:text-zinc-200"
+                            }`}
+                    >
+                        Text Launch
+                    </button>
+                    <button
+                        onClick={() => setMode('video')}
+                        className={`flex-1 py-2 text-sm font-medium rounded-md transition-all ${mode === 'video'
+                                ? "bg-zinc-800 text-white shadow-sm"
+                                : "text-zinc-400 hover:text-zinc-200"
+                            }`}
+                    >
+                        Talk It Out (Video)
+                    </button>
+                </div>
+
+                {/* Inputs */}
                 <div className="space-y-3">
                     <div>
                         <div className="flex justify-between mb-1">
@@ -135,7 +167,7 @@ export default function Generator() {
                             <select
                                 onChange={(e) => {
                                     setGithub(e.target.value);
-                                    setMyRepos([]); // Hide dropdown after selection
+                                    setMyRepos([]);
                                 }}
                                 className="w-full p-2 bg-zinc-900 border border-zinc-800 text-zinc-300"
                             >
@@ -176,41 +208,73 @@ export default function Generator() {
                     disabled={loading}
                     className="w-full py-3 bg-white text-black font-bold rounded hover:bg-zinc-200 disabled:opacity-50 transition-colors"
                 >
-                    {loading ? "Generating Launch Strategy..." : "Generate Launch Strategy"}
+                    {loading
+                        ? "Generating Strategy..."
+                        : mode === 'video' ? "Generate Video Scripts" : "Generate Launch Strategy"
+                    }
                 </button>
 
+                {/* Results */}
                 {result && (
                     <div className="space-y-6 pt-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
 
-                        <Section title="🎯 Product Positioning" text={result.positioning} />
-                        <Section title="🪝 Core Hook" text={result.core_hook} />
+                        {/* Text Mode Results */}
+                        {mode === 'text' && (
+                            <>
+                                <Section title="🎯 Product Positioning" text={result.positioning || ''} />
+                                <Section title="🪝 Core Hook" text={result.core_hook || ''} />
 
-                        <Section
-                            title="🐱 Product Hunt Description"
-                            text={
-                                typeof result.product_hunt === "string"
-                                    ? result.product_hunt
-                                    : `Headline: ${result.product_hunt.headline}\nTagline: ${result.product_hunt.tagline}\n\n${result.product_hunt.description}\n\nMaker's Comment:\n${result.product_hunt.makers_comment}`
-                            }
-                        />
+                                <Section
+                                    title="🐱 Product Hunt Description"
+                                    text={
+                                        typeof result.product_hunt === "string"
+                                            ? result.product_hunt
+                                            : result.product_hunt
+                                                ? `Headline: ${result.product_hunt.headline}\nTagline: ${result.product_hunt.tagline}\n\n${result.product_hunt.description}\n\nMaker's Comment:\n${result.product_hunt.makers_comment}`
+                                                : ''
+                                    }
+                                />
 
-                        <Section
-                            title="🧵 X Threads"
-                            text={
-                                Array.isArray(result.x_threads)
-                                    ? result.x_threads.map(t => typeof t === 'string' ? t : JSON.stringify(t)).join("\n\n---\n\n")
-                                    : String(result.x_threads)
-                            }
-                        />
+                                <Section
+                                    title="🧵 X Threads"
+                                    text={
+                                        Array.isArray(result.x_threads)
+                                            ? result.x_threads.map(t => typeof t === 'string' ? t : JSON.stringify(t)).join("\n\n---\n\n")
+                                            : String(result.x_threads || '')
+                                    }
+                                />
 
-                        <Section title="💼 LinkedIn Post" text={result.linkedin} />
+                                <Section title="💼 LinkedIn Post" text={result.linkedin || ''} />
 
-                        <Section
-                            title="📅 7-Day Follow-up Plan"
-                            text={result.followups?.join("\n\n")}
-                        />
+                                <Section
+                                    title="📅 7-Day Follow-up Plan"
+                                    text={result.followups?.join("\n\n") || ''}
+                                />
 
-                        <Section title="📣 Call to Action" text={result.cta} />
+                                <Section title="📣 Call to Action" text={result.cta || ''} />
+                            </>
+                        )}
+
+                        {/* Video Mode Results */}
+                        {mode === 'video' && (
+                            <>
+                                <Section
+                                    title="📱 60s TikTok/Reels Script"
+                                    text={result.shorts_script || "No script generated."}
+                                />
+
+                                <Section
+                                    title="📺 3-5 Min YouTube Script"
+                                    text={result.youtube_script || "No script generated."}
+                                />
+
+                                <Section
+                                    title="🔦 Bullet Teleprompter (Founders Only)"
+                                    text={result.teleprompter || "No content generated."}
+                                />
+                            </>
+                        )}
+
                     </div>
                 )}
             </div>
@@ -219,13 +283,14 @@ export default function Generator() {
 }
 
 function Section({ title, text }: { title: string; text: string }) {
+    if (!text) return null;
     return (
         <div className="bg-zinc-900 border border-zinc-800 p-4 space-y-2">
             <div className="flex justify-between items-center">
                 <h2 className="font-semibold">{title}</h2>
                 <button
                     onClick={() => navigator.clipboard.writeText(text)}
-                    className="text-xs text-blue-500 hover:underline"
+                    className="text-xs text-blue-500 hover:text-blue-400 transition-colors"
                 >
                     Copy
                 </button>
