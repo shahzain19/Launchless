@@ -322,44 +322,12 @@ export default function Generator() {
                         {mode === 'video' && (
                             <>
                                 {/* SHOT LIST RENDERER */}
-                                <div className="bg-zinc-900 border border-zinc-800 p-4 space-y-4">
-                                    <div className="flex justify-between items-center">
-                                        <h2 className="font-semibold text-white">1️⃣ Shot List ({result.total_estimated_duration || '60s'})</h2>
-                                        <button
-                                            onClick={() => navigator.clipboard.writeText(JSON.stringify(result.shot_list, null, 2))}
-                                            className="text-xs text-blue-500 hover:text-blue-400 transition-colors"
-                                        >
-                                            Copy JSON
-                                        </button>
-                                    </div>
-
-                                    <div className="space-y-3">
-                                        {Array.isArray(result.shot_list) ? result.shot_list.map((shot, idx) => (
-                                            <div key={idx} className="flex gap-4 p-3 bg-zinc-950/50 rounded border border-zinc-800">
-                                                <div className="flex flex-col items-center min-w-[60px] pt-1">
-                                                    <span className="text-xl font-bold text-zinc-600">#{idx + 1}</span>
-                                                    <span className="text-xs font-mono text-zinc-500 bg-zinc-900 px-1.5 py-0.5 rounded mt-1 border border-zinc-800">
-                                                        {shot.duration}
-                                                    </span>
-                                                </div>
-                                                <div className="space-y-1 flex-1">
-                                                    <div className="flex items-center gap-2">
-                                                        <span className={`text-xs font-bold uppercase px-2 py-0.5 rounded ${shot.type.includes('Head') ? 'bg-purple-900/30 text-purple-400' : 'bg-blue-900/30 text-blue-400'
-                                                            }`}>
-                                                            {shot.type}
-                                                        </span>
-                                                    </div>
-                                                    <p className="text-sm text-zinc-300 font-medium">👁️ {shot.visual}</p>
-                                                    <p className="text-sm text-zinc-400 italic">🗣️ "{shot.audio}"</p>
-                                                </div>
-                                            </div>
-                                        )) : (
-                                            <div className="text-zinc-500 italic p-4 text-center">
-                                                No shot list generated.
-                                            </div>
-                                        )}
-                                    </div>
-                                </div>
+                                {/* SHOT LIST RENDERER */}
+                                <ShotListSection
+                                    shots={result.shot_list || []}
+                                    duration={result.total_estimated_duration || '60s'}
+                                    onRegenerate={(instr) => handleRegenerate('shot_list', JSON.stringify(result.shot_list), instr)}
+                                />
 
                                 {/* TELEPROMPTER RENDERER */}
                                 <Section
@@ -469,6 +437,98 @@ function Section({ title, text, onRegenerate }: { title: string; text: string; o
             <pre className="whitespace-pre-wrap text-sm text-zinc-300 font-sans leading-relaxed">
                 {text}
             </pre>
+        </div>
+    );
+}
+
+function ShotListSection({ shots, duration, onRegenerate }: { shots: Shot[]; duration: string; onRegenerate: (instr: string) => void }) {
+    const [isRegenerating, setIsRegenerating] = useState(false);
+    const [instruction, setInstruction] = useState("");
+    const [loading, setLoading] = useState(false);
+
+    function handleSubmit() {
+        if (!instruction.trim()) return;
+        setLoading(true);
+        onRegenerate(instruction);
+        setLoading(false);
+        setIsRegenerating(false);
+        setInstruction("");
+    }
+
+    return (
+        <div className="bg-zinc-900 border border-zinc-800 p-4 space-y-4 group">
+            <div className="flex justify-between items-center">
+                <h2 className="font-semibold text-white">1️⃣ Shot List ({duration})</h2>
+                <div className="flex gap-2">
+                    {!isRegenerating && (
+                        <button
+                            onClick={() => setIsRegenerating(true)}
+                            className="text-xs text-zinc-500 hover:text-white transition-colors flex items-center gap-1 opacity-0 group-hover:opacity-100"
+                        >
+                            Refine
+                        </button>
+                    )}
+                    <button
+                        onClick={() => navigator.clipboard.writeText(JSON.stringify(shots, null, 2))}
+                        className="text-xs text-blue-500 hover:text-blue-400 transition-colors"
+                    >
+                        Copy JSON
+                    </button>
+                </div>
+            </div>
+
+            {isRegenerating && (
+                <div className="flex gap-2 mb-2 animate-in fade-in slide-in-from-top-1 duration-200">
+                    <input
+                        autoFocus
+                        className="flex-1 bg-zinc-800 border-zinc-700 text-xs p-1.5 rounded text-white focus:outline-none focus:ring-1 focus:ring-zinc-600"
+                        placeholder="Ex: Make it shorter, add more humor..."
+                        value={instruction}
+                        onChange={e => setInstruction(e.target.value)}
+                        onKeyDown={e => e.key === 'Enter' && handleSubmit()}
+                    />
+                    <button
+                        onClick={handleSubmit}
+                        disabled={loading}
+                        className="bg-zinc-100 text-black text-xs px-3 py-1.5 rounded font-medium hover:bg-zinc-200"
+                    >
+                        {loading ? "..." : "Go"}
+                    </button>
+                    <button
+                        onClick={() => setIsRegenerating(false)}
+                        className="text-zinc-500 text-xs px-2 hover:text-zinc-300"
+                    >
+                        ✕
+                    </button>
+                </div>
+            )}
+
+            <div className="space-y-3">
+                {Array.isArray(shots) ? shots.map((shot, idx) => (
+                    <div key={idx} className="flex gap-4 p-3 bg-zinc-950/50 rounded border border-zinc-800">
+                        <div className="flex flex-col items-center min-w-[60px] pt-1">
+                            <span className="text-xl font-bold text-zinc-600">#{idx + 1}</span>
+                            <span className="text-xs font-mono text-zinc-500 bg-zinc-900 px-1.5 py-0.5 rounded mt-1 border border-zinc-800">
+                                {shot.duration}
+                            </span>
+                        </div>
+                        <div className="space-y-1 flex-1">
+                            <div className="flex items-center gap-2">
+                                <span className={`text-xs font-bold uppercase px-2 py-0.5 rounded ${shot.type.includes('Head') ? 'bg-purple-900/30 text-purple-400' : 'bg-blue-900/30 text-blue-400'
+                                    }`}>
+                                    {shot.type}
+                                </span>
+                            </div>
+                            <p className="text-sm text-zinc-300 font-medium">👁️ {shot.visual}</p>
+                            <p className="text-sm text-zinc-400 italic">🗣️ "{shot.audio}"</p>
+                        </div>
+                    </div>
+                )) : (
+                    <div className="text-zinc-500 italic p-4 text-center">
+                        No shot list generated.
+                    </div>
+                )}
+            </div>
         </div>
     );
 }
