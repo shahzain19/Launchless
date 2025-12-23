@@ -142,7 +142,7 @@ export default function Generator() {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-b from-zinc-950 via-zinc-950 to-zinc-900 text-zinc-100 px-6 py-12">
+        <div className="min-h-screen bg-zinc-950 text-zinc-100 px-6 py-12">
             <div className="max-w-4xl mx-auto space-y-8">
 
                 {/* Header & Auth */}
@@ -177,7 +177,7 @@ export default function Generator() {
                     <button
                         onClick={() => setMode('text')}
                         className={`flex-1 py-3 px-4 text-sm font-semibold rounded-lg transition-all duration-200 ${mode === 'text'
-                            ? "bg-white text-black shadow-lg shadow-white/10"
+                            ? "bg-white text-black"
                             : "text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50"
                             }`}
                     >
@@ -262,7 +262,7 @@ export default function Generator() {
                 <button
                     onClick={handleGenerate}
                     disabled={loading}
-                    className="w-full py-4 bg-white text-black font-bold rounded-xl hover:bg-zinc-200 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg shadow-white/10 hover:shadow-white/20 hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2"
+                    className="w-full py-4 bg-white text-black font-bold rounded-xl hover:bg-zinc-200 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2"
                 >
                     {loading ? (
                         <>
