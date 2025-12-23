@@ -1,73 +1,122 @@
-# React + TypeScript + Vite
+Launchless
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Ship your project without becoming a marketer.
 
-Currently, two official plugins are available:
+Launchless helps builders turn unfinished ideas, GitHub repos, or deployed projects into ready-to-post launch content — without learning marketing, copywriting, or video editing.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+No dashboards.
+No analytics.
+No growth hacks.
 
-## React Compiler
+Just ship.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Why Launchless exists
 
-## Expanding the ESLint configuration
+Most builders don’t hate building.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+They hate launching.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+Writing posts feels fake
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+Marketing takes more time than coding
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+Video creation feels impossible
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Editing tools are overwhelming
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+You end up shipping… nothing
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+Launchless removes the execution friction.
+
+What Launchless does
+
+You give Launchless one of these:
+
+A GitHub repo
+
+A website URL
+
+A short project description
+
+Click Generate Launch.
+
+You instantly get:
+
+A clear product positioning (1-liner)
+
+The core hook (why this exists)
+
+Platform-ready launch posts
+
+Step-by-step video scripts (no editing required)
+
+Follow-up content for the next 7 days
+
+Simple call-to-action copy
+
+No accounts.
+No setup.
+No learning curve.
+
+The real value (important)
+
+Launchless is not a “content generator”.
+
+It’s a decision remover.
+
+You don’t ask:
+
+“What should I say?”
+
+“How should I edit?”
+
+“What platform should I use?”
+
+“Is this good enough?”
+
+You just follow steps.
+
+No-Editing Video Mode (core feature)
+
+Most builders don’t know how to make videos.
+
+Launchless assumes:
+
+Zero editing skills
+
+Phone or laptop camera
+
+No fancy tools
+
+Example output:
+
+Video plan (45 seconds total)
+
+Open camera (10s)
+Say what problem annoyed you.
+
+Screen record (20s)
+Show the repo / website / feature.
+
+Back to camera (15s)
+Say who this is for and why it exists.
+
+Post it as-is.
+
+No cuts.
+No effects.
+No perfection.
+
+Supported platforms (MVP)
+
+X (Twitter)
+
+LinkedIn
+
+Product Hunt
+
+YouTube Shorts (scripts)
+
+Instagram Reels (scripts)
+
+More coming — only if builders actually need them.
