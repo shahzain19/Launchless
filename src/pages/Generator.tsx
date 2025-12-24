@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import LaunchlessInsights from "../components/LaunchlessInsights";
+import LaunchlessDemo from "../components/LaunchlessDemo";
 
 interface Shot {
     type: "Talking Head" | "Screen Record";
@@ -23,6 +25,9 @@ interface LaunchResult {
     total_estimated_duration?: string;
     shorts_script?: string;
     youtube_script?: string;
+
+    // Launchless Insights
+    launchless_insights?: any;
 }
 
 interface User {
@@ -281,6 +286,9 @@ export default function Generator() {
                     </div>
                 </div>
 
+                {/* Launchless Demo */}
+                <LaunchlessDemo />
+
                 {error && (
                     <div className="bg-red-500/10 border border-red-500/20 rounded-lg px-4 py-3 text-red-400 text-sm flex items-start gap-3">
                         <svg className="w-5 h-5 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
@@ -324,6 +332,13 @@ export default function Generator() {
                     <div className="space-y-6 pt-4 animate-in fade-in slide-in-from-bottom-4 duration-700">
                         <div className="border-t border-zinc-800/50 pt-8">
                             <h2 className="text-xl font-bold mb-6 text-zinc-200">Generated Content</h2>
+
+                            {/* Launchless Insights */}
+                            {result.launchless_insights && (
+                                <div className="mb-8">
+                                    <LaunchlessInsights data={result.launchless_insights} />
+                                </div>
+                            )}
 
                             {/* Text Mode Results */}
                             {mode === 'text' && (
