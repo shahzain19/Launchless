@@ -190,6 +190,135 @@ export default function Landing() {
         </div>
       </section>
 
+      {/* Content Generation Features */}
+      <section className="py-24 border-t border-zinc-900">
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl font-light text-zinc-300 mb-4">Everything you need to launch</h2>
+            <p className="text-zinc-500">AI generates founder-grade content in seconds</p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-12">
+            {/* Text Content */}
+            <div>
+              <div className="flex items-center gap-3 mb-8">
+                <div className="w-12 h-12 bg-zinc-900 rounded-2xl flex items-center justify-center">
+                  <span className="text-xl">📝</span>
+                </div>
+                <div>
+                  <h3 className="text-xl font-medium text-zinc-200">Text Launch Content</h3>
+                  <p className="text-sm text-zinc-500">Ready-to-post copy for all platforms</p>
+                </div>
+              </div>
+              
+              <div className="space-y-4">
+                <div className="flex items-center gap-3 text-sm">
+                  <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                  <span className="text-zinc-300">Product positioning & core hooks</span>
+                </div>
+                <div className="flex items-center gap-3 text-sm">
+                  <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                  <span className="text-zinc-300">Product Hunt launch post</span>
+                </div>
+                <div className="flex items-center gap-3 text-sm">
+                  <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                  <span className="text-zinc-300">Twitter/X launch threads (3 versions)</span>
+                </div>
+                <div className="flex items-center gap-3 text-sm">
+                  <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                  <span className="text-zinc-300">LinkedIn launch post</span>
+                </div>
+                <div className="flex items-center gap-3 text-sm">
+                  <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                  <span className="text-zinc-300">7-day follow-up campaign</span>
+                </div>
+                <div className="flex items-center gap-3 text-sm">
+                  <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                  <span className="text-zinc-300">Call-to-action copy</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Video Content */}
+            <div>
+              <div className="flex items-center gap-3 mb-8">
+                <div className="w-12 h-12 bg-zinc-900 rounded-2xl flex items-center justify-center">
+                  <span className="text-xl">🎬</span>
+                </div>
+                <div>
+                  <h3 className="text-xl font-medium text-zinc-200">Video Launch Plan</h3>
+                  <p className="text-sm text-zinc-500">Complete video production roadmap</p>
+                </div>
+              </div>
+              
+              <div className="space-y-4">
+                <div className="flex items-center gap-3 text-sm">
+                  <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+                  <span className="text-zinc-300">Shot list with timing</span>
+                </div>
+                <div className="flex items-center gap-3 text-sm">
+                  <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+                  <span className="text-zinc-300">Teleprompter notes</span>
+                </div>
+                <div className="flex items-center gap-3 text-sm">
+                  <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+                  <span className="text-zinc-300">Short-form script (TikTok/Reels)</span>
+                </div>
+                <div className="flex items-center gap-3 text-sm">
+                  <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+                  <span className="text-zinc-300">Long-form script (YouTube)</span>
+                </div>
+                <div className="flex items-center gap-3 text-sm">
+                  <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+                  <span className="text-zinc-300">Visual & audio direction</span>
+                </div>
+                <div className="flex items-center gap-3 text-sm">
+                  <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+                  <span className="text-zinc-300">Estimated duration planning</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Launchless Insights */}
+          <div className="mt-16 bg-gradient-to-r from-zinc-900/50 to-zinc-800/30 rounded-3xl p-8 border border-zinc-800">
+            <div className="text-center mb-8">
+              <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                <span className="text-2xl">🧠</span>
+              </div>
+              <h3 className="text-2xl font-medium text-zinc-200 mb-2">Launchless Insights</h3>
+              <p className="text-zinc-400">AI analysis to maximize your launch success</p>
+            </div>
+
+            <div className="grid md:grid-cols-3 gap-8">
+              <div className="text-center">
+                <div className="text-lg font-medium text-zinc-300 mb-2">Buyer Type Detection</div>
+                <p className="text-sm text-zinc-500">Identifies your ideal customer profile and adjusts messaging tone</p>
+              </div>
+              <div className="text-center">
+                <div className="text-lg font-medium text-zinc-300 mb-2">Demand Reality Check</div>
+                <p className="text-sm text-zinc-500">Honest assessment of market demand with repositioning suggestions</p>
+              </div>
+              <div className="text-center">
+                <div className="text-lg font-medium text-zinc-300 mb-2">Traffic Light System</div>
+                <p className="text-sm text-zinc-500">Green/yellow/red signals on whether to ship, pivot, or pause</p>
+              </div>
+            </div>
+
+            <div className="mt-8 grid md:grid-cols-2 gap-8">
+              <div className="text-center">
+                <div className="text-lg font-medium text-zinc-300 mb-2">Objection Pre-emption</div>
+                <p className="text-sm text-zinc-500">Identifies likely objections and weaves responses into your copy</p>
+              </div>
+              <div className="text-center">
+                <div className="text-lg font-medium text-zinc-300 mb-2">Founder Credibility</div>
+                <p className="text-sm text-zinc-500">Authentic credibility signals that build trust without bragging</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Platforms */}
       <section className="py-24 border-t border-zinc-900">
         <div className="max-w-4xl mx-auto px-6 text-center">
