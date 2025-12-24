@@ -5,7 +5,7 @@ export default function Landing() {
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-zinc-900/20 to-transparent"></div>
         
-        <div className="relative max-w-4xl mx-auto px-6 pt-32 pb-24 text-center">
+        <div className="relative max-w-5xl mx-auto px-6 pt-32 pb-24 text-center">
           {/* Logo */}
           <div className="mb-16">
             <img
@@ -17,16 +17,34 @@ export default function Landing() {
 
           {/* Hero Text */}
           <h1 className="text-5xl md:text-7xl font-light tracking-tight mb-8 leading-[1.1]">
-            AI finds people who
+            Launch content +
             <br />
-            <span className="text-zinc-500">already need your product</span>
+            <span className="text-zinc-500">customer discovery</span>
+            <br />
+            <span className="text-2xl md:text-3xl text-zinc-600 font-normal">in seconds</span>
           </h1>
 
-          <p className="text-xl text-zinc-400 max-w-2xl mx-auto mb-16 font-light leading-relaxed">
-            Signal Finder scans GitHub, Reddit, and Twitter to surface ranked leads with context.
+          <p className="text-xl text-zinc-400 max-w-3xl mx-auto mb-16 font-light leading-relaxed">
+            AI generates founder-grade launch content for all platforms, then finds people who already need your product.
             <br />
-            <span className="text-zinc-500">AI does discovery. You do conversation.</span>
+            <span className="text-zinc-500">Complete launch system. Zero marketing experience required.</span>
           </p>
+
+          {/* Feature Pills */}
+          <div className="flex flex-wrap items-center justify-center gap-3 mb-16">
+            <div className="bg-zinc-900/50 border border-zinc-800 rounded-full px-4 py-2 text-sm text-zinc-300">
+              📝 Launch content
+            </div>
+            <div className="bg-zinc-900/50 border border-zinc-800 rounded-full px-4 py-2 text-sm text-zinc-300">
+              🎬 Video scripts
+            </div>
+            <div className="bg-zinc-900/50 border border-zinc-800 rounded-full px-4 py-2 text-sm text-zinc-300">
+              🔍 Signal finder
+            </div>
+            <div className="bg-zinc-900/50 border border-zinc-800 rounded-full px-4 py-2 text-sm text-zinc-300">
+              🧠 AI insights
+            </div>
+          </div>
 
           {/* CTA */}
           <div className="mb-12">
@@ -34,7 +52,7 @@ export default function Landing() {
               href="/projects"
               className="inline-flex items-center px-8 py-4 bg-white text-black text-lg font-medium rounded-full hover:bg-zinc-100 transition-all duration-300 hover:scale-105 shadow-2xl shadow-white/10"
             >
-              Find your first signals
+              Start your launch
               <svg className="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
               </svg>
@@ -42,7 +60,7 @@ export default function Landing() {
           </div>
 
           {/* Trust Indicators */}
-          <div className="flex items-center justify-center gap-8 text-sm text-zinc-600">
+          <div className="flex items-center justify-center gap-8 text-sm text-zinc-600 flex-wrap">
             <span className="flex items-center gap-2">
               <div className="w-2 h-2 bg-green-500 rounded-full"></div>
               No automation
@@ -50,6 +68,10 @@ export default function Landing() {
             <span className="flex items-center gap-2">
               <div className="w-2 h-2 bg-green-500 rounded-full"></div>
               No spam
+            </span>
+            <span className="flex items-center gap-2">
+              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+              Real APIs
             </span>
             <span className="flex items-center gap-2">
               <div className="w-2 h-2 bg-green-500 rounded-full"></div>
@@ -63,18 +85,18 @@ export default function Landing() {
       <section className="py-24 border-t border-zinc-900">
         <div className="max-w-6xl mx-auto px-6">
           <div className="text-center mb-20">
-            <h2 className="text-3xl font-light text-zinc-300 mb-4">How it works</h2>
-            <p className="text-zinc-500">Three steps to find your ideal customers</p>
+            <h2 className="text-3xl font-light text-zinc-300 mb-4">Complete launch system</h2>
+            <p className="text-zinc-500">From content creation to customer discovery</p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-12">
             <div className="text-center group">
               <div className="w-16 h-16 bg-zinc-900 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:bg-zinc-800 transition-colors">
-                <span className="text-2xl">🎯</span>
+                <span className="text-2xl">📝</span>
               </div>
-              <h3 className="text-xl font-medium mb-3">Define Intent</h3>
+              <h3 className="text-xl font-medium mb-3">Generate Content</h3>
               <p className="text-zinc-500 leading-relaxed">
-                Describe your product, target audience, and pain points. AI generates signal patterns.
+                AI creates launch content for all platforms: Product Hunt, Twitter, LinkedIn, video scripts, and more.
               </p>
             </div>
 
@@ -82,19 +104,19 @@ export default function Landing() {
               <div className="w-16 h-16 bg-zinc-900 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:bg-zinc-800 transition-colors">
                 <span className="text-2xl">🔍</span>
               </div>
-              <h3 className="text-xl font-medium mb-3">AI Scans</h3>
+              <h3 className="text-xl font-medium mb-3">Find Customers</h3>
               <p className="text-zinc-500 leading-relaxed">
-                Real-time scanning of GitHub repos, Reddit posts, and Twitter for launch signals.
+                Signal Finder scans GitHub, Reddit, and Twitter to find people who already need your product.
               </p>
             </div>
 
             <div className="text-center group">
               <div className="w-16 h-16 bg-zinc-900 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:bg-zinc-800 transition-colors">
-                <span className="text-2xl">💬</span>
+                <span className="text-2xl">🚀</span>
               </div>
-              <h3 className="text-xl font-medium mb-3">Get Leads</h3>
+              <h3 className="text-xl font-medium mb-3">Launch & Connect</h3>
               <p className="text-zinc-500 leading-relaxed">
-                Receive ranked lead cards with context and AI-generated conversation starters.
+                Post your content and reach out to leads with AI-generated conversation starters.
               </p>
             </div>
           </div>
