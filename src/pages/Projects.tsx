@@ -392,7 +392,7 @@ export default function Projects() {
                 message={`Are you sure you want to delete "${deleteDialog.project?.name}"? This action cannot be undone and will delete all associated content.`}
                 confirmText="Delete"
                 cancelText="Cancel"
-                type="danger"
+                variant="danger"
                 onConfirm={() => deleteDialog.project && deleteProject(deleteDialog.project)}
                 onCancel={() => setDeleteDialog({ isOpen: false })}
             />
