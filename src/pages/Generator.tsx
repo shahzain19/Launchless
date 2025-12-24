@@ -43,6 +43,7 @@ export default function Generator() {
     const [result, setResult] = useState<LaunchResult | null>(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
+    const [success, setSuccess] = useState(false);
     const [myRepos, setMyRepos] = useState<Repo[]>([]);
     const [loadingRepos, setLoadingRepos] = useState(false);
     const [mode, setMode] = useState<'text' | 'video'>('text');
@@ -62,12 +63,22 @@ export default function Generator() {
 
     async function fetchMyRepos() {
         setLoadingRepos(true);
+        setError("");
         try {
             const res = await fetch(`${API_URL}/api/my-repos`, { credentials: "include" });
+            
+            if (!res.ok) {
+                if (res.status === 401) {
+                    throw new Error("Please log in with GitHub to access your repositories.");
+                }
+                throw new Error("Failed to fetch repositories. Please try again.");
+            }
+            
             const data = await res.json();
             setMyRepos(data);
         } catch (err) {
             console.error("Failed to fetch repos", err);
+            setError(err instanceof Error ? err.message : "Failed to fetch repositories.");
         } finally {
             setLoadingRepos(false);
         }
@@ -75,11 +86,12 @@ export default function Generator() {
 
     async function handleGenerate() {
         if (!github && !website && !description) {
-            setError("Add at least one input.");
+            setError("Please provide at least one input: GitHub URL, website, or description.");
             return;
         }
 
         setError("");
+        setSuccess(false);
         setLoading(true);
         setResult(null);
 
@@ -98,10 +110,20 @@ export default function Generator() {
                 }),
             });
 
+            if (!res.ok) {
+                const errorData = await res.json().catch(() => ({}));
+                throw new Error(errorData.error || `Server error: ${res.status}`);
+            }
+
             const data = await res.json();
             setResult(data);
+            setSuccess(true);
+            
+            // Auto-hide success message after 3 seconds
+            setTimeout(() => setSuccess(false), 3000);
         } catch (err) {
-            setError("Something went wrong.");
+            console.error("Generation failed:", err);
+            setError(err instanceof Error ? err.message : "Failed to generate launch content. Please try again.");
         } finally {
             setLoading(false);
         }
@@ -122,6 +144,11 @@ export default function Generator() {
                 })
             });
 
+            if (!res.ok) {
+                const errorData = await res.json().catch(() => ({}));
+                throw new Error(errorData.error || "Failed to regenerate content");
+            }
+
             const data = await res.json();
             if (data.newContent) {
                 let contentToSet = data.newContent;
@@ -138,6 +165,7 @@ export default function Generator() {
             }
         } catch (err) {
             console.error("Regeneration failed", err);
+            setError(err instanceof Error ? err.message : "Failed to regenerate content. Please try again.");
         }
     }
 
@@ -254,8 +282,20 @@ export default function Generator() {
                 </div>
 
                 {error && (
-                    <div className="bg-red-500/10 border border-red-500/20 rounded-lg px-4 py-3 text-red-400 text-sm">
-                        {error}
+                    <div className="bg-red-500/10 border border-red-500/20 rounded-lg px-4 py-3 text-red-400 text-sm flex items-start gap-3">
+                        <svg className="w-5 h-5 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                        </svg>
+                        <span>{error}</span>
+                    </div>
+                )}
+
+                {success && (
+                    <div className="bg-green-500/10 border border-green-500/20 rounded-lg px-4 py-3 text-green-400 text-sm flex items-center gap-3 animate-in fade-in slide-in-from-top-2 duration-300">
+                        <svg className="w-5 h-5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                        </svg>
+                        <span>🎉 Launch content generated successfully! Scroll down to see your results.</span>
                     </div>
                 )}
 
