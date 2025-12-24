@@ -19,31 +19,30 @@ interface Project {
 interface Generation {
     id: number;
     type: string;
-    content: any;
+    content: {
+        // Text mode content
+        positioning?: string;
+        core_hook?: string;
+        product_hunt?: string | { headline: string; tagline: string; description: string; makers_comment: string };
+        x_threads?: (string | object)[];
+        linkedin?: string;
+        followups?: string[];
+        cta?: string;
+        
+        // Video mode content
+        shot_list?: Array<{
+            type: "Talking Head" | "Screen Record";
+            duration: string;
+            visual: string;
+            audio: string;
+        }>;
+        teleprompter?: string[];
+        total_estimated_duration?: string;
+        shorts_script?: string;
+        youtube_script?: string;
+    };
     launchlessInsights: any;
     createdAt: string;
-}
-
-interface Script {
-    id: number;
-    type: string;
-    title: string;
-    content: string;
-    duration: string;
-    status: string;
-    createdAt: string;
-    updatedAt: string;
-}
-
-interface ShotList {
-    id: number;
-    title: string;
-    shots: any[];
-    totalDuration: string;
-    scriptId: number;
-    status: string;
-    createdAt: string;
-    updatedAt: string;
 }
 
 interface Post {
@@ -334,19 +333,7 @@ export default function ProjectDetail() {
                             </div>
                         ) : (
                             generations.map((generation) => (
-                                <div key={generation.id} className="bg-zinc-900/30 rounded-lg p-6 border border-zinc-800/50">
-                                    <div className="flex items-center justify-between mb-4">
-                                        <span className="text-sm text-zinc-400">
-                                            {new Date(generation.createdAt).toLocaleDateString()}
-                                        </span>
-                                        <span className="px-2 py-1 text-xs bg-blue-500/20 text-blue-400 rounded">
-                                            {generation.type}
-                                        </span>
-                                    </div>
-                                    {generation.launchlessInsights && (
-                                        <LaunchlessInsights data={generation.launchlessInsights} />
-                                    )}
-                                </div>
+                                <GenerationCard key={generation.id} generation={generation} />
                             ))
                         )}
                     </div>
@@ -399,6 +386,207 @@ export default function ProjectDetail() {
 
             {/* Toast Notifications */}
             <ToastContainer toasts={toasts} removeToast={removeToast} />
+        </div>
+    );
+}
+
+// Generation Card Component
+function GenerationCard({ generation }: { generation: Generation }) {
+    const [activeTab, setActiveTab] = useState<'insights' | 'content'>('content');
+    
+    return (
+        <div className="bg-zinc-900/30 rounded-lg border border-zinc-800/50 overflow-hidden">
+            {/* Header */}
+            <div className="flex items-center justify-between p-4 border-b border-zinc-800/50">
+                <div className="flex items-center gap-3">
+                    <span className="text-sm text-zinc-400">
+                        {new Date(generation.createdAt).toLocaleDateString()}
+                    </span>
+                    <span className="px-2 py-1 text-xs bg-blue-500/20 text-blue-400 rounded">
+                        {generation.type}
+                    </span>
+                </div>
+                
+                {/* Tab Toggle */}
+                <div className="flex bg-zinc-800 rounded p-1">
+                    <button
+                        onClick={() => setActiveTab('content')}
+                        className={`px-3 py-1 text-xs rounded transition-all ${
+                            activeTab === 'content'
+                                ? 'bg-white text-black font-medium'
+                                : 'text-zinc-400 hover:text-zinc-200'
+                        }`}
+                    >
+                        Content
+                    </button>
+                    <button
+                        onClick={() => setActiveTab('insights')}
+                        className={`px-3 py-1 text-xs rounded transition-all ${
+                            activeTab === 'insights'
+                                ? 'bg-white text-black font-medium'
+                                : 'text-zinc-400 hover:text-zinc-200'
+                        }`}
+                    >
+                        Insights
+                    </button>
+                </div>
+            </div>
+
+            {/* Content */}
+            <div className="p-6">
+                {activeTab === 'content' && (
+                    <GenerationContent generation={generation} />
+                )}
+                
+                {activeTab === 'insights' && generation.launchlessInsights && (
+                    <LaunchlessInsights data={generation.launchlessInsights} />
+                )}
+            </div>
+        </div>
+    );
+}
+
+// Generation Content Component
+function GenerationContent({ generation }: { generation: Generation }) {
+    if (generation.type === 'video') {
+        return <VideoContent content={generation.content} />;
+    } else {
+        return <TextContent content={generation.content} />;
+    }
+}
+
+// Text Content Component
+function TextContent({ content }: { content: Generation['content'] }) {
+    return (
+        <div className="space-y-6">
+            {content.positioning && (
+                <ContentSection title="Product Positioning" content={content.positioning} />
+            )}
+            
+            {content.core_hook && (
+                <ContentSection title="Core Hook" content={content.core_hook} />
+            )}
+            
+            {content.product_hunt && (
+                <ContentSection 
+                    title="Product Hunt" 
+                    content={
+                        typeof content.product_hunt === 'string' 
+                            ? content.product_hunt 
+                            : `${content.product_hunt.headline}\n${content.product_hunt.tagline}\n\n${content.product_hunt.description}\n\nMaker's Comment:\n${content.product_hunt.makers_comment}`
+                    } 
+                />
+            )}
+            
+            {content.x_threads && (
+                <ContentSection 
+                    title="X/Twitter Threads" 
+                    content={
+                        Array.isArray(content.x_threads)
+                            ? content.x_threads.map(t => typeof t === 'string' ? t : JSON.stringify(t)).join('\n\n---\n\n')
+                            : String(content.x_threads)
+                    } 
+                />
+            )}
+            
+            {content.linkedin && (
+                <ContentSection title="LinkedIn Post" content={content.linkedin} />
+            )}
+            
+            {content.followups && (
+                <ContentSection title="Follow-up Posts" content={content.followups.join('\n\n')} />
+            )}
+            
+            {content.cta && (
+                <ContentSection title="Call to Action" content={content.cta} />
+            )}
+        </div>
+    );
+}
+
+// Video Content Component
+function VideoContent({ content }: { content: Generation['content'] }) {
+    return (
+        <div className="space-y-6">
+            {/* Shot List */}
+            {content.shot_list && content.shot_list.length > 0 && (
+                <div>
+                    <div className="flex items-center justify-between mb-4">
+                        <h3 className="font-medium text-white">Shot List</h3>
+                        <span className="text-xs text-zinc-400 bg-zinc-800 px-2 py-1 rounded">
+                            {content.total_estimated_duration || '60s'}
+                        </span>
+                    </div>
+                    <div className="space-y-3">
+                        {content.shot_list.map((shot, idx) => (
+                            <div key={idx} className="flex gap-3 p-4 bg-zinc-950/50 rounded-lg border border-zinc-800/50">
+                                <div className="flex flex-col items-center min-w-[50px]">
+                                    <span className="text-lg font-bold text-zinc-500">#{idx + 1}</span>
+                                    <span className="text-xs text-zinc-400 bg-zinc-800 px-2 py-1 rounded mt-1">
+                                        {shot.duration}
+                                    </span>
+                                </div>
+                                <div className="flex-1 space-y-2">
+                                    <div className="flex items-center gap-2">
+                                        <span className={`text-xs font-bold uppercase px-2 py-1 rounded ${
+                                            shot.type.includes('Head')
+                                                ? 'bg-purple-500/20 text-purple-300'
+                                                : 'bg-blue-500/20 text-blue-300'
+                                        }`}>
+                                            {shot.type}
+                                        </span>
+                                    </div>
+                                    <div className="text-sm text-zinc-200">
+                                        <span className="text-zinc-500">Visual:</span> {shot.visual}
+                                    </div>
+                                    <div className="text-sm text-zinc-400 italic">
+                                        <span className="text-zinc-500">Audio:</span> "{shot.audio}"
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
+            
+            {/* Teleprompter */}
+            {content.teleprompter && content.teleprompter.length > 0 && (
+                <ContentSection 
+                    title="Teleprompter Notes" 
+                    content={content.teleprompter.map(note => `• ${note}`).join('\n')} 
+                />
+            )}
+            
+            {/* Scripts */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {content.shorts_script && (
+                    <ContentSection title="Short-form Script (60s)" content={content.shorts_script} />
+                )}
+                
+                {content.youtube_script && (
+                    <ContentSection title="Long-form Script (3-5min)" content={content.youtube_script} />
+                )}
+            </div>
+        </div>
+    );
+}
+
+// Content Section Component
+function ContentSection({ title, content }: { title: string; content: string }) {
+    return (
+        <div className="bg-zinc-950/30 rounded-lg p-4 border border-zinc-800/50">
+            <div className="flex items-center justify-between mb-3">
+                <h4 className="font-medium text-zinc-200 text-sm">{title}</h4>
+                <button
+                    onClick={() => navigator.clipboard.writeText(content)}
+                    className="text-xs text-zinc-500 hover:text-zinc-300 px-2 py-1 rounded hover:bg-zinc-800/50 transition-colors"
+                >
+                    Copy
+                </button>
+            </div>
+            <div className="text-sm text-zinc-300 whitespace-pre-wrap leading-relaxed">
+                {content}
+            </div>
         </div>
     );
 }
