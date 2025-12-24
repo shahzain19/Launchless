@@ -2,6 +2,9 @@ import { useState, useEffect } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import LaunchlessInsights from "../components/LaunchlessInsights";
 import LaunchlessDemo from "../components/LaunchlessDemo";
+import LoadingSpinner from "../components/LoadingSpinner";
+import { ToastContainer } from "../components/Toast";
+import { useToast } from "../hooks/useToast";
 
 interface Shot {
     type: "Talking Head" | "Screen Record";
@@ -59,6 +62,7 @@ export default function Generator() {
     const [loadingRepos, setLoadingRepos] = useState(false);
     const [mode, setMode] = useState<'text' | 'video'>('text');
 
+    const { toasts, removeToast, success, error } = useToast();
     const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001";
 
     useEffect(() => {
@@ -120,7 +124,7 @@ export default function Generator() {
 
     async function handleGenerate() {
         if (!github && !website && !description) {
-            setError("Please provide at least one input: GitHub URL, website, or description.");
+            error("Please provide at least one input: GitHub URL, website, or description.");
             return;
         }
 
@@ -145,20 +149,20 @@ export default function Generator() {
                 }),
             });
 
+            const data = await res.json();
+
             if (!res.ok) {
-                const errorData = await res.json().catch(() => ({}));
-                throw new Error(errorData.error || `Server error: ${res.status}`);
+                throw new Error(data.message || `Server error: ${res.status}`);
             }
 
-            const data = await res.json();
-            setResult(data);
-            setSuccess(true);
+            setResult(data.success ? data.data : data);
+            success("Content generated successfully!");
             
             // Auto-hide success message after 3 seconds
             setTimeout(() => setSuccess(false), 3000);
         } catch (err) {
             console.error("Generation failed:", err);
-            setError(err instanceof Error ? err.message : "Failed to generate launch content. Please try again.");
+            error(err instanceof Error ? err.message : "Failed to generate launch content. Please try again.");
         } finally {
             setLoading(false);
         }
@@ -206,11 +210,11 @@ export default function Generator() {
 
     return (
         <div className="min-h-screen bg-zinc-950 text-zinc-100">
-            <div className="max-w-3xl mx-auto px-6 py-8">
+            <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8">
 
                 {/* Simplified Header */}
                 <div className="text-center mb-8">
-                    <div className="flex items-center justify-center gap-2 mb-2">
+                    <div className="flex items-center justify-center gap-2 mb-2 flex-wrap">
                         {project && (
                             <>
                                 <button
@@ -219,40 +223,42 @@ export default function Generator() {
                                 >
                                     ← Projects
                                 </button>
-                                <span className="text-zinc-600">/</span>
+                                <span className="text-zinc-600 hidden sm:inline">/</span>
                                 <button
                                     onClick={() => navigate(`/projects/${project.id}`)}
-                                    className="text-zinc-400 hover:text-zinc-200 text-sm"
+                                    className="text-zinc-400 hover:text-zinc-200 text-sm truncate max-w-32 sm:max-w-none"
                                 >
                                     {project.name}
                                 </button>
-                                <span className="text-zinc-600">/</span>
+                                <span className="text-zinc-600 hidden sm:inline">/</span>
                             </>
                         )}
-                        <h1 className="text-2xl font-bold text-white">
+                        <h1 className="text-xl sm:text-2xl font-bold text-white">
                             {project ? 'Generate Content' : 'Launchless'}
                         </h1>
                     </div>
-                    <p className="text-zinc-400">
+                    <p className="text-zinc-400 text-sm sm:text-base">
                         {project ? `Generate launch content for ${project.name}` : 'Founder-grade launch content in seconds'}
                     </p>
                     
-                    {/* Auth in top right */}
-                    <div className="absolute top-6 right-6">
+                    {/* Auth in top right - mobile friendly */}
+                    <div className="absolute top-4 right-4 sm:top-6 sm:right-6">
                         {user ? (
                             <div className="flex items-center gap-2">
                                 {user.avatarUrl && (
                                     <img src={user.avatarUrl} alt={user.username} className="w-6 h-6 rounded-full" />
                                 )}
-                                <span className="text-sm text-zinc-400">{user.username}</span>
-                                <a href={`${API_URL}/auth/logout`} className="text-xs text-zinc-500 hover:text-white ml-2">Sign out</a>
+                                <span className="text-sm text-zinc-400 hidden sm:inline">{user.username}</span>
+                                <a href={`${API_URL}/auth/logout`} className="text-xs text-zinc-500 hover:text-white">
+                                    Sign out
+                                </a>
                             </div>
                         ) : (
                             <a
                                 href={`${API_URL}/auth/github`}
                                 className="text-sm text-zinc-400 hover:text-white transition-colors"
                             >
-                                Login with GitHub
+                                Login
                             </a>
                         )}
                     </div>
@@ -281,7 +287,7 @@ export default function Generator() {
                 </div>
 
                 {/* Simplified Input Form */}
-                <div className="bg-zinc-900/50 rounded-xl p-6 mb-6 border border-zinc-800/50">
+                <div className="bg-zinc-900/50 rounded-xl p-4 sm:p-6 mb-6 border border-zinc-800/50">
                     <div className="space-y-4">
                         {/* GitHub Input */}
                         <div>
@@ -305,14 +311,15 @@ export default function Generator() {
                                         placeholder="https://github.com/owner/repo"
                                         value={github}
                                         onChange={(e) => setGithub(e.target.value)}
-                                        className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-100 text-sm placeholder:text-zinc-500 focus:outline-none focus:ring-1 focus:ring-white/20"
+                                        className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-100 text-sm placeholder:text-zinc-500 focus:outline-none focus:ring-1 focus:ring-white/20 pr-16"
                                     />
                                     {user && (
                                         <button
                                             onClick={fetchMyRepos}
-                                            className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-blue-400 hover:text-blue-300"
+                                            disabled={loadingRepos}
+                                            className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-blue-400 hover:text-blue-300 disabled:opacity-50"
                                         >
-                                            {loadingRepos ? "..." : "My repos"}
+                                            {loadingRepos ? <LoadingSpinner size="sm" /> : "My repos"}
                                         </button>
                                     )}
                                 </div>
@@ -350,10 +357,7 @@ export default function Generator() {
                     >
                         {loading ? (
                             <>
-                                <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
-                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                                </svg>
+                                <LoadingSpinner size="sm" />
                                 Generating...
                             </>
                         ) : (
@@ -477,6 +481,9 @@ export default function Generator() {
                     </div>
                 )}
             </div>
+
+            {/* Toast Notifications */}
+            <ToastContainer toasts={toasts} removeToast={removeToast} />
         </div>
     );
 }

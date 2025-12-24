@@ -1,0 +1,86 @@
+/* Mobile-specific styles and responsive fixes */
+
+/* Ensure proper mobile viewport */
+@media (max-width: 768px) {
+  /* Fix horizontal scrolling issues */
+  body {
+    overflow-x: hidden;
+  }
+
+  /* Improve touch targets */
+  button, a, input, textarea, select {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Better spacing on mobile */
+  .mobile-padding {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  /* Stack elements vertically on mobile */
+  .mobile-stack {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  /* Hide elements on mobile */
+  .mobile-hidden {
+    display: none;
+  }
+
+  /* Show only on mobile */
+  .mobile-only {
+    display: block;
+  }
+
+  /* Better form layouts on mobile */
+  .mobile-form-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  /* Improve text readability */
+  .mobile-text {
+    font-size: 16px; /* Prevents zoom on iOS */
+    line-height: 1.5;
+  }
+
+  /* Better modal sizing */
+  .mobile-modal {
+    margin: 1rem;
+    max-height: calc(100vh - 2rem);
+    overflow-y: auto;
+  }
+
+  /* Sticky headers */
+  .mobile-sticky {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: rgba(9, 9, 11, 0.95);
+    backdrop-filter: blur(8px);
+  }
+}
+
+/* Desktop-only styles */
+@media (min-width: 769px) {
+  .mobile-only {
+    display: none;
+  }
+}
+
+/* Tablet styles */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .tablet-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Large screen optimizations */
+@media (min-width: 1200px) {
+  .desktop-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
