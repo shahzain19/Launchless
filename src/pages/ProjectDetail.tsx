@@ -24,6 +24,28 @@ interface Generation {
     createdAt: string;
 }
 
+interface Script {
+    id: number;
+    type: string;
+    title: string;
+    content: string;
+    duration: string;
+    status: string;
+    createdAt: string;
+    updatedAt: string;
+}
+
+interface ShotList {
+    id: number;
+    title: string;
+    shots: any[];
+    totalDuration: string;
+    scriptId: number;
+    status: string;
+    createdAt: string;
+    updatedAt: string;
+}
+
 interface Post {
     id: number;
     platform: string;
