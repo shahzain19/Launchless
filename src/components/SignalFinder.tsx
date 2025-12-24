@@ -216,13 +216,15 @@ export default function SignalFinder({ projectId }: SignalFinderProps) {
                 </div>
                 
                 {definition && (
-                    <button
-                        onClick={scanForSignals}
-                        disabled={scanning}
-                        className="bg-white text-black px-4 py-2 rounded-lg font-medium hover:bg-zinc-200 transition-colors disabled:opacity-50"
-                    >
-                        {scanning ? 'Scanning...' : 'Scan for Signals'}
-                    </button>
+                    <div className="flex items-center gap-3">
+                        <button
+                            onClick={scanForSignals}
+                            disabled={scanning}
+                            className="bg-white text-black px-4 py-2 rounded-lg font-medium hover:bg-zinc-200 transition-colors disabled:opacity-50"
+                        >
+                            {scanning ? 'Scanning...' : 'Scan for Signals'}
+                        </button>
+                    </div>
                 )}
             </div>
 
