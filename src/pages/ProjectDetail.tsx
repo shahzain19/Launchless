@@ -301,19 +301,7 @@ export default function ProjectDetail() {
                         {generations.length > 0 && (
                             <div>
                                 <h2 className="text-lg font-medium text-white mb-4">Latest Generation</h2>
-                                <div className="bg-zinc-900/30 rounded-lg p-6 border border-zinc-800/50">
-                                    <div className="flex items-center justify-between mb-4">
-                                        <span className="text-sm text-zinc-400">
-                                            {new Date(generations[0].createdAt).toLocaleDateString()}
-                                        </span>
-                                        <span className="px-2 py-1 text-xs bg-blue-500/20 text-blue-400 rounded">
-                                            {generations[0].type}
-                                        </span>
-                                    </div>
-                                    {generations[0].launchlessInsights && (
-                                        <LaunchlessInsights data={generations[0].launchlessInsights} />
-                                    )}
-                                </div>
+                                <GenerationCard generation={generations[0]} />
                             </div>
                         )}
                     </div>
@@ -392,7 +380,7 @@ export default function ProjectDetail() {
 
 // Generation Card Component
 function GenerationCard({ generation }: { generation: Generation }) {
-    const [activeTab, setActiveTab] = useState<'insights' | 'content'>('content');
+    const [activeTab, setActiveTab] = useState<'content' | 'insights'>('content');
     
     return (
         <div className="bg-zinc-900/30 rounded-lg border border-zinc-800/50 overflow-hidden">
