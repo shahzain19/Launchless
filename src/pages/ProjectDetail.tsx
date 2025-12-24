@@ -2,9 +2,6 @@ import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import LaunchlessInsights from "../components/LaunchlessInsights";
 import LoadingSpinner from "../components/LoadingSpinner";
-import EditProjectModal from "../components/EditProjectModal";
-import ConfirmDialog from "../components/ConfirmDialog";
-import { ToastContainer } from "../components/Toast";
 import { useToast } from "../hooks/useToast";
 
 interface Project {
@@ -42,10 +39,8 @@ export default function ProjectDetail() {
     const [posts, setPosts] = useState<Post[]>([]);
     const [activeTab, setActiveTab] = useState<'overview' | 'generations' | 'posts'>('overview');
     const [loading, setLoading] = useState(true);
-    const [editModalOpen, setEditModalOpen] = useState(false);
-    const [deleteDialog, setDeleteDialog] = useState<{ isOpen: boolean; post?: Post }>({ isOpen: false });
 
-    const { toasts, removeToast, success, error } = useToast();
+    const { error } = useToast();
     const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001";
 
     useEffect(() => {
@@ -97,77 +92,6 @@ export default function ProjectDetail() {
         } catch (err) {
             console.error("Failed to fetch posts", err);
             error("Failed to load posts");
-        }
-    }
-
-    async function updateProject(updates: Partial<Project>) {
-        try {
-            const res = await fetch(`${API_URL}/api/projects/${id}`, {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                credentials: "include",
-                body: JSON.stringify(updates)
-            });
-
-            const data = await res.json();
-
-            if (!res.ok) {
-                throw new Error(data.message || "Failed to update project");
-            }
-
-            setProject(data.success ? data.data : data);
-            success("Project updated successfully!");
-        } catch (err) {
-            console.error("Failed to update project", err);
-            error(err instanceof Error ? err.message : "Failed to update project");
-            throw err; // Re-throw to handle in modal
-        }
-    }
-
-    async function updatePostStatus(postId: number, status: string) {
-        try {
-            const res = await fetch(`${API_URL}/api/projects/${id}/posts/${postId}`, {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                credentials: "include",
-                body: JSON.stringify({ status })
-            });
-
-            if (!res.ok) {
-                const data = await res.json();
-                throw new Error(data.message || "Failed to update post");
-            }
-
-            // Update local state
-            setPosts(posts.map(post => 
-                post.id === postId ? { ...post, status } : post
-            ));
-            success("Post status updated!");
-        } catch (err) {
-            console.error("Failed to update post", err);
-            error("Failed to update post status");
-        }
-    }
-
-    async function deletePost(post: Post) {
-        try {
-            const res = await fetch(`${API_URL}/api/projects/${id}/posts/${post.id}`, {
-                method: "DELETE",
-                credentials: "include"
-            });
-
-            if (!res.ok) {
-                const data = await res.json();
-                throw new Error(data.message || "Failed to delete post");
-            }
-
-            setPosts(posts.filter(p => p.id !== post.id));
-            success("Post deleted successfully");
-        } catch (err) {
-            console.error("Failed to delete post", err);
-            error("Failed to delete post");
-        } finally {
-            setDeleteDialog({ isOpen: false });
         }
     }
 
