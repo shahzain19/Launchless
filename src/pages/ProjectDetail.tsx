@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import LaunchlessInsights from "../components/LaunchlessInsights";
+import SignalFinder from "../components/SignalFinder";
 import LoadingSpinner from "../components/LoadingSpinner";
 import { useToast } from "../hooks/useToast";
 import { ToastContainer } from "../components/Toast";
@@ -59,7 +60,7 @@ export default function ProjectDetail() {
     const [project, setProject] = useState<Project | null>(null);
     const [generations, setGenerations] = useState<Generation[]>([]);
     const [posts, setPosts] = useState<Post[]>([]);
-    const [activeTab, setActiveTab] = useState<'overview' | 'generations' | 'posts'>('overview');
+    const [activeTab, setActiveTab] = useState<'overview' | 'generations' | 'posts' | 'signals'>('overview');
     const [loading, setLoading] = useState(true);
 
     const { toasts, removeToast, error } = useToast();
@@ -257,6 +258,16 @@ export default function ProjectDetail() {
                         Overview
                     </button>
                     <button
+                        onClick={() => setActiveTab('signals')}
+                        className={`flex-1 py-2 px-4 text-sm rounded-md transition-all ${
+                            activeTab === 'signals'
+                                ? "bg-white text-black font-medium"
+                                : "text-zinc-400 hover:text-zinc-200"
+                        }`}
+                    >
+                        Signal Finder
+                    </button>
+                    <button
                         onClick={() => setActiveTab('generations')}
                         className={`flex-1 py-2 px-4 text-sm rounded-md transition-all ${
                             activeTab === 'generations'
@@ -305,6 +316,10 @@ export default function ProjectDetail() {
                             </div>
                         )}
                     </div>
+                )}
+
+                {activeTab === 'signals' && (
+                    <SignalFinder projectId={id!} />
                 )}
 
                 {activeTab === 'generations' && (
