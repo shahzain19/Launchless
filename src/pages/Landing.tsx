@@ -31,15 +31,15 @@ export default function Landing() {
 
         {/* CTA */}
         <a
-          href="/app"
+          href="/projects"
           className="mt-14 px-8 py-4 bg-white text-black text-base font-semibold rounded-lg hover:bg-gray-200 transition-all duration-200 hover:scale-105 active:scale-95 shadow-lg shadow-white/10"
         >
-          Generate my launch →
+          Start your first project →
         </a>
 
         {/* Trust indicator */}
         <p className="mt-6 text-xs text-gray-600">
-          No signup required • Takes 30 seconds
+          Sign in with GitHub • Organize your launches
         </p>
       </div>
 
@@ -92,10 +92,10 @@ export default function Landing() {
         <div className="text-center mt-12">
           <p className="text-sm text-gray-500 mb-6">Plus 7-day follow-up plan, call-to-action copy, and more</p>
           <a
-            href="/app"
+            href="/projects"
             className="inline-flex items-center gap-2 text-blue-400 hover:text-blue-300 transition-colors font-medium"
           >
-            Try it with your product →
+            Start your first project →
           </a>
         </div>
       </section>

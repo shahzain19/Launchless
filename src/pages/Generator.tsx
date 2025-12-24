@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import LaunchlessInsights from "../components/LaunchlessInsights";
 import LaunchlessDemo from "../components/LaunchlessDemo";
 
@@ -41,7 +42,12 @@ interface Repo {
 }
 
 export default function Generator() {
+    const [searchParams] = useSearchParams();
+    const navigate = useNavigate();
+    const projectId = searchParams.get('projectId');
+    
     const [user, setUser] = useState<User | null>(null);
+    const [project, setProject] = useState<any>(null);
     const [github, setGithub] = useState("");
     const [website, setWebsite] = useState("");
     const [description, setDescription] = useState("");
@@ -64,7 +70,30 @@ export default function Generator() {
                 }
             })
             .catch((err) => console.error("Auth check failed", err));
-    }, []);
+
+        // If projectId is provided, fetch project details
+        if (projectId) {
+            fetchProject();
+        }
+    }, [projectId]);
+
+    async function fetchProject() {
+        if (!projectId) return;
+        
+        try {
+            const res = await fetch(`${API_URL}/api/projects/${projectId}`, { credentials: "include" });
+            if (res.ok) {
+                const projectData = await res.json();
+                setProject(projectData);
+                // Pre-fill form with project data
+                setGithub(projectData.github || "");
+                setWebsite(projectData.website || "");
+                setDescription(projectData.description || "");
+            }
+        } catch (err) {
+            console.error("Failed to fetch project", err);
+        }
+    }
 
     async function fetchMyRepos() {
         setLoadingRepos(true);
@@ -112,6 +141,7 @@ export default function Generator() {
                     website,
                     description,
                     mode,
+                    projectId,
                 }),
             });
 
@@ -180,8 +210,32 @@ export default function Generator() {
 
                 {/* Simplified Header */}
                 <div className="text-center mb-8">
-                    <h1 className="text-2xl font-bold text-white mb-2">Launchless</h1>
-                    <p className="text-zinc-400">Founder-grade launch content in seconds</p>
+                    <div className="flex items-center justify-center gap-2 mb-2">
+                        {project && (
+                            <>
+                                <button
+                                    onClick={() => navigate('/projects')}
+                                    className="text-zinc-400 hover:text-zinc-200 text-sm"
+                                >
+                                    ← Projects
+                                </button>
+                                <span className="text-zinc-600">/</span>
+                                <button
+                                    onClick={() => navigate(`/projects/${project.id}`)}
+                                    className="text-zinc-400 hover:text-zinc-200 text-sm"
+                                >
+                                    {project.name}
+                                </button>
+                                <span className="text-zinc-600">/</span>
+                            </>
+                        )}
+                        <h1 className="text-2xl font-bold text-white">
+                            {project ? 'Generate Content' : 'Launchless'}
+                        </h1>
+                    </div>
+                    <p className="text-zinc-400">
+                        {project ? `Generate launch content for ${project.name}` : 'Founder-grade launch content in seconds'}
+                    </p>
                     
                     {/* Auth in top right */}
                     <div className="absolute top-6 right-6">
