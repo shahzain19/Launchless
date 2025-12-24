@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import LaunchlessInsights from "../components/LaunchlessInsights";
 import LoadingSpinner from "../components/LoadingSpinner";
 import { useToast } from "../hooks/useToast";
+import { ToastContainer } from "../components/Toast";
 
 interface Project {
     id: number;
@@ -40,7 +41,7 @@ export default function ProjectDetail() {
     const [activeTab, setActiveTab] = useState<'overview' | 'generations' | 'posts'>('overview');
     const [loading, setLoading] = useState(true);
 
-    const { error } = useToast();
+    const { toasts, removeToast, error } = useToast();
     const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001";
 
     useEffect(() => {
@@ -52,46 +53,72 @@ export default function ProjectDetail() {
     }, [id]);
 
     async function fetchProject() {
+        if (!id) {
+            error("No project ID provided");
+            setLoading(false);
+            return;
+        }
+
         try {
+            console.log(`Fetching project with ID: ${id}`);
             const res = await fetch(`${API_URL}/api/projects/${id}`, { credentials: "include" });
             
+            console.log(`Response status: ${res.status}`);
+            
             if (!res.ok) {
-                throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+                const errorData = await res.json().catch(() => ({}));
+                console.error("API Error:", errorData);
+                throw new Error(errorData.message || `HTTP ${res.status}: ${res.statusText}`);
             }
             
             const data = await res.json();
-            setProject(data.success ? data.data : data);
+            console.log("Project data received:", data);
+            
+            const projectData = data.success ? data.data : data;
+            if (!projectData) {
+                throw new Error("No project data received");
+            }
+            
+            setProject(projectData);
         } catch (err) {
             console.error("Failed to fetch project", err);
-            error("Failed to load project details");
+            error(err instanceof Error ? err.message : "Failed to load project details");
         } finally {
             setLoading(false);
         }
     }
 
     async function fetchGenerations() {
+        if (!id) return;
+        
         try {
             const res = await fetch(`${API_URL}/api/projects/${id}/generations`, { credentials: "include" });
             if (res.ok) {
                 const data = await res.json();
                 setGenerations(data.success ? data.data : data);
+            } else {
+                console.warn("Failed to fetch generations:", res.status);
             }
         } catch (err) {
             console.error("Failed to fetch generations", err);
-            error("Failed to load generations");
+            // Don't show error for generations as it's not critical
         }
     }
 
     async function fetchPosts() {
+        if (!id) return;
+        
         try {
             const res = await fetch(`${API_URL}/api/projects/${id}/posts`, { credentials: "include" });
             if (res.ok) {
                 const data = await res.json();
                 setPosts(data.success ? data.data : data);
+            } else {
+                console.warn("Failed to fetch posts:", res.status);
             }
         } catch (err) {
             console.error("Failed to fetch posts", err);
-            error("Failed to load posts");
+            // Don't show error for posts as it's not critical
         }
     }
 
@@ -347,6 +374,9 @@ export default function ProjectDetail() {
                     </div>
                 )}
             </div>
+
+            {/* Toast Notifications */}
+            <ToastContainer toasts={toasts} removeToast={removeToast} />
         </div>
     );
 }
