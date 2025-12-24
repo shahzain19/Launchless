@@ -45,6 +45,35 @@ interface CredibilityLine {
     placement: string;
 }
 
+interface FirstReply {
+    type: string;
+    text: string;
+    timing: string;
+    purpose: string;
+}
+
+interface WorthBuilding {
+    verdict: string;
+    confidence: number;
+    reasoning: string;
+    next_steps?: string[];
+    timeline?: string;
+}
+
+interface TrafficLight {
+    light: string;
+    score: number;
+    action: string;
+    message: string;
+    signals: string[];
+    breakdown: {
+        demand: string;
+        market: string;
+        audience_clarity: number;
+        red_flags: number;
+    };
+}
+
 interface LaunchlessData {
     buyer_type: BuyerType;
     demand_check: DemandCheck;
@@ -52,16 +81,9 @@ interface LaunchlessData {
     soft_ctas: { ctas: SoftCTA[] };
     objections: { objections: Objection[]; integrated_copy: string };
     credibility: { credibility_lines: CredibilityLine[]; founder_story: string };
-    first_reply?: { replies: any[] };
-    worth_building?: any;
-    traffic_light?: {
-        light: string;
-        score: number;
-        action: string;
-        message: string;
-        signals: string[];
-        breakdown: any;
-    };
+    first_reply?: { replies: FirstReply[] };
+    worth_building?: WorthBuilding;
+    traffic_light?: TrafficLight;
 }
 
 interface LaunchlessInsightsProps {
@@ -178,7 +200,7 @@ export default function LaunchlessInsights({ data }: LaunchlessInsightsProps) {
                                 <div className="text-sm font-medium text-blue-400 mb-2">📊 Worth Building Analysis</div>
                                 <p className="text-sm text-blue-300 mb-3">{data.worth_building.reasoning}</p>
                                 <div className="space-y-2">
-                                    {data.worth_building.next_steps?.map((step, idx) => (
+                                    {data.worth_building.next_steps?.map((step: string, idx: number) => (
                                         <div key={idx} className="text-sm text-blue-300">• {step}</div>
                                     ))}
                                 </div>
