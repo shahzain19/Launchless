@@ -12,7 +12,7 @@ export default function Landing() {
 
         {/* Hero */}
         <h1 className="text-4xl md:text-6xl font-semibold max-w-4xl leading-tight">
-          Ship your SaaS.<br />
+          Ship your Product.<br />
           <span className="text-gray-400">We handle the launch.</span>
         </h1>
 
