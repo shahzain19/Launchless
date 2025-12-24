@@ -1,90 +1,86 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 
-export interface ToastProps {
+export interface Toast {
+    id: string;
+    type: 'success' | 'error' | 'info';
     message: string;
-    type: 'success' | 'error' | 'warning' | 'info';
     duration?: number;
-    onClose: () => void;
 }
 
-export default function Toast({ message, type, duration = 5000, onClose }: ToastProps) {
-    const [isVisible, setIsVisible] = useState(true);
+interface ToastProps {
+    toast: Toast;
+    onRemove: (id: string) => void;
+}
 
+function ToastItem({ toast, onRemove }: ToastProps) {
     useEffect(() => {
         const timer = setTimeout(() => {
-            setIsVisible(false);
-            setTimeout(onClose, 300); // Wait for fade out animation
-        }, duration);
+            onRemove(toast.id);
+        }, toast.duration || 5000);
 
         return () => clearTimeout(timer);
-    }, [duration, onClose]);
+    }, [toast.id, toast.duration, onRemove]);
 
-    const typeStyles = {
-        success: 'bg-green-500/10 border-green-500/20 text-green-400',
-        error: 'bg-red-500/10 border-red-500/20 text-red-400',
-        warning: 'bg-yellow-500/10 border-yellow-500/20 text-yellow-400',
-        info: 'bg-blue-500/10 border-blue-500/20 text-blue-400'
+    const getToastStyles = () => {
+        switch (toast.type) {
+            case 'success':
+                return 'bg-green-500/10 border-green-500/20 text-green-400';
+            case 'error':
+                return 'bg-red-500/10 border-red-500/20 text-red-400';
+            case 'info':
+                return 'bg-blue-500/10 border-blue-500/20 text-blue-400';
+            default:
+                return 'bg-zinc-500/10 border-zinc-500/20 text-zinc-400';
+        }
     };
 
-    const icons = {
-        success: '✓',
-        error: '✕',
-        warning: '⚠',
-        info: 'ℹ'
+    const getIcon = () => {
+        switch (toast.type) {
+            case 'success':
+                return '✅';
+            case 'error':
+                return '❌';
+            case 'info':
+                return 'ℹ️';
+            default:
+                return '';
+        }
     };
 
     return (
         <div className={`
-            fixed top-4 right-4 z-50 max-w-sm p-4 rounded-lg border backdrop-blur-sm
-            transition-all duration-300 transform
-            ${isVisible ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0'}
-            ${typeStyles[type]}
+            ${getToastStyles()}
+            border rounded-lg px-4 py-3 text-sm
+            animate-in slide-in-from-right-full duration-300
+            flex items-center gap-3
+            shadow-lg backdrop-blur-sm
         `}>
-            <div className="flex items-start gap-3">
-                <span className="flex-shrink-0 text-lg">{icons[type]}</span>
-                <div className="flex-1">
-                    <p className="text-sm font-medium">{message}</p>
-                </div>
-                <button
-                    onClick={() => {
-                        setIsVisible(false);
-                        setTimeout(onClose, 300);
-                    }}
-                    className="flex-shrink-0 text-current opacity-70 hover:opacity-100 transition-opacity"
-                >
-                    ✕
-                </button>
-            </div>
+            <span>{getIcon()}</span>
+            <span className="flex-1">{toast.message}</span>
+            <button
+                onClick={() => onRemove(toast.id)}
+                className="text-current opacity-70 hover:opacity-100 transition-opacity"
+            >
+                ✕
+            </button>
         </div>
     );
 }
 
-// Toast container component
 interface ToastContainerProps {
-    toasts: Array<{
-        id: string;
-        message: string;
-        type: 'success' | 'error' | 'warning' | 'info';
-        duration?: number;
-    }>;
+    toasts: Toast[];
     removeToast: (id: string) => void;
 }
 
 export function ToastContainer({ toasts, removeToast }: ToastContainerProps) {
     return (
-        <div className="fixed top-4 right-4 z-50 space-y-2">
-            {toasts.map((toast, index) => (
-                <div
+        <div className="fixed top-4 right-4 z-50 space-y-2 max-w-sm">
+            {toasts.map((toast) => (
+                <ToastItem
                     key={toast.id}
-                    style={{ transform: `translateY(${index * 4}px)` }}
-                >
-                    <Toast
-                        message={toast.message}
-                        type={toast.type}
-                        duration={toast.duration}
-                        onClose={() => removeToast(toast.id)}
-                    />
-                </div>
+                    toast={toast}
+                    onRemove={removeToast}
+                />
             ))}
         </div>
     );

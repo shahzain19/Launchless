@@ -1,11 +1,5 @@
 import { useState, useCallback } from 'react';
-
-interface Toast {
-    id: string;
-    message: string;
-    type: 'success' | 'error' | 'warning' | 'info';
-    duration?: number;
-}
+import { Toast } from '../components/Toast';
 
 export function useToast() {
     const [toasts, setToasts] = useState<Toast[]>([]);
@@ -20,28 +14,22 @@ export function useToast() {
     }, []);
 
     const success = useCallback((message: string, duration?: number) => {
-        addToast({ message, type: 'success', duration });
+        addToast({ type: 'success', message, duration });
     }, [addToast]);
 
     const error = useCallback((message: string, duration?: number) => {
-        addToast({ message, type: 'error', duration });
-    }, [addToast]);
-
-    const warning = useCallback((message: string, duration?: number) => {
-        addToast({ message, type: 'warning', duration });
+        addToast({ type: 'error', message, duration });
     }, [addToast]);
 
     const info = useCallback((message: string, duration?: number) => {
-        addToast({ message, type: 'info', duration });
+        addToast({ type: 'info', message, duration });
     }, [addToast]);
 
     return {
         toasts,
-        addToast,
         removeToast,
         success,
         error,
-        warning,
         info
     };
 }

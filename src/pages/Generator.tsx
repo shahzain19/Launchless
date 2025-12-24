@@ -62,7 +62,7 @@ export default function Generator() {
     const [loadingRepos, setLoadingRepos] = useState(false);
     const [mode, setMode] = useState<'text' | 'video'>('text');
 
-    const { toasts, removeToast, success, error } = useToast();
+    const { toasts, removeToast, success: showSuccess, error: showError } = useToast();
     const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001";
 
     useEffect(() => {
@@ -124,7 +124,7 @@ export default function Generator() {
 
     async function handleGenerate() {
         if (!github && !website && !description) {
-            error("Please provide at least one input: GitHub URL, website, or description.");
+            showError("Please provide at least one input: GitHub URL, website, or description.");
             return;
         }
 
@@ -152,17 +152,20 @@ export default function Generator() {
             const data = await res.json();
 
             if (!res.ok) {
-                throw new Error(data.message || `Server error: ${res.status}`);
+                throw new Error(data.error || `Server error: ${res.status}`);
             }
 
-            setResult(data.success ? data.data : data);
-            success("Content generated successfully!");
+            setResult(data);
+            showSuccess("Content generated successfully!");
+            setSuccess(true);
             
             // Auto-hide success message after 3 seconds
             setTimeout(() => setSuccess(false), 3000);
         } catch (err) {
             console.error("Generation failed:", err);
-            error(err instanceof Error ? err.message : "Failed to generate launch content. Please try again.");
+            const errorMessage = err instanceof Error ? err.message : "Failed to generate launch content. Please try again.";
+            showError(errorMessage);
+            setError(errorMessage);
         } finally {
             setLoading(false);
         }
@@ -204,7 +207,9 @@ export default function Generator() {
             }
         } catch (err) {
             console.error("Regeneration failed", err);
-            setError(err instanceof Error ? err.message : "Failed to regenerate content. Please try again.");
+            const errorMessage = err instanceof Error ? err.message : "Failed to regenerate content. Please try again.";
+            showError(errorMessage);
+            setError(errorMessage);
         }
     }
 

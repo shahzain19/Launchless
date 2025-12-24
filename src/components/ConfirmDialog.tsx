@@ -1,57 +1,85 @@
+import LoadingSpinner from "./LoadingSpinner";
+
 interface ConfirmDialogProps {
     isOpen: boolean;
     title: string;
     message: string;
     confirmText?: string;
     cancelText?: string;
-    onConfirm: () => void;
+    onConfirm: () => void | Promise<void>;
     onCancel: () => void;
-    type?: 'danger' | 'warning' | 'info';
+    loading?: boolean;
+    variant?: 'danger' | 'warning' | 'info';
 }
 
 export default function ConfirmDialog({
     isOpen,
     title,
     message,
-    confirmText = 'Confirm',
-    cancelText = 'Cancel',
+    confirmText = "Confirm",
+    cancelText = "Cancel",
     onConfirm,
     onCancel,
-    type = 'info'
+    loading = false,
+    variant = 'info'
 }: ConfirmDialogProps) {
     if (!isOpen) return null;
 
-    const typeStyles = {
-        danger: 'bg-red-500 hover:bg-red-600',
-        warning: 'bg-yellow-500 hover:bg-yellow-600',
-        info: 'bg-blue-500 hover:bg-blue-600'
+    const getVariantStyles = () => {
+        switch (variant) {
+            case 'danger':
+                return {
+                    button: 'bg-red-600 hover:bg-red-700 text-white',
+                    icon: '⚠️'
+                };
+            case 'warning':
+                return {
+                    button: 'bg-yellow-600 hover:bg-yellow-700 text-white',
+                    icon: '⚠️'
+                };
+            default:
+                return {
+                    button: 'bg-blue-600 hover:bg-blue-700 text-white',
+                    icon: 'ℹ️'
+                };
+        }
     };
 
+    const styles = getVariantStyles();
+
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center">
-            {/* Backdrop */}
-            <div 
-                className="absolute inset-0 bg-black/50 backdrop-blur-sm"
-                onClick={onCancel}
-            />
-            
-            {/* Dialog */}
-            <div className="relative bg-zinc-900 border border-zinc-800 rounded-xl p-6 max-w-md w-full mx-4 shadow-2xl">
-                <h3 className="text-lg font-semibold text-white mb-2">{title}</h3>
-                <p className="text-zinc-300 text-sm mb-6">{message}</p>
-                
-                <div className="flex gap-3 justify-end">
-                    <button
-                        onClick={onCancel}
-                        className="px-4 py-2 text-zinc-400 hover:text-zinc-200 transition-colors"
-                    >
-                        {cancelText}
-                    </button>
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+            <div className="bg-zinc-900 rounded-xl p-6 w-full max-w-md">
+                <div className="flex items-center gap-3 mb-4">
+                    <span className="text-2xl">{styles.icon}</span>
+                    <h2 className="text-lg font-bold text-white">{title}</h2>
+                </div>
+
+                <p className="text-zinc-300 text-sm mb-6 leading-relaxed">
+                    {message}
+                </p>
+
+                <div className="flex gap-3">
                     <button
                         onClick={onConfirm}
-                        className={`px-4 py-2 text-white rounded-lg font-medium transition-colors ${typeStyles[type]}`}
+                        disabled={loading}
+                        className={`flex-1 py-2 px-4 rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 ${styles.button}`}
                     >
-                        {confirmText}
+                        {loading ? (
+                            <>
+                                <LoadingSpinner size="sm" />
+                                Processing...
+                            </>
+                        ) : (
+                            confirmText
+                        )}
+                    </button>
+                    <button
+                        onClick={onCancel}
+                        disabled={loading}
+                        className="px-4 py-2 text-zinc-400 hover:text-zinc-200 disabled:opacity-50 transition-colors"
+                    >
+                        {cancelText}
                     </button>
                 </div>
             </div>

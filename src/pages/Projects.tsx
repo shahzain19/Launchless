@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import LoadingSpinner from "../components/LoadingSpinner";
+import EditProject from "../components/EditProject";
 import ConfirmDialog from "../components/ConfirmDialog";
-import { ToastContainer } from "../components/Toast";
+import LoadingSpinner from "../components/LoadingSpinner";
 import { useToast } from "../hooks/useToast";
+import { ToastContainer } from "../components/Toast";
 
 interface Project {
     id: number;
