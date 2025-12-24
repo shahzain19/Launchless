@@ -48,7 +48,7 @@ export default function SignalFinder({ projectId }: SignalFinderProps) {
         productDescription: '',
         targetAudience: '',
         painPoints: [''],
-        platforms: ['github', 'twitter']
+        platforms: ['github', 'reddit']
     });
 
     const { error, success } = useToast();
@@ -151,8 +151,13 @@ export default function SignalFinder({ projectId }: SignalFinderProps) {
             if (!res.ok) throw new Error('Failed to scan for signals');
 
             const data = await res.json();
-            setLeads(prev => [...data.data.leads, ...prev]);
-            success(`Found ${data.data.total} new signals`);
+            
+            if (data.data.total === 0) {
+                error('No new signals found. Try again later or adjust your platform selection.');
+            } else {
+                setLeads(prev => [...data.data.leads, ...prev]);
+                success(`Found ${data.data.total} new real signals from live APIs`);
+            }
         } catch (err) {
             error('Failed to scan for signals');
         } finally {
@@ -211,7 +216,7 @@ export default function SignalFinder({ projectId }: SignalFinderProps) {
                 <div>
                     <h2 className="text-xl font-bold text-white mb-2">Signal Finder</h2>
                     <p className="text-zinc-400 text-sm">
-                        AI finds people who already need your product. You stay in control.
+                        AI finds real people who already need your product using live APIs. No mock data.
                     </p>
                 </div>
                 
@@ -222,7 +227,7 @@ export default function SignalFinder({ projectId }: SignalFinderProps) {
                             disabled={scanning}
                             className="bg-white text-black px-4 py-2 rounded-lg font-medium hover:bg-zinc-200 transition-colors disabled:opacity-50"
                         >
-                            {scanning ? 'Scanning...' : 'Scan for Signals'}
+                            {scanning ? 'Scanning Live APIs...' : 'Scan Real APIs'}
                         </button>
                     </div>
                 )}
@@ -364,7 +369,7 @@ function SetupTab({
                             Platforms to monitor
                         </label>
                         <div className="flex gap-3">
-                            {['github', 'twitter', 'reddit', 'indie_hackers'].map(platform => (
+                            {['github', 'reddit'].map(platform => (
                                 <label key={platform} className="flex items-center gap-2">
                                     <input
                                         type="checkbox"
@@ -379,13 +384,13 @@ function SetupTab({
                                         className="rounded border-zinc-700 bg-zinc-800 text-blue-500 focus:ring-blue-500"
                                     />
                                     <span className="text-sm text-zinc-300 capitalize">
-                                        {platform.replace('_', ' ')}
+                                        {platform === 'github' ? '🐙 GitHub' : '🤖 Reddit'}
                                     </span>
                                 </label>
                             ))}
                         </div>
                         <p className="text-xs text-zinc-500 mt-1">
-                            Start with GitHub + Twitter for best results
+                            Both platforms use real APIs with live data
                         </p>
                     </div>
                 </div>
@@ -458,11 +463,18 @@ function LeadsTab({
             {filteredLeads.length === 0 ? (
                 <div className="text-center py-12">
                     <div className="text-zinc-400 mb-4">
-                        {filter === 'all' ? 'No signals found yet' : `No ${filter} leads`}
+                        {filter === 'all' ? 'No real signals found yet' : `No ${filter} leads`}
                     </div>
                     {filter === 'all' && (
-                        <div className="text-sm text-zinc-500">
-                            Click "Scan for Signals" to find potential customers
+                        <div className="text-sm text-zinc-500 space-y-2">
+                            <div>Click "Scan Real APIs" to find real potential customers from:</div>
+                            <div className="flex justify-center gap-4 mt-2">
+                                <span className="bg-zinc-800 px-2 py-1 rounded text-xs">🐙 GitHub API</span>
+                                <span className="bg-zinc-800 px-2 py-1 rounded text-xs">🤖 Reddit API</span>
+                            </div>
+                            <div className="text-xs text-zinc-600 mt-2">
+                                Both platforms provide real-time data
+                            </div>
                         </div>
                     )}
                 </div>
