@@ -188,7 +188,7 @@ export default function LaunchlessInsights({ data }: LaunchlessInsightsProps) {
 
                         <div className="space-y-2">
                             <div className="text-sm font-medium text-zinc-300">Signals Detected:</div>
-                            {data.traffic_light.signals.map((signal, idx) => (
+                            {data.traffic_light.signals.map((signal: string, idx: number) => (
                                 <div key={idx} className="text-sm text-zinc-400 bg-zinc-950/50 p-2 rounded border border-zinc-800/50">
                                     {signal}
                                 </div>
@@ -211,7 +211,7 @@ export default function LaunchlessInsights({ data }: LaunchlessInsightsProps) {
 
                 {activeTab === "first-reply" && data.first_reply && (
                     <div className="space-y-3">
-                        {data.first_reply.replies.map((reply, idx) => (
+                        {data.first_reply.replies.map((reply: FirstReply, idx: number) => (
                             <div key={idx} className="bg-zinc-950/50 border border-zinc-800/50 rounded-lg p-4 hover:border-zinc-700/50 transition-all">
                                 <div className="flex items-center gap-2 mb-2">
                                     <span className="px-2 py-1 text-xs font-medium bg-purple-500/20 text-purple-300 rounded">
@@ -279,7 +279,7 @@ export default function LaunchlessInsights({ data }: LaunchlessInsightsProps) {
                             <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-4">
                                 <div className="text-sm font-medium text-red-400 mb-2">🚩 Red Flags</div>
                                 <ul className="space-y-1">
-                                    {data.demand_check.red_flags.map((flag, idx) => (
+                                    {data.demand_check.red_flags.map((flag: string, idx: number) => (
                                         <li key={idx} className="text-sm text-red-300">• {flag}</li>
                                     ))}
                                 </ul>
@@ -324,7 +324,7 @@ export default function LaunchlessInsights({ data }: LaunchlessInsightsProps) {
 
                 {activeTab === "soft-ctas" && (
                     <div className="space-y-3">
-                        {data.soft_ctas.ctas.map((cta, idx) => (
+                        {data.soft_ctas.ctas.map((cta: SoftCTA, idx: number) => (
                             <div key={idx} className="bg-zinc-950/50 border border-zinc-800/50 rounded-lg p-4 hover:border-zinc-700/50 transition-all">
                                 <div className="flex items-center gap-2 mb-2">
                                     <span className="px-2 py-1 text-xs font-medium bg-blue-500/20 text-blue-300 rounded">
@@ -347,7 +347,7 @@ export default function LaunchlessInsights({ data }: LaunchlessInsightsProps) {
                 {activeTab === "objections" && (
                     <div className="space-y-4">
                         <div className="space-y-3">
-                            {data.objections.objections.map((obj, idx) => (
+                            {data.objections.objections.map((obj: Objection, idx: number) => (
                                 <div key={idx} className="bg-zinc-950/50 border border-zinc-800/50 rounded-lg p-4">
                                     <div className="text-sm font-medium text-red-400 mb-2">
                                         🤔 "{obj.objection}"
@@ -377,7 +377,7 @@ export default function LaunchlessInsights({ data }: LaunchlessInsightsProps) {
                         </div>
                         
                         <div className="space-y-3">
-                            {data.credibility.credibility_lines.map((line, idx) => (
+                            {data.credibility.credibility_lines.map((line: CredibilityLine, idx: number) => (
                                 <div key={idx} className="bg-zinc-950/50 border border-zinc-800/50 rounded-lg p-4">
                                     <div className="flex items-center gap-2 mb-2">
                                         <span className="px-2 py-1 text-xs font-medium bg-green-500/20 text-green-300 rounded">

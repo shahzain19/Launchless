@@ -126,21 +126,16 @@ export default function LaunchlessDemo() {
 
     if (!showDemo) {
         return (
-            <div className="bg-gradient-to-br from-purple-500/10 to-pink-500/10 border border-purple-500/20 rounded-xl p-6 mb-8">
-                <div className="flex items-center gap-3 mb-4">
-                    <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
-                        <span className="text-white font-bold">L</span>
-                    </div>
-                    <div>
-                        <h3 className="text-lg font-bold text-white">Launchless Features Demo</h3>
-                        <p className="text-sm text-purple-300">See the 6 founder-grade features in action</p>
-                    </div>
+            <div className="bg-zinc-900/30 border border-zinc-800/50 rounded-lg p-4 mb-6 text-center">
+                <div className="mb-3">
+                    <h3 className="text-sm font-medium text-white mb-1">✨ Powered by Launchless Features</h3>
+                    <p className="text-xs text-zinc-400">6 founder-grade features that enhance your launch content</p>
                 </div>
                 <button
                     onClick={() => setShowDemo(true)}
-                    className="bg-white text-black px-4 py-2 rounded-lg font-medium hover:bg-zinc-200 transition-colors"
+                    className="text-xs text-blue-400 hover:text-blue-300 transition-colors"
                 >
-                    🚀 Try Demo Features
+                    See what makes it special →
                 </button>
             </div>
         );
