@@ -305,13 +305,13 @@ export default function Projects() {
 
     if (!user) {
         return (
-            <div className="min-h-screen bg-black text-white flex items-center justify-center">
+            <div className="min-h-screen bg-white text-black flex items-center justify-center">
                 <div className="text-center">
                     <h1 className="text-2xl font-bold mb-4">Welcome to Launchless</h1>
-                    <p className="text-zinc-400 mb-6">Sign in to manage your launch projects</p>
+                    <p className="text-gray-600 mb-6">Sign in to manage your launch projects</p>
                     <a
                         href={`${API_URL}/auth/github`}
-                        className="bg-white text-black px-6 py-3 rounded-lg font-medium hover:bg-zinc-200 transition-colors"
+                        className="bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors"
                     >
                         Sign in with GitHub
                     </a>
@@ -321,16 +321,16 @@ export default function Projects() {
     }
 
    return (
-  <div className="min-h-screen bg-black text-white">
+  <div className="min-h-screen bg-white text-black">
     <div className="max-w-6xl mx-auto px-6 py-14">
 
       {/* Header */}
       <div className="flex items-center justify-between mb-14">
         <div>
-          <h1 className="text-3xl font-semibold tracking-tight">
+          <h1 className="text-3xl font-semibold tracking-tight text-black">
             Projects
           </h1>
-          <p className="text-zinc-500 mt-1">
+          <p className="text-gray-600 mt-1">
             Everything you’re building, in one place
           </p>
         </div>
@@ -338,13 +338,13 @@ export default function Projects() {
         <div className="flex items-center gap-4">
           <button
             onClick={() => setShowCreateForm(true)}
-            className="bg-white text-black px-5 py-2.5 text-sm font-medium rounded-lg hover:bg-zinc-200 transition"
+            className="bg-blue-600 text-white px-5 py-2.5 text-sm font-medium rounded-lg hover:bg-blue-700 transition"
           >
             New project
           </button>
 
           {user && (
-            <div className="flex items-center gap-3 text-sm text-zinc-400">
+            <div className="flex items-center gap-3 text-sm text-gray-600">
               {user.avatarUrl && (
                 <img
                   src={user.avatarUrl}
@@ -354,7 +354,7 @@ export default function Projects() {
               )}
               <a
                 href={`${API_URL}/auth/logout`}
-                className="hover:text-white transition"
+                className="hover:text-black transition"
               >
                 Sign out
               </a>
