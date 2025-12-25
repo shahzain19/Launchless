@@ -24,13 +24,13 @@ function ToastItem({ toast, onRemove }: ToastProps) {
     const getToastStyles = () => {
         switch (toast.type) {
             case 'success':
-                return 'bg-green-500/10 border-green-500/20 text-green-400';
+                return 'bg-green-50 border-green-200 text-green-700';
             case 'error':
-                return 'bg-red-500/10 border-red-500/20 text-red-400';
+                return 'bg-red-50 border-red-200 text-red-700';
             case 'info':
-                return 'bg-blue-500/10 border-blue-500/20 text-blue-400';
+                return 'bg-blue-50 border-blue-200 text-blue-700';
             default:
-                return 'bg-zinc-500/10 border-zinc-500/20 text-zinc-400';
+                return 'bg-gray-50 border-gray-200 text-gray-700';
         }
     };
 

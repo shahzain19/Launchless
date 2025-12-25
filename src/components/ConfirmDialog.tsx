@@ -49,13 +49,13 @@ export default function ConfirmDialog({
 
     return (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-            <div className="bg-zinc-900 rounded-xl p-6 w-full max-w-md">
+            <div className="bg-white rounded-xl p-6 w-full max-w-md border border-gray-200">
                 <div className="flex items-center gap-3 mb-4">
                     <span className="text-2xl">{styles.icon}</span>
-                    <h2 className="text-lg font-bold text-white">{title}</h2>
+                    <h2 className="text-lg font-bold text-black">{title}</h2>
                 </div>
 
-                <p className="text-zinc-300 text-sm mb-6 leading-relaxed">
+                <p className="text-gray-700 text-sm mb-6 leading-relaxed">
                     {message}
                 </p>
 
@@ -77,7 +77,7 @@ export default function ConfirmDialog({
                     <button
                         onClick={onCancel}
                         disabled={loading}
-                        className="px-4 py-2 text-zinc-400 hover:text-zinc-200 disabled:opacity-50 transition-colors"
+                        className="px-4 py-2 text-gray-600 hover:text-black disabled:opacity-50 transition-colors"
                     >
                         {cancelText}
                     </button>
