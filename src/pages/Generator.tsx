@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 import LaunchlessInsights from "../components/LaunchlessInsights";
 import LaunchlessDemo from "../components/LaunchlessDemo";
 import LoadingSpinner from "../components/LoadingSpinner";
@@ -40,11 +41,6 @@ interface LaunchResult {
     launchless_insights?: any;
 }
 
-interface User {
-    username: string;
-    avatarUrl?: string;
-}
-
 interface Repo {
     full_name: string;
     html_url: string;
@@ -55,7 +51,6 @@ export default function Generator() {
     const navigate = useNavigate();
     const projectId = searchParams.get('projectId');
     
-    const [user, setUser] = useState<User | null>(null);
     const [project, setProject] = useState<any>(null);
     const [github, setGithub] = useState("");
     const [website, setWebsite] = useState("");
@@ -69,6 +64,7 @@ export default function Generator() {
     const [loadingRepos, setLoadingRepos] = useState(false);
     const [mode, setMode] = useState<'text' | 'video'>('text');
 
+    const { user } = useAuth();
     const { toasts, removeToast, success: showSuccess, error: showError, handleError: showErrorWithContext } = useToast();
     const networkStatus = useNetworkStatus();
 
@@ -99,13 +95,7 @@ export default function Generator() {
                 
                 // Parallel loading for better performance
                 const promises = [
-                    apiClient.get('/auth/current-user')
-                        .then(data => {
-                            if (data.authenticated) {
-                                setUser(data.user);
-                            }
-                        })
-                        .catch(err => console.warn("Auth check failed:", err))
+                 
                 ];
 
                 if (projectId) {

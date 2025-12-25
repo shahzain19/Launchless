@@ -416,7 +416,55 @@ export default function ProjectDetail() {
                         className={`flex-1 py-2 px-4 text-sm rounded-lg transition-all ${
                             activeTab === 'generations'
                                 ? "bg-blue-600 text-white font-medium"
-                                : "text-gray-600 hover:text-black"
+                                a.href = url;
+                                a.download = `${project.name}-video-plan.json`;
+                                a.click();
+                                URL.revokeObjectURL(url);
+                            }}
+                            className="text-xs text-purple-600 hover:text-purple-700 px-2 py-1 rounded-md hover:bg-purple-50 transition-colors"
+                        >
+                            📤 Export
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div className="p-6 space-y-6">
+                {/* Production Overview */}
+                <div className="bg-white rounded-lg p-4 border border-gray-200">
+                    <h4 className="font-medium text-black mb-3 flex items-center gap-2">
+                        📊 Production Overview
+                    </h4>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <div className="text-center">
+                            <div className="text-lg font-bold text-purple-600">
+                                {script.shot_list?.length || 0}
+                            </div>
+                            <div className="text-xs text-gray-600">Shots</div>
+                        </div>
+                        <div className="text-center">
+                            <div className="text-lg font-bold text-blue-600">
+                                {script.shot_list?.reduce((acc: number, shot: any) => {
+                                    const seconds = parseInt(shot.duration?.replace(/[^0-9]/g, '') || '0');
+                                    return acc + seconds;
+                                }, 0) || 0}s
+                            </div>
+                            <div className="text-xs text-gray-600">Duration</div>
+                        </div>
+                        <div className="text-center">
+                            <div className="text-lg font-bold text-green-600">
+                                {script.shot_list?.filter((s: any) => s.type === 'Talking Head').length || 0}
+                            </div>
+                            <div className="text-xs text-gray-600">Face Cam</div>
+                        </div>
+                        <div className="text-center">
+                            <div className="text-lg font-bold text-orange-600">
+                                {script.shot_list?.filter((s: any) => s.type === 'Screen Record').length || 0}
+                            </div>
+                            <div className="text-xs text-gray-600">Screen</div>
+                        </div>
+                    </div>
+                </div>         : "text-gray-600 hover:text-black"
                         }`}
                     >
                         Generations ({generations.length})

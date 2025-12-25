@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { AuthProvider } from "./contexts/AuthContext";
 import Landing from "./pages/Landing";
 import Generator from "./pages/Generator";
 import Projects from "./pages/Projects";
@@ -7,15 +8,17 @@ import Debug from "./pages/Debug";
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Landing />} />
-        <Route path="/app" element={<Generator />} />
-        <Route path="/generate" element={<Generator />} />
-        <Route path="/projects" element={<Projects />} />
-        <Route path="/projects/:id" element={<ProjectDetail />} />
-        <Route path="/debug" element={<Debug />} />
-      </Routes>
-    </BrowserRouter>
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Landing />} />
+          <Route path="/app" element={<Generator />} />
+          <Route path="/generate" element={<Generator />} />
+          <Route path="/projects" element={<Projects />} />
+          <Route path="/projects/:id" element={<ProjectDetail />} />
+          <Route path="/debug" element={<Debug />} />
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
   );
 }

@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
+import { useApi } from "../hooks/useApi";
 import ConfirmDialog from "../components/ConfirmDialog";
 import LoadingSpinner from "../components/LoadingSpinner";
 import { useToast } from "../hooks/useToast";
@@ -16,14 +18,8 @@ interface Project {
   updatedAt: string;
 }
 
-interface User {
-  username: string;
-  avatarUrl?: string;
-}
-
 export default function Projects() {
   const [projects, setProjects] = useState<Project[]>([]);
-  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [creating, setCreating] = useState(false);
   const [showCreateForm, setShowCreateForm] = useState(false);
@@ -50,13 +46,17 @@ export default function Projects() {
     Record<number, { generations: number; posts: number; lastActivity: string }>
   >({});
 
+  const { user, isAuthenticated, logout } = useAuth();
+  const { apiCall, API_URL } = useApi();
   const { toasts, removeToast, success, error } = useToast();
-  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001";
 
   useEffect(() => {
-    fetchUser();
-    fetchProjects();
-  }, []);
+    if (isAuthenticated) {
+      fetchProjects();
+    } else {
+      setLoading(false);
+    }
+  }, [isAuthenticated]);
 
   useEffect(() => {
     if (projects.length > 0) {
@@ -64,33 +64,10 @@ export default function Projects() {
     }
   }, [projects]);
 
-  async function fetchUser() {
-    try {
-      const res = await fetch(`${API_URL}/auth/current-user`, {
-        credentials: "include",
-      });
-      const data = await res.json();
-      if (data.authenticated) {
-        setUser(data.user);
-      }
-    } catch (err) {
-      console.error("Failed to fetch user", err);
-      error("Failed to load user information");
-    }
-  }
-
   async function fetchProjects() {
     try {
-      const res = await fetch(`${API_URL}/api/projects`, {
-        credentials: "include",
-      });
-
-      if (!res.ok) {
-        throw new Error(`HTTP ${res.status}: ${res.statusText}`);
-      }
-
-      const data = await res.json();
-      setProjects(data.success ? data.data : data); // Handle both old and new response formats
+      const data = await apiCall('/api/projects');
+      setProjects(data.success ? data.data : data);
     } catch (err) {
       console.error("Failed to fetch projects", err);
       error("Failed to load projects. Please try again.");
@@ -102,35 +79,29 @@ export default function Projects() {
   async function fetchProjectStats() {
     try {
       const statsPromises = projects.map(async (project) => {
-        const [generationsRes, postsRes] = await Promise.all([
-          fetch(`${API_URL}/api/projects/${project.id}/generations`, {
-            credentials: "include",
-          }),
-          fetch(`${API_URL}/api/projects/${project.id}/posts`, {
-            credentials: "include",
-          }),
-        ]);
+        try {
+          const [generationsData, postsData] = await Promise.all([
+            apiCall(`/api/projects/${project.id}/generations`),
+            apiCall(`/api/projects/${project.id}/posts`),
+          ]);
 
-        let generations = 0;
-        let posts = 0;
-        let lastActivity = project.updatedAt;
+          const genArray = generationsData.success ? generationsData.data : generationsData;
+          const postArray = postsData.success ? postsData.data : postsData;
+          
+          const generations = Array.isArray(genArray) ? genArray.length : 0;
+          const posts = Array.isArray(postArray) ? postArray.length : 0;
+          const lastActivity = genArray.length > 0 ? genArray[0].createdAt : project.updatedAt;
 
-        if (generationsRes.ok) {
-          const genData = await generationsRes.json();
-          const genArray = genData.success ? genData.data : genData;
-          generations = Array.isArray(genArray) ? genArray.length : 0;
-          if (genArray.length > 0) {
-            lastActivity = genArray[0].createdAt;
-          }
+          return { projectId: project.id, generations, posts, lastActivity };
+        } catch (err) {
+          console.error(`Failed to fetch stats for project ${project.id}:`, err);
+          return { 
+            projectId: project.id, 
+            generations: 0, 
+            posts: 0, 
+            lastActivity: project.updatedAt 
+          };
         }
-
-        if (postsRes.ok) {
-          const postData = await postsRes.json();
-          const postArray = postData.success ? postData.data : postData;
-          posts = Array.isArray(postArray) ? postArray.length : 0;
-        }
-
-        return { projectId: project.id, generations, posts, lastActivity };
       });
 
       const stats = await Promise.all(statsPromises);
@@ -190,32 +161,10 @@ export default function Projects() {
     setErrors({});
 
     try {
-      const res = await fetch(`${API_URL}/api/projects`, {
+      const data = await apiCall('/api/projects', {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
         body: JSON.stringify(newProject),
       });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        if (data.details && Array.isArray(data.details)) {
-          // Handle validation errors
-          const fieldErrors: Record<string, string> = {};
-          data.details.forEach((detail: string) => {
-            if (detail.includes("name")) fieldErrors.name = detail;
-            else if (detail.includes("description"))
-              fieldErrors.description = detail;
-            else if (detail.includes("GitHub")) fieldErrors.github = detail;
-            else if (detail.includes("Website")) fieldErrors.website = detail;
-          });
-          setErrors(fieldErrors);
-        } else {
-          error(data.message || "Failed to create project");
-        }
-        return;
-      }
 
       const project = data.success ? data.data : data;
       setProjects([project, ...projects]);
@@ -224,9 +173,7 @@ export default function Projects() {
       success("Project created successfully!");
     } catch (err) {
       console.error("Failed to create project", err);
-      error(
-        "Failed to create project. Please check your connection and try again."
-      );
+      error("Failed to create project. Please try again.");
     } finally {
       setCreating(false);
     }
@@ -234,15 +181,9 @@ export default function Projects() {
 
   async function deleteProject(project: Project) {
     try {
-      const res = await fetch(`${API_URL}/api/projects/${project.id}`, {
+      await apiCall(`/api/projects/${project.id}`, {
         method: "DELETE",
-        credentials: "include",
       });
-
-      if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.message || "Failed to delete project");
-      }
 
       setProjects(projects.filter((p) => p.id !== project.id));
       success("Project deleted successfully");
@@ -263,18 +204,10 @@ export default function Projects() {
         website: project.website,
       };
 
-      const res = await fetch(`${API_URL}/api/projects`, {
+      const data = await apiCall('/api/projects', {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
         body: JSON.stringify(duplicatedProject),
       });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.message || "Failed to duplicate project");
-      }
 
       const newProject = data.success ? data.data : data;
       setProjects([newProject, ...projects]);
@@ -289,21 +222,12 @@ export default function Projects() {
 
   async function updateProjectStatus(project: Project, newStatus: string) {
     try {
-      const res = await fetch(`${API_URL}/api/projects/${project.id}`, {
+      const data = await apiCall(`/api/projects/${project.id}`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
         body: JSON.stringify({ ...project, status: newStatus }),
       });
 
-      if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.message || "Failed to update project status");
-      }
-
-      const data = await res.json();
       const updatedProject = data.success ? data.data : data;
-
       setProjects(
         projects.map((p) => (p.id === project.id ? updatedProject : p))
       );
@@ -381,6 +305,10 @@ export default function Projects() {
                 )}
                 <a
                   href={`${API_URL}/auth/logout`}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    logout();
+                  }}
                   className="hover:text-black transition"
                 >
                   Sign out
