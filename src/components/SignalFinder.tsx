@@ -214,8 +214,8 @@ export default function SignalFinder({ projectId }: SignalFinderProps) {
             {/* Header */}
             <div className="flex items-center justify-between">
                 <div>
-                    <h2 className="text-xl font-bold text-white mb-2">Signal Finder</h2>
-                    <p className="text-zinc-400 text-sm">
+                    <h2 className="text-xl font-bold text-black mb-2">Signal Finder</h2>
+                    <p className="text-gray-600 text-sm">
                         AI finds real people who already need your product using live APIs. No mock data.
                     </p>
                 </div>
@@ -225,7 +225,7 @@ export default function SignalFinder({ projectId }: SignalFinderProps) {
                         <button
                             onClick={scanForSignals}
                             disabled={scanning}
-                            className="bg-white text-black px-4 py-2 rounded-lg font-medium hover:bg-zinc-200 transition-colors disabled:opacity-50"
+                            className="bg-blue-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors disabled:opacity-50"
                         >
                             {scanning ? 'Scanning Live APIs...' : 'Scan Real APIs'}
                         </button>
@@ -234,13 +234,13 @@ export default function SignalFinder({ projectId }: SignalFinderProps) {
             </div>
 
             {/* Tabs */}
-            <div className="flex gap-1 bg-zinc-900 rounded-lg p-1">
+            <div className="flex gap-1 bg-gray-100 rounded-lg p-1">
                 <button
                     onClick={() => setActiveTab('setup')}
                     className={`flex-1 py-2 px-4 text-sm rounded-md transition-all ${
                         activeTab === 'setup'
-                            ? "bg-white text-black font-medium"
-                            : "text-zinc-400 hover:text-zinc-200"
+                            ? "bg-blue-600 text-white font-medium"
+                            : "text-gray-600 hover:text-black"
                     }`}
                 >
                     Setup
@@ -249,8 +249,8 @@ export default function SignalFinder({ projectId }: SignalFinderProps) {
                     onClick={() => setActiveTab('leads')}
                     className={`flex-1 py-2 px-4 text-sm rounded-md transition-all ${
                         activeTab === 'leads'
-                            ? "bg-white text-black font-medium"
-                            : "text-zinc-400 hover:text-zinc-200"
+                            ? "bg-blue-600 text-white font-medium"
+                            : "text-gray-600 hover:text-black"
                     }`}
                 >
                     Leads ({leads.length})
@@ -301,25 +301,25 @@ function SetupTab({
 }) {
     return (
         <div className="space-y-6">
-            <div className="bg-zinc-900/30 rounded-lg p-6 border border-zinc-800/50">
-                <h3 className="font-medium text-white mb-4">Product Intent Definition</h3>
+            <div className="bg-gray-50 border border-gray-200 rounded-lg p-6">
+                <h3 className="font-medium text-black mb-4">Product Intent Definition</h3>
                 
                 <div className="space-y-4">
                     <div>
-                        <label className="block text-sm text-zinc-300 mb-2">
+                        <label className="block text-sm text-gray-700 mb-2">
                             What does your product do? *
                         </label>
                         <textarea
                             value={form.productDescription}
                             onChange={(e) => setForm((prev: SetupForm) => ({ ...prev, productDescription: e.target.value }))}
                             placeholder="A tool that turns GitHub repos into launch posts for devs who hate marketing."
-                            className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-white placeholder-zinc-500 focus:border-blue-500 focus:outline-none"
+                            className="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-black placeholder-gray-500 focus:border-blue-500 focus:outline-none"
                             rows={3}
                         />
                     </div>
 
                     <div>
-                        <label className="block text-sm text-zinc-300 mb-2">
+                        <label className="block text-sm text-gray-700 mb-2">
                             Who is it for? *
                         </label>
                         <input
@@ -327,12 +327,12 @@ function SetupTab({
                             value={form.targetAudience}
                             onChange={(e) => setForm((prev: SetupForm) => ({ ...prev, targetAudience: e.target.value }))}
                             placeholder="Solo developers, indie hackers, startup founders"
-                            className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-white placeholder-zinc-500 focus:border-blue-500 focus:outline-none"
+                            className="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-black placeholder-gray-500 focus:border-blue-500 focus:outline-none"
                         />
                     </div>
 
                     <div>
-                        <label className="block text-sm text-zinc-300 mb-2">
+                        <label className="block text-sm text-gray-700 mb-2">
                             What pain does it solve? *
                         </label>
                         <div className="space-y-2">
@@ -343,12 +343,12 @@ function SetupTab({
                                         value={point}
                                         onChange={(e) => updatePainPoint(index, e.target.value)}
                                         placeholder="Developers hate writing marketing copy"
-                                        className="flex-1 bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-white placeholder-zinc-500 focus:border-blue-500 focus:outline-none"
+                                        className="flex-1 bg-white border border-gray-300 rounded-lg px-3 py-2 text-black placeholder-gray-500 focus:border-blue-500 focus:outline-none"
                                     />
                                     {form.painPoints.length > 1 && (
                                         <button
                                             onClick={() => removePainPoint(index)}
-                                            className="text-zinc-500 hover:text-red-400 px-2"
+                                            className="text-gray-500 hover:text-red-500 px-2"
                                         >
                                             ×
                                         </button>
@@ -357,7 +357,7 @@ function SetupTab({
                             ))}
                             <button
                                 onClick={addPainPoint}
-                                className="text-blue-400 hover:text-blue-300 text-sm"
+                                className="text-blue-600 hover:text-blue-700 text-sm"
                             >
                                 + Add another pain point
                             </button>
@@ -365,7 +365,7 @@ function SetupTab({
                     </div>
 
                     <div>
-                        <label className="block text-sm text-zinc-300 mb-2">
+                        <label className="block text-sm text-gray-700 mb-2">
                             Platforms to monitor
                         </label>
                         <div className="flex gap-3 flex-wrap">
@@ -381,9 +381,9 @@ function SetupTab({
                                                 setForm((prev: SetupForm) => ({ ...prev, platforms: prev.platforms.filter((p: string) => p !== platform) }));
                                             }
                                         }}
-                                        className="rounded border-zinc-700 bg-zinc-800 text-blue-500 focus:ring-blue-500"
+                                        className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                                     />
-                                    <span className="text-sm text-zinc-300 capitalize">
+                                    <span className="text-sm text-gray-700 capitalize">
                                         {platform === 'github' ? '🐙 GitHub' : 
                                          platform === 'reddit' ? '🤖 Reddit' : 
                                          platform === 'twitter' ? '🐦 X (Twitter)' : platform}
@@ -391,7 +391,7 @@ function SetupTab({
                                 </label>
                             ))}
                         </div>
-                        <p className="text-xs text-zinc-500 mt-1">
+                        <p className="text-xs text-gray-500 mt-1">
                             GitHub & Reddit use real APIs. X (Twitter) has rate limits.
                         </p>
                     </div>
@@ -400,7 +400,7 @@ function SetupTab({
                 <button
                     onClick={onSave}
                     disabled={loading}
-                    className="mt-6 bg-white text-black px-6 py-2 rounded-lg font-medium hover:bg-zinc-200 transition-colors disabled:opacity-50"
+                    className="mt-6 bg-blue-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors disabled:opacity-50"
                 >
                     {loading ? 'Saving...' : 'Save & Generate Patterns'}
                 </button>
@@ -429,8 +429,8 @@ function LeadsTab({
     if (!hasDefinition) {
         return (
             <div className="text-center py-12">
-                <div className="text-zinc-400 mb-4">No signal definition found</div>
-                <div className="text-sm text-zinc-500">
+                <div className="text-gray-600 mb-4">No signal definition found</div>
+                <div className="text-sm text-gray-500">
                     Complete the setup first to start finding signals
                 </div>
             </div>
@@ -447,8 +447,8 @@ function LeadsTab({
                         onClick={() => setFilter(status)}
                         className={`px-3 py-1 text-sm rounded-lg transition-colors ${
                             filter === status
-                                ? 'bg-white text-black'
-                                : 'bg-zinc-800 text-zinc-400 hover:text-zinc-200'
+                                ? 'bg-blue-600 text-white'
+                                : 'bg-gray-100 text-gray-600 hover:text-black'
                         }`}
                     >
                         {status === 'all' ? 'All' : status.charAt(0).toUpperCase() + status.slice(1)}
@@ -464,18 +464,18 @@ function LeadsTab({
             {/* Leads */}
             {filteredLeads.length === 0 ? (
                 <div className="text-center py-12">
-                    <div className="text-zinc-400 mb-4">
+                    <div className="text-gray-600 mb-4">
                         {filter === 'all' ? 'No real signals found yet' : `No ${filter} leads`}
                     </div>
                     {filter === 'all' && (
-                        <div className="text-sm text-zinc-500 space-y-2">
+                        <div className="text-sm text-gray-500 space-y-2">
                             <div>Click "Scan Real APIs" to find real potential customers from:</div>
                             <div className="flex justify-center gap-4 mt-2">
-                                <span className="bg-zinc-800 px-2 py-1 rounded text-xs">🐙 GitHub API</span>
-                                <span className="bg-zinc-800 px-2 py-1 rounded text-xs">🤖 Reddit API</span>
-                                <span className="bg-zinc-800 px-2 py-1 rounded text-xs">🐦 X (Twitter) API</span>
+                                <span className="bg-gray-100 px-2 py-1 rounded text-xs">🐙 GitHub API</span>
+                                <span className="bg-gray-100 px-2 py-1 rounded text-xs">🤖 Reddit API</span>
+                                <span className="bg-gray-100 px-2 py-1 rounded text-xs">🐦 X (Twitter) API</span>
                             </div>
-                            <div className="text-xs text-zinc-600 mt-2">
+                            <div className="text-xs text-gray-400 mt-2">
                                 X API has strict rate limits (may be unavailable)
                             </div>
                         </div>
@@ -518,27 +518,27 @@ function LeadCard({
     }[lead.platform] || '📡';
 
     return (
-        <div className="bg-zinc-900/30 rounded-lg p-6 border border-zinc-800/50">
+        <div className="bg-gray-50 border border-gray-200 rounded-lg p-6">
             {/* Header */}
             <div className="flex items-start justify-between mb-4">
                 <div className="flex items-center gap-3">
                     <span className="text-2xl">{platformIcon}</span>
                     <div>
                         <div className="flex items-center gap-2">
-                            <span className="font-medium text-white">Lead #{lead.id}</span>
-                            <span className="text-xs bg-zinc-800 px-2 py-1 rounded text-zinc-400">
+                            <span className="font-medium text-black">Lead #{lead.id}</span>
+                            <span className="text-xs bg-gray-200 px-2 py-1 rounded text-gray-600">
                                 {lead.platform}
                             </span>
-                            <span className="text-xs bg-zinc-800 px-2 py-1 rounded text-zinc-400">
+                            <span className="text-xs bg-gray-200 px-2 py-1 rounded text-gray-600">
                                 {lead.signalType.replace('_', ' ')}
                             </span>
                         </div>
-                        <div className="text-sm text-zinc-400 mt-1">
+                        <div className="text-sm text-gray-600 mt-1">
                             <a 
                                 href={lead.authorProfile} 
                                 target="_blank" 
                                 rel="noopener noreferrer"
-                                className="text-blue-400 hover:text-blue-300"
+                                className="text-blue-600 hover:text-blue-700"
                             >
                                 @{lead.authorUsername}
                             </a>
@@ -550,18 +550,18 @@ function LeadCard({
                     <div className={`text-sm font-medium ${confidenceColor}`}>
                         {Math.round(lead.confidence * 100)}% confidence
                     </div>
-                    <div className="text-xs text-zinc-500">
+                    <div className="text-xs text-gray-500">
                         {new Date(lead.createdAt).toLocaleDateString()}
                     </div>
                 </div>
             </div>
 
             {/* Signal Data */}
-            <div className="bg-zinc-950/50 rounded-lg p-4 mb-4">
-                <div className="text-sm text-zinc-300 mb-2">
-                    <span className="text-zinc-500">Why flagged:</span>
+            <div className="bg-white border border-gray-200 rounded-lg p-4 mb-4">
+                <div className="text-sm text-black mb-2">
+                    <span className="text-gray-600">Why flagged:</span>
                 </div>
-                <ul className="text-sm text-zinc-400 space-y-1">
+                <ul className="text-sm text-gray-700 space-y-1">
                     {Object.entries(lead.signalData).map(([key, value]) => (
                         <li key={key}>
                             • {key.replace(/([A-Z])/g, ' $1').toLowerCase()}: {String(value)}
@@ -572,21 +572,21 @@ function LeadCard({
                     href={lead.sourceUrl} 
                     target="_blank" 
                     rel="noopener noreferrer"
-                    className="text-blue-400 hover:text-blue-300 text-sm mt-2 inline-block"
+                    className="text-blue-600 hover:text-blue-700 text-sm mt-2 inline-block"
                 >
                     View source →
                 </a>
             </div>
 
             {/* Suggested Opener */}
-            <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-4 mb-4">
-                <div className="text-sm text-blue-300 mb-2">Suggested opener:</div>
-                <div className="text-sm text-zinc-300 italic">
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+                <div className="text-sm text-blue-700 mb-2">Suggested opener:</div>
+                <div className="text-sm text-black italic">
                     "{lead.suggestedOpener}"
                 </div>
                 <button
                     onClick={() => navigator.clipboard.writeText(lead.suggestedOpener)}
-                    className="text-xs text-blue-400 hover:text-blue-300 mt-2"
+                    className="text-xs text-blue-600 hover:text-blue-700 mt-2"
                 >
                     Copy to clipboard
                 </button>
@@ -599,7 +599,7 @@ function LeadCard({
                         value={notes}
                         onChange={(e) => setNotes(e.target.value)}
                         placeholder="Add notes about this lead..."
-                        className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-white placeholder-zinc-500 focus:border-blue-500 focus:outline-none text-sm"
+                        className="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-black placeholder-gray-500 focus:border-blue-500 focus:outline-none text-sm"
                         rows={2}
                     />
                 </div>
@@ -618,7 +618,7 @@ function LeadCard({
                 <button
                     onClick={() => onUpdateStatus(lead.id, 'skipped')}
                     disabled={lead.status === 'skipped'}
-                    className="bg-zinc-600 hover:bg-zinc-700 disabled:bg-zinc-600/50 text-white px-3 py-1 rounded text-sm font-medium transition-colors"
+                    className="bg-gray-600 hover:bg-gray-700 disabled:bg-gray-600/50 text-white px-3 py-1 rounded text-sm font-medium transition-colors"
                 >
                     Skip
                 </button>
@@ -633,14 +633,14 @@ function LeadCard({
 
                 <button
                     onClick={() => setShowNotes(!showNotes)}
-                    className="text-zinc-400 hover:text-zinc-200 px-2 py-1 text-sm"
+                    className="text-gray-600 hover:text-black px-2 py-1 text-sm"
                 >
                     {showNotes ? 'Hide Notes' : 'Add Notes'}
                 </button>
             </div>
 
             {lead.contactedAt && (
-                <div className="text-xs text-zinc-500 mt-2">
+                <div className="text-xs text-gray-500 mt-2">
                     Contacted on {new Date(lead.contactedAt).toLocaleDateString()}
                 </div>
             )}

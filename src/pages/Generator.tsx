@@ -214,7 +214,7 @@ export default function Generator() {
     }
 
     return (
-        <div className="min-h-screen bg-zinc-950 text-zinc-100">
+        <div className="min-h-screen bg-white text-black">
             <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8">
 
                 {/* Simplified Header */}
@@ -224,25 +224,25 @@ export default function Generator() {
                             <>
                                 <button
                                     onClick={() => navigate('/projects')}
-                                    className="text-zinc-400 hover:text-zinc-200 text-sm"
+                                    className="text-gray-600 hover:text-black text-sm"
                                 >
                                     ← Projects
                                 </button>
-                                <span className="text-zinc-600 hidden sm:inline">/</span>
+                                <span className="text-gray-400 hidden sm:inline">/</span>
                                 <button
                                     onClick={() => navigate(`/projects/${project.id}`)}
-                                    className="text-zinc-400 hover:text-zinc-200 text-sm truncate max-w-32 sm:max-w-none"
+                                    className="text-gray-600 hover:text-black text-sm truncate max-w-32 sm:max-w-none"
                                 >
                                     {project.name}
                                 </button>
-                                <span className="text-zinc-600 hidden sm:inline">/</span>
+                                <span className="text-gray-400 hidden sm:inline">/</span>
                             </>
                         )}
-                        <h1 className="text-xl sm:text-2xl font-bold text-white">
+                        <h1 className="text-xl sm:text-2xl font-bold text-black">
                             {project ? 'Generate Content' : 'Launchless'}
                         </h1>
                     </div>
-                    <p className="text-zinc-400 text-sm sm:text-base">
+                    <p className="text-gray-600 text-sm sm:text-base">
                         {project ? `Generate launch content for ${project.name}` : 'Founder-grade launch content in seconds'}
                     </p>
                     
@@ -253,15 +253,15 @@ export default function Generator() {
                                 {user.avatarUrl && (
                                     <img src={user.avatarUrl} alt={user.username} className="w-6 h-6 rounded-full" />
                                 )}
-                                <span className="text-sm text-zinc-400 hidden sm:inline">{user.username}</span>
-                                <a href={`${API_URL}/auth/logout`} className="text-xs text-zinc-500 hover:text-white">
+                                <span className="text-sm text-gray-600 hidden sm:inline">{user.username}</span>
+                                <a href={`${API_URL}/auth/logout`} className="text-xs text-gray-500 hover:text-black">
                                     Sign out
                                 </a>
                             </div>
                         ) : (
                             <a
                                 href={`${API_URL}/auth/github`}
-                                className="text-sm text-zinc-400 hover:text-white transition-colors"
+                                className="text-sm text-gray-600 hover:text-black transition-colors"
                             >
                                 Login
                             </a>
@@ -270,12 +270,12 @@ export default function Generator() {
                 </div>
 
                 {/* Simplified Mode Toggle */}
-                <div className="flex bg-zinc-900 rounded-lg p-1 mb-6 max-w-sm mx-auto">
+                <div className="flex bg-gray-100 rounded-lg p-1 mb-6 max-w-sm mx-auto">
                     <button
                         onClick={() => setMode('text')}
                         className={`flex-1 py-2 px-3 text-sm rounded-md transition-all ${mode === 'text'
-                            ? "bg-white text-black font-medium"
-                            : "text-zinc-400 hover:text-zinc-200"
+                            ? "bg-blue-600 text-white font-medium"
+                            : "text-gray-600 hover:text-black"
                             }`}
                     >
                         Text Launch
