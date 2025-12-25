@@ -189,7 +189,7 @@ export default function ProjectDetail() {
                     <div className="flex items-center gap-3">
                         <Link
                             to={`/generate?projectId=${project.id}`}
-                            className="bg-white text-black px-4 py-2 rounded-lg font-medium hover:bg-zinc-200 transition-colors"
+                            className="bg-white text-black px-4 py-2 font-medium hover:bg-zinc-200 transition-colors"
                         >
                             Generate Content
                         </Link>
@@ -246,7 +246,7 @@ export default function ProjectDetail() {
                 </div>
 
                 {/* Tabs */}
-                <div className="flex gap-1 mb-6 bg-zinc-900 rounded-lg p-1">
+                <div className="flex gap-1 mb-6 bg-zinc-900 p-1">
                     <button
                         onClick={() => setActiveTab('overview')}
                         className={`flex-1 py-2 px-4 text-sm rounded-md transition-all ${
@@ -293,15 +293,15 @@ export default function ProjectDetail() {
                 {activeTab === 'overview' && (
                     <div className="space-y-6">
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            <div className="bg-zinc-900/30 rounded-lg p-6 border border-zinc-800/50">
+                            <div className="bg-zinc-900 p-6 border border-zinc-800">
                                 <div className="text-2xl font-bold text-white mb-1">{generations.length}</div>
                                 <div className="text-sm text-zinc-400">Content Generations</div>
                             </div>
-                            <div className="bg-zinc-900/30 rounded-lg p-6 border border-zinc-800/50">
+                            <div className="bg-zinc-900 p-6 border border-zinc-800">
                                 <div className="text-2xl font-bold text-white mb-1">{posts.length}</div>
                                 <div className="text-sm text-zinc-400">Posts Created</div>
                             </div>
-                            <div className="bg-zinc-900/30 rounded-lg p-6 border border-zinc-800/50">
+                            <div className="bg-zinc-900 p-6 border border-zinc-800">
                                 <div className="text-2xl font-bold text-white mb-1">
                                     {posts.filter(p => p.status === 'published').length}
                                 </div>
@@ -353,7 +353,7 @@ export default function ProjectDetail() {
                             </div>
                         ) : (
                             posts.map((post) => (
-                                <div key={post.id} className="bg-zinc-900/30 rounded-lg p-6 border border-zinc-800/50">
+                                <div key={post.id} className="bg-zinc-900 p-6 border border-zinc-800">
                                     <div className="flex items-center justify-between mb-3">
                                         <div className="flex items-center gap-3">
                                             <span className="px-2 py-1 text-xs bg-purple-500/20 text-purple-400 rounded">
@@ -398,7 +398,7 @@ function GenerationCard({ generation }: { generation: Generation }) {
     const [activeTab, setActiveTab] = useState<'content' | 'insights'>('content');
     
     return (
-        <div className="bg-zinc-900/30 rounded-lg border border-zinc-800/50 overflow-hidden">
+        <div className="bg-zinc-900 border border-zinc-800 overflow-hidden">
             {/* Header */}
             <div className="flex items-center justify-between p-4 border-b border-zinc-800/50">
                 <div className="flex items-center gap-3">
