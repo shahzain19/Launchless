@@ -34,7 +34,7 @@ export default function Projects() {
         github: "",
         website: ""
     });
-    const [errors, setErrors] = useState<Record<string, string>>({});
+    const [, setErrors] = useState<Record<string, string>>({});
 
     const { toasts, removeToast, success, error } = useToast();
     const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001";
