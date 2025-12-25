@@ -392,7 +392,7 @@ function SetupTab({
                             ))}
                         </div>
                         <p className="text-xs text-zinc-500 mt-1">
-                            GitHub & Reddit use real APIs. X (Twitter) is configured and ready.
+                            GitHub & Reddit use real APIs. X (Twitter) has rate limits.
                         </p>
                     </div>
                 </div>
@@ -476,7 +476,7 @@ function LeadsTab({
                                 <span className="bg-zinc-800 px-2 py-1 rounded text-xs">🐦 X (Twitter) API</span>
                             </div>
                             <div className="text-xs text-zinc-600 mt-2">
-                                All platforms configured and ready to scan
+                                X API has strict rate limits (may be unavailable)
                             </div>
                         </div>
                     )}

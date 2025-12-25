@@ -195,42 +195,58 @@ export default function Projects() {
     }
 
     return (
-        <div className="min-h-screen bg-zinc-950 text-zinc-100">
-            <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
+        <div className="min-h-screen bg-gradient-to-br from-zinc-950 via-zinc-900 to-zinc-950 text-zinc-100">
+            <div className="max-w-6xl mx-auto px-6 py-12">
                 {/* Header */}
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4">
-                    <div>
-                        <h1 className="text-2xl font-bold text-white mb-2">Your Projects</h1>
-                        <p className="text-zinc-400">Manage your launch campaigns and content</p>
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-16 gap-8">
+                    <div className="space-y-3">
+                        <h1 className="text-4xl font-bold text-white tracking-tight bg-gradient-to-r from-white to-zinc-300 bg-clip-text text-transparent">
+                            Your Projects
+                        </h1>
+                        <p className="text-zinc-400 text-xl font-light">Ship faster, launch smarter</p>
                     </div>
                     
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-6">
                         <button
                             onClick={() => setShowCreateForm(true)}
-                            className="bg-white text-black px-4 py-2 rounded-lg font-medium hover:bg-zinc-200 transition-colors"
+                            className="group bg-white text-black px-8 py-4 rounded-2xl font-semibold hover:bg-zinc-100 transition-all duration-300 flex items-center gap-3 shadow-2xl hover:shadow-white/10 hover:scale-105"
                         >
+                            <div className="w-5 h-5 rounded-full bg-black/10 flex items-center justify-center group-hover:rotate-90 transition-transform duration-300">
+                                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M12 4v16m8-8H4" />
+                                </svg>
+                            </div>
                             New Project
                         </button>
                         
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-4 bg-white/5 backdrop-blur-sm rounded-2xl px-6 py-3 border border-white/10">
                             {user.avatarUrl && (
-                                <img src={user.avatarUrl} alt={user.username} className="w-8 h-8 rounded-full" />
+                                <img src={user.avatarUrl} alt={user.username} className="w-10 h-10 rounded-full ring-2 ring-white/20" />
                             )}
-                            <span className="text-sm text-zinc-400 hidden sm:inline">{user.username}</span>
-                            <a href={`${API_URL}/auth/logout`} className="text-xs text-zinc-500 hover:text-white ml-2">
-                                Sign out
-                            </a>
+                            <div className="hidden sm:block">
+                                <div className="text-sm font-semibold text-white">{user.username}</div>
+                                <a href={`${API_URL}/auth/logout`} className="text-xs text-zinc-400 hover:text-white transition-colors font-medium">
+                                    Sign out
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 {/* Create Project Form */}
                 {showCreateForm && (
-                    <div className="bg-zinc-900/50 rounded-xl p-6 mb-8 border border-zinc-800/50">
-                        <h2 className="text-lg font-medium text-white mb-4">Create New Project</h2>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div className="bg-white/5 backdrop-blur-sm rounded-3xl p-8 mb-12 border border-white/10 shadow-2xl">
+                        <h2 className="text-2xl font-bold text-white mb-8 flex items-center gap-3">
+                            <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                                </svg>
+                            </div>
+                            Create New Project
+                        </h2>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                             <div>
-                                <label className="text-sm text-zinc-300 mb-2 block">Project Name *</label>
+                                <label className="text-sm font-semibold text-zinc-300 mb-3 block">Project Name *</label>
                                 <input
                                     value={newProject.name}
                                     onChange={(e) => {
@@ -238,14 +254,14 @@ export default function Projects() {
                                         if (errors.name) setErrors({ ...errors, name: "" });
                                     }}
                                     placeholder="My Awesome Product"
-                                    className={`w-full px-3 py-2 bg-zinc-800 border rounded-lg text-zinc-100 text-sm placeholder:text-zinc-500 focus:outline-none focus:ring-1 focus:ring-white/20 ${
-                                        errors.name ? 'border-red-500' : 'border-zinc-700'
+                                    className={`w-full px-4 py-4 bg-white/5 border rounded-2xl text-zinc-100 placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-transparent transition-all ${
+                                        errors.name ? 'border-red-500/50 bg-red-500/5' : 'border-white/10 hover:border-white/20'
                                     }`}
                                 />
-                                {errors.name && <p className="text-red-400 text-xs mt-1">{errors.name}</p>}
+                                {errors.name && <p className="text-red-400 text-sm mt-2 font-medium">{errors.name}</p>}
                             </div>
                             <div>
-                                <label className="text-sm text-zinc-300 mb-2 block">Description</label>
+                                <label className="text-sm font-semibold text-zinc-300 mb-3 block">Description</label>
                                 <input
                                     value={newProject.description}
                                     onChange={(e) => {
@@ -253,14 +269,14 @@ export default function Projects() {
                                         if (errors.description) setErrors({ ...errors, description: "" });
                                     }}
                                     placeholder="Brief description of your product"
-                                    className={`w-full px-3 py-2 bg-zinc-800 border rounded-lg text-zinc-100 text-sm placeholder:text-zinc-500 focus:outline-none focus:ring-1 focus:ring-white/20 ${
-                                        errors.description ? 'border-red-500' : 'border-zinc-700'
+                                    className={`w-full px-4 py-4 bg-white/5 border rounded-2xl text-zinc-100 placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-transparent transition-all ${
+                                        errors.description ? 'border-red-500/50 bg-red-500/5' : 'border-white/10 hover:border-white/20'
                                     }`}
                                 />
-                                {errors.description && <p className="text-red-400 text-xs mt-1">{errors.description}</p>}
+                                {errors.description && <p className="text-red-400 text-sm mt-2 font-medium">{errors.description}</p>}
                             </div>
                             <div>
-                                <label className="text-sm text-zinc-300 mb-2 block">GitHub Repository</label>
+                                <label className="text-sm font-semibold text-zinc-300 mb-3 block">GitHub Repository</label>
                                 <input
                                     value={newProject.github}
                                     onChange={(e) => {
@@ -268,14 +284,14 @@ export default function Projects() {
                                         if (errors.github) setErrors({ ...errors, github: "" });
                                     }}
                                     placeholder="https://github.com/owner/repo"
-                                    className={`w-full px-3 py-2 bg-zinc-800 border rounded-lg text-zinc-100 text-sm placeholder:text-zinc-500 focus:outline-none focus:ring-1 focus:ring-white/20 ${
-                                        errors.github ? 'border-red-500' : 'border-zinc-700'
+                                    className={`w-full px-4 py-4 bg-white/5 border rounded-2xl text-zinc-100 placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-transparent transition-all ${
+                                        errors.github ? 'border-red-500/50 bg-red-500/5' : 'border-white/10 hover:border-white/20'
                                     }`}
                                 />
-                                {errors.github && <p className="text-red-400 text-xs mt-1">{errors.github}</p>}
+                                {errors.github && <p className="text-red-400 text-sm mt-2 font-medium">{errors.github}</p>}
                             </div>
                             <div>
-                                <label className="text-sm text-zinc-300 mb-2 block">Website</label>
+                                <label className="text-sm font-semibold text-zinc-300 mb-3 block">Website</label>
                                 <input
                                     value={newProject.website}
                                     onChange={(e) => {
@@ -283,18 +299,18 @@ export default function Projects() {
                                         if (errors.website) setErrors({ ...errors, website: "" });
                                     }}
                                     placeholder="https://yourproduct.com"
-                                    className={`w-full px-3 py-2 bg-zinc-800 border rounded-lg text-zinc-100 text-sm placeholder:text-zinc-500 focus:outline-none focus:ring-1 focus:ring-white/20 ${
-                                        errors.website ? 'border-red-500' : 'border-zinc-700'
+                                    className={`w-full px-4 py-4 bg-white/5 border rounded-2xl text-zinc-100 placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-transparent transition-all ${
+                                        errors.website ? 'border-red-500/50 bg-red-500/5' : 'border-white/10 hover:border-white/20'
                                     }`}
                                 />
-                                {errors.website && <p className="text-red-400 text-xs mt-1">{errors.website}</p>}
+                                {errors.website && <p className="text-red-400 text-sm mt-2 font-medium">{errors.website}</p>}
                             </div>
                         </div>
-                        <div className="flex gap-2">
+                        <div className="flex gap-4">
                             <button
                                 onClick={createProject}
                                 disabled={creating || !newProject.name.trim()}
-                                className="bg-white text-black px-4 py-2 rounded-lg font-medium hover:bg-zinc-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
+                                className="bg-white text-black px-8 py-4 rounded-2xl font-semibold hover:bg-zinc-100 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 flex items-center gap-3 shadow-xl hover:scale-105"
                             >
                                 {creating && <LoadingSpinner size="sm" />}
                                 {creating ? 'Creating...' : 'Create Project'}
@@ -305,7 +321,7 @@ export default function Projects() {
                                     setErrors({});
                                     setNewProject({ name: "", description: "", github: "", website: "" });
                                 }}
-                                className="px-4 py-2 text-zinc-400 hover:text-zinc-200 transition-colors"
+                                className="px-8 py-4 text-zinc-400 hover:text-white transition-colors font-semibold rounded-2xl hover:bg-white/5"
                             >
                                 Cancel
                             </button>
@@ -315,51 +331,76 @@ export default function Projects() {
 
                 {/* Projects Grid */}
                 {loading ? (
-                    <div className="text-center py-12">
-                        <LoadingSpinner size="lg" className="mx-auto mb-4" />
-                        <div className="text-zinc-400">Loading projects...</div>
+                    <div className="text-center py-20">
+                        <LoadingSpinner size="lg" className="mx-auto mb-6" />
+                        <div className="text-zinc-400 text-lg font-light">Loading your projects...</div>
                     </div>
                 ) : projects.length === 0 ? (
-                    <div className="text-center py-12">
-                        <div className="text-zinc-400 mb-4">No projects yet</div>
+                    <div className="text-center py-20">
+                        <div className="w-24 h-24 mx-auto mb-8 rounded-full bg-white/5 flex items-center justify-center">
+                            <svg className="w-12 h-12 text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                            </svg>
+                        </div>
+                        <h3 className="text-2xl font-bold text-white mb-4">No projects yet</h3>
+                        <p className="text-zinc-400 mb-8 text-lg font-light">Create your first project to get started</p>
                         <button
                             onClick={() => setShowCreateForm(true)}
-                            className="text-blue-400 hover:text-blue-300 transition-colors"
+                            className="bg-white text-black px-8 py-4 rounded-2xl font-semibold hover:bg-zinc-100 transition-all duration-300 hover:scale-105 shadow-xl"
                         >
                             Create your first project →
                         </button>
                     </div>
                 ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                         {projects.map((project) => (
                             <div
                                 key={project.id}
-                                className="bg-zinc-900/30 rounded-lg p-6 border border-zinc-800/50 hover:border-zinc-700/50 transition-all group relative"
+                                className="group bg-white/5 backdrop-blur-sm rounded-3xl p-8 border border-white/10 hover:border-white/20 transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-white/5 relative overflow-hidden"
                             >
-                                <Link to={`/projects/${project.id}`} className="block">
-                                    <div className="flex items-start justify-between mb-3">
-                                        <h3 className="font-medium text-white group-hover:text-blue-400 transition-colors">
+                                {/* Background gradient */}
+                                <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                                
+                                <Link to={`/projects/${project.id}`} className="block relative z-10">
+                                    <div className="flex items-start justify-between mb-6">
+                                        <h3 className="font-bold text-xl text-white group-hover:text-white transition-colors leading-tight">
                                             {project.name}
                                         </h3>
-                                        <span className={`px-2 py-1 text-xs rounded ${
-                                            project.status === 'published' ? 'bg-green-500/20 text-green-400' :
-                                            project.status === 'ready' ? 'bg-blue-500/20 text-blue-400' :
-                                            'bg-zinc-500/20 text-zinc-400'
+                                        <span className={`px-3 py-1 text-xs font-semibold rounded-full ${
+                                            project.status === 'published' ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' :
+                                            project.status === 'ready' ? 'bg-blue-500/20 text-blue-300 border border-blue-500/30' :
+                                            'bg-zinc-500/20 text-zinc-300 border border-zinc-500/30'
                                         }`}>
                                             {project.status}
                                         </span>
                                     </div>
                                     
                                     {project.description && (
-                                        <p className="text-sm text-zinc-400 mb-3 line-clamp-2">
+                                        <p className="text-zinc-400 mb-6 line-clamp-2 font-light leading-relaxed">
                                             {project.description}
                                         </p>
                                     )}
                                     
-                                    <div className="flex items-center gap-4 text-xs text-zinc-500">
-                                        {project.github && <span>📂 GitHub</span>}
-                                        {project.website && <span>🌐 Website</span>}
-                                        <span className="ml-auto">
+                                    <div className="flex items-center justify-between text-sm">
+                                        <div className="flex items-center gap-4 text-zinc-500">
+                                            {project.github && (
+                                                <span className="flex items-center gap-2">
+                                                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                                                        <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                                                    </svg>
+                                                    GitHub
+                                                </span>
+                                            )}
+                                            {project.website && (
+                                                <span className="flex items-center gap-2">
+                                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9v-9m0-9v9m0 9c-5 0-9-4-9-9s4-9 9-9" />
+                                                    </svg>
+                                                    Website
+                                                </span>
+                                            )}
+                                        </div>
+                                        <span className="text-zinc-500 font-medium">
                                             {new Date(project.updatedAt).toLocaleDateString()}
                                         </span>
                                     </div>
@@ -371,10 +412,10 @@ export default function Projects() {
                                         e.preventDefault();
                                         setDeleteDialog({ isOpen: true, project });
                                     }}
-                                    className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity text-zinc-500 hover:text-red-400 p-1"
+                                    className="absolute top-6 right-6 opacity-0 group-hover:opacity-100 transition-all duration-300 text-zinc-500 hover:text-red-400 p-2 rounded-full hover:bg-red-500/10 z-20"
                                     title="Delete project"
                                 >
-                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                                     </svg>
                                 </button>
