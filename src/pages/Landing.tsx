@@ -362,12 +362,12 @@ export default function Landing() {
               <div className="font-medium mb-1">Reddit</div>
               <div className="text-sm text-zinc-500">Launch posts</div>
             </div>
-            <div className="text-center opacity-50">
+            <div className="text-center">
               <div className="w-16 h-16 bg-zinc-900 rounded-2xl flex items-center justify-center mx-auto mb-4">
                 <span className="text-2xl">🐦</span>
               </div>
-              <div className="font-medium mb-1">Twitter</div>
-              <div className="text-sm text-zinc-500">Requires API key</div>
+              <div className="font-medium mb-1">X (Twitter)</div>
+              <div className="text-sm text-zinc-500">Launch signals</div>
             </div>
           </div>
         </div>

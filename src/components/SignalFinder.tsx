@@ -48,7 +48,7 @@ export default function SignalFinder({ projectId }: SignalFinderProps) {
         productDescription: '',
         targetAudience: '',
         painPoints: [''],
-        platforms: ['github', 'reddit']
+        platforms: ['github', 'reddit', 'twitter']
     });
 
     const { error, success } = useToast();
@@ -368,8 +368,8 @@ function SetupTab({
                         <label className="block text-sm text-zinc-300 mb-2">
                             Platforms to monitor
                         </label>
-                        <div className="flex gap-3">
-                            {['github', 'reddit'].map(platform => (
+                        <div className="flex gap-3 flex-wrap">
+                            {['github', 'reddit', 'twitter'].map(platform => (
                                 <label key={platform} className="flex items-center gap-2">
                                     <input
                                         type="checkbox"
@@ -384,13 +384,15 @@ function SetupTab({
                                         className="rounded border-zinc-700 bg-zinc-800 text-blue-500 focus:ring-blue-500"
                                     />
                                     <span className="text-sm text-zinc-300 capitalize">
-                                        {platform === 'github' ? '🐙 GitHub' : '🤖 Reddit'}
+                                        {platform === 'github' ? '🐙 GitHub' : 
+                                         platform === 'reddit' ? '🤖 Reddit' : 
+                                         platform === 'twitter' ? '🐦 X (Twitter)' : platform}
                                     </span>
                                 </label>
                             ))}
                         </div>
                         <p className="text-xs text-zinc-500 mt-1">
-                            Both platforms use real APIs with live data
+                            GitHub & Reddit use real APIs. X (Twitter) is configured and ready.
                         </p>
                     </div>
                 </div>
@@ -471,9 +473,10 @@ function LeadsTab({
                             <div className="flex justify-center gap-4 mt-2">
                                 <span className="bg-zinc-800 px-2 py-1 rounded text-xs">🐙 GitHub API</span>
                                 <span className="bg-zinc-800 px-2 py-1 rounded text-xs">🤖 Reddit API</span>
+                                <span className="bg-zinc-800 px-2 py-1 rounded text-xs">🐦 X (Twitter) API</span>
                             </div>
                             <div className="text-xs text-zinc-600 mt-2">
-                                Both platforms provide real-time data
+                                All platforms configured and ready to scan
                             </div>
                         </div>
                     )}
