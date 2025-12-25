@@ -358,7 +358,7 @@ export default function Generator() {
                     <button
                         onClick={handleGenerate}
                         disabled={loading || (!github && !website && !description)}
-                        className="w-full mt-6 py-3 bg-white text-black font-medium rounded-lg hover:bg-zinc-200 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2"
+                        className="w-full mt-6 py-3 bg-white text-black font-medium hover:bg-zinc-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
                     >
                         {loading ? (
                             <>
@@ -508,21 +508,21 @@ function SimpleSection({ title, text, onRegenerate }: { title: string; text: str
     }
 
     return (
-        <div className="bg-zinc-900/30 rounded-lg p-4 border border-zinc-800/50 hover:border-zinc-700/50 transition-all group">
+        <div className="bg-zinc-900 p-4 border border-zinc-800 hover:border-zinc-700 transition-colors group">
             <div className="flex items-center justify-between mb-3">
                 <h3 className="font-medium text-zinc-200 text-sm">{title}</h3>
                 <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                     {onRegenerate && (
                         <button
                             onClick={() => setIsEditing(!isEditing)}
-                            className="text-xs text-zinc-500 hover:text-zinc-300 px-2 py-1 rounded hover:bg-zinc-800/50"
+                            className="text-xs text-zinc-500 hover:text-zinc-300 px-2 py-1 hover:bg-zinc-800"
                         >
                             Edit
                         </button>
                     )}
                     <button
                         onClick={() => navigator.clipboard.writeText(text)}
-                        className="text-xs text-zinc-500 hover:text-zinc-300 px-2 py-1 rounded hover:bg-zinc-800/50"
+                        className="text-xs text-zinc-500 hover:text-zinc-300 px-2 py-1 hover:bg-zinc-800"
                     >
                         Copy
                     </button>
@@ -574,19 +574,19 @@ function SimpleShotList({ shots, duration, onRegenerate }: { shots: Shot[]; dura
     }
 
     return (
-        <div className="bg-zinc-900/30 rounded-lg p-4 border border-zinc-800/50 hover:border-zinc-700/50 transition-all group">
+        <div className="bg-zinc-900 p-4 border border-zinc-800 hover:border-zinc-700 transition-colors group">
             <div className="flex items-center justify-between mb-3">
                 <h3 className="font-medium text-zinc-200 text-sm">Shot List ({duration})</h3>
                 <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                     <button
                         onClick={() => setIsEditing(!isEditing)}
-                        className="text-xs text-zinc-500 hover:text-zinc-300 px-2 py-1 rounded hover:bg-zinc-800/50"
+                        className="text-xs text-zinc-500 hover:text-zinc-300 px-2 py-1 hover:bg-zinc-800"
                     >
                         Edit
                     </button>
                     <button
                         onClick={() => navigator.clipboard.writeText(JSON.stringify(shots, null, 2))}
-                        className="text-xs text-zinc-500 hover:text-zinc-300 px-2 py-1 rounded hover:bg-zinc-800/50"
+                        className="text-xs text-zinc-500 hover:text-zinc-300 px-2 py-1 hover:bg-zinc-800"
                     >
                         Copy
                     </button>

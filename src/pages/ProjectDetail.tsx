@@ -204,7 +204,7 @@ export default function ProjectDetail() {
                 </div>
 
                 {/* Project Info */}
-                <div className="bg-zinc-900/30 rounded-lg p-6 mb-8 border border-zinc-800/50">
+                <div className="bg-zinc-900 p-6 mb-8 border border-zinc-800">
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div>
                             <div className="text-sm text-zinc-500 mb-1">GitHub Repository</div>

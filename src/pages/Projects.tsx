@@ -324,7 +324,7 @@ export default function Projects() {
           {projects.map((project) => (
             <div
               key={project.id}
-              className="relative group bg-zinc-900 p-6 border border-zinc-800 hover:border-zinc-700 transition"
+              className="relative group bg-zinc-900 p-6 border border-zinc-800 hover:border-zinc-700 transition-colors"
             >
               <Link to={`/projects/${project.id}`}>
                 <h3 className="font-medium text-lg mb-2">
