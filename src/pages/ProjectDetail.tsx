@@ -60,9 +60,12 @@ export default function ProjectDetail() {
     const [project, setProject] = useState<Project | null>(null);
     const [generations, setGenerations] = useState<Generation[]>([]);
     const [posts, setPosts] = useState<Post[]>([]);
-    const [activeTab, setActiveTab] = useState<'overview' | 'generations' | 'posts' | 'signals'>('overview');
+    const [activeTab, setActiveTab] = useState<'overview' | 'generations' | 'posts' | 'scripts' | 'signals'>('overview');
     const [loading, setLoading] = useState(true);
     const [statusDialog, setStatusDialog] = useState(false);
+    const [showPostGenerator, setShowPostGenerator] = useState(false);
+    const [generatingPosts, setGeneratingPosts] = useState(false);
+    const [scripts, setScripts] = useState<any[]>([]);
 
     const { toasts, removeToast, error, success } = useToast();
     const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001";
@@ -72,6 +75,7 @@ export default function ProjectDetail() {
             fetchProject();
             fetchGenerations();
             fetchPosts();
+            fetchScripts();
         }
     }, [id]);
 
@@ -201,6 +205,77 @@ export default function ProjectDetail() {
         } catch (err) {
             console.error("Failed to update project status", err);
             error("Failed to update project status. Please try again.");
+        }
+    }
+
+    async function fetchScripts() {
+        if (!id) return;
+        
+        try {
+            // For now, extract scripts from generations
+            const res = await fetch(`${API_URL}/api/projects/${id}/generations`, { credentials: "include" });
+            if (res.ok) {
+                const data = await res.json();
+                const generationsData = data.success ? data.data : data;
+                
+                const extractedScripts = generationsData
+                    .filter((gen: Generation) => gen.type === 'video' && gen.content)
+                    .map((gen: Generation) => ({
+                        id: gen.id,
+                        createdAt: gen.createdAt,
+                        type: gen.type,
+                        shorts_script: gen.content.shorts_script,
+                        youtube_script: gen.content.youtube_script,
+                        teleprompter: gen.content.teleprompter,
+                        shot_list: gen.content.shot_list
+                    }))
+                    .filter((script: any) => script.shorts_script || script.youtube_script);
+                
+                setScripts(extractedScripts);
+            }
+        } catch (err) {
+            console.error("Failed to fetch scripts", err);
+        }
+    }
+
+    async function generatePostsFromContent() {
+        if (!project || !id) return;
+        
+        setGeneratingPosts(true);
+        try {
+            // Use the latest generation to create posts
+            if (generations.length === 0) {
+                error("No content generations found. Generate content first.");
+                return;
+            }
+
+            const latestGeneration = generations[0];
+            const res = await fetch(`${API_URL}/api/projects/${id}/generate-posts`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+                body: JSON.stringify({
+                    generationId: latestGeneration.id,
+                    platforms: ['twitter', 'linkedin', 'facebook', 'instagram']
+                })
+            });
+
+            if (!res.ok) {
+                const data = await res.json();
+                throw new Error(data.message || "Failed to generate posts");
+            }
+
+            const data = await res.json();
+            const newPosts = data.success ? data.data : data;
+            
+            setPosts([...newPosts, ...posts]);
+            setShowPostGenerator(false);
+            success(`Generated ${newPosts.length} posts successfully!`);
+        } catch (err) {
+            console.error("Failed to generate posts", err);
+            error("Failed to generate posts. Please try again.");
+        } finally {
+            setGeneratingPosts(false);
         }
     }
 
@@ -356,6 +431,16 @@ export default function ProjectDetail() {
                     >
                         Posts ({posts.length})
                     </button>
+                    <button
+                        onClick={() => setActiveTab('scripts')}
+                        className={`flex-1 py-2 px-4 text-sm rounded-lg transition-all ${
+                            activeTab === 'scripts'
+                                ? "bg-white text-black font-medium"
+                                : "text-zinc-400 hover:text-zinc-200"
+                        }`}
+                    >
+                        Scripts ({scripts.length})
+                    </button>
                 </div>
 
                 {/* Tab Content */}
@@ -413,12 +498,36 @@ export default function ProjectDetail() {
 
                 {activeTab === 'posts' && (
                     <div className="space-y-4">
+                        {/* Posts Header with Generate Button */}
+                        <div className="flex items-center justify-between">
+                            <h2 className="text-lg font-medium text-white">Posts</h2>
+                            <div className="flex items-center gap-3">
+                                {generations.length > 0 && (
+                                    <button
+                                        onClick={() => setShowPostGenerator(true)}
+                                        className="bg-white text-black px-4 py-2 rounded-lg text-sm font-medium hover:bg-zinc-200 transition-colors"
+                                    >
+                                        Generate Posts
+                                    </button>
+                                )}
+                            </div>
+                        </div>
+
                         {posts.length === 0 ? (
                             <div className="text-center py-12">
                                 <div className="text-zinc-400 mb-4">No posts created yet</div>
-                                <div className="text-sm text-zinc-500">
-                                    Posts will be created automatically from your generated content
-                                </div>
+                                {generations.length > 0 ? (
+                                    <button
+                                        onClick={() => setShowPostGenerator(true)}
+                                        className="bg-white text-black px-4 py-2 rounded-lg text-sm font-medium hover:bg-zinc-200 transition-colors"
+                                    >
+                                        Generate Posts from Content
+                                    </button>
+                                ) : (
+                                    <div className="text-sm text-zinc-500">
+                                        Generate content first, then create posts from it
+                                    </div>
+                                )}
                             </div>
                         ) : (
                             posts.map((post) => (
@@ -432,13 +541,21 @@ export default function ProjectDetail() {
                                                 <span className="font-medium text-white">{post.title}</span>
                                             )}
                                         </div>
-                                        <span className={`px-2 py-1 text-xs rounded-full ${
-                                            post.status === 'published' ? 'bg-green-500/20 text-green-400' :
-                                            post.status === 'scheduled' ? 'bg-yellow-500/20 text-yellow-400' :
-                                            'bg-zinc-500/20 text-zinc-400'
-                                        }`}>
-                                            {post.status}
-                                        </span>
+                                        <div className="flex items-center gap-2">
+                                            <button
+                                                onClick={() => navigator.clipboard.writeText(post.content)}
+                                                className="text-xs text-zinc-500 hover:text-zinc-300 px-2 py-1 rounded-md hover:bg-zinc-800/50 transition-colors"
+                                            >
+                                                Copy
+                                            </button>
+                                            <span className={`px-2 py-1 text-xs rounded-full ${
+                                                post.status === 'published' ? 'bg-green-500/20 text-green-400' :
+                                                post.status === 'scheduled' ? 'bg-yellow-500/20 text-yellow-400' :
+                                                'bg-zinc-500/20 text-zinc-400'
+                                            }`}>
+                                                {post.status}
+                                            </span>
+                                        </div>
                                     </div>
                                     <div className="text-sm text-zinc-300 whitespace-pre-wrap">
                                         {post.content.length > 200 
@@ -448,6 +565,97 @@ export default function ProjectDetail() {
                                     </div>
                                     <div className="text-xs text-zinc-500 mt-3">
                                         Created {new Date(post.createdAt).toLocaleDateString()}
+                                    </div>
+                                </div>
+                            ))
+                        )}
+                    </div>
+                )}
+
+                {activeTab === 'scripts' && (
+                    <div className="space-y-4">
+                        <div className="flex items-center justify-between">
+                            <h2 className="text-lg font-medium text-white">Video Scripts</h2>
+                            <span className="text-sm text-zinc-400">
+                                {scripts.length} script{scripts.length !== 1 ? 's' : ''} available
+                            </span>
+                        </div>
+
+                        {scripts.length === 0 ? (
+                            <div className="text-center py-12">
+                                <div className="text-zinc-400 mb-4">No video scripts found</div>
+                                <div className="text-sm text-zinc-500">
+                                    Generate video content to see scripts here
+                                </div>
+                                <Link
+                                    to={`/generate?projectId=${project.id}&mode=video`}
+                                    className="inline-block mt-4 bg-white text-black px-4 py-2 rounded-lg text-sm font-medium hover:bg-zinc-200 transition-colors"
+                                >
+                                    Generate Video Content
+                                </Link>
+                            </div>
+                        ) : (
+                            scripts.map((script) => (
+                                <div key={script.id} className="bg-zinc-900 border border-zinc-800 rounded-xl overflow-hidden">
+                                    <div className="p-4 border-b border-zinc-800/50">
+                                        <div className="flex items-center justify-between">
+                                            <div className="flex items-center gap-3">
+                                                <span className="text-sm text-zinc-400">
+                                                    {new Date(script.createdAt).toLocaleDateString()}
+                                                </span>
+                                                <span className="px-2 py-1 text-xs bg-purple-500/20 text-purple-400 rounded-full">
+                                                    Video Script
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div className="p-6 space-y-6">
+                                        {/* Shot List */}
+                                        {script.shot_list && script.shot_list.length > 0 && (
+                                            <div>
+                                                <h4 className="font-medium text-white mb-3">Shot List</h4>
+                                                <div className="space-y-2">
+                                                    {script.shot_list.map((shot: any, idx: number) => (
+                                                        <div key={idx} className="flex gap-3 p-3 bg-zinc-950/50 rounded-lg border border-zinc-800/50">
+                                                            <div className="flex flex-col items-center min-w-[40px]">
+                                                                <span className="text-sm font-bold text-zinc-500">#{idx + 1}</span>
+                                                                <span className="text-xs text-zinc-400 bg-zinc-800 px-1 py-0.5 rounded mt-1">
+                                                                    {shot.duration}
+                                                                </span>
+                                                            </div>
+                                                            <div className="flex-1 space-y-1">
+                                                                <div className="text-xs text-zinc-200">
+                                                                    <span className="text-zinc-500">Visual:</span> {shot.visual}
+                                                                </div>
+                                                                <div className="text-xs text-zinc-400 italic">
+                                                                    <span className="text-zinc-500">Audio:</span> "{shot.audio}"
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        {/* Scripts Grid */}
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                            {script.shorts_script && (
+                                                <ContentSection title="Short-form Script (60s)" content={script.shorts_script} />
+                                            )}
+                                            
+                                            {script.youtube_script && (
+                                                <ContentSection title="Long-form Script (3-5min)" content={script.youtube_script} />
+                                            )}
+                                        </div>
+
+                                        {/* Teleprompter */}
+                                        {script.teleprompter && script.teleprompter.length > 0 && (
+                                            <ContentSection 
+                                                title="Teleprompter Notes" 
+                                                content={script.teleprompter.map((note: string) => `• ${note}`).join('\n')} 
+                                            />
+                                        )}
                                     </div>
                                 </div>
                             ))
@@ -487,6 +695,54 @@ export default function ProjectDetail() {
                                 className="flex-1 px-4 py-2 text-sm text-zinc-400 hover:text-white transition-colors"
                             >
                                 Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Post Generation Dialog */}
+            {showPostGenerator && (
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+                    <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 max-w-lg w-full mx-4">
+                        <h3 className="text-lg font-medium text-white mb-4">
+                            Generate Social Media Posts
+                        </h3>
+                        <p className="text-sm text-zinc-400 mb-6">
+                            Create platform-specific posts from your latest content generation. 
+                            This will generate optimized posts for Twitter, LinkedIn, Facebook, and Instagram.
+                        </p>
+                        
+                        {generations.length > 0 && (
+                            <div className="bg-zinc-950/50 rounded-lg p-4 mb-6">
+                                <div className="text-sm text-zinc-300 mb-2">
+                                    <strong>Source Content:</strong>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <span className="px-2 py-1 text-xs bg-blue-500/20 text-blue-400 rounded-full">
+                                        {generations[0].type}
+                                    </span>
+                                    <span className="text-xs text-zinc-500">
+                                        {new Date(generations[0].createdAt).toLocaleDateString()}
+                                    </span>
+                                </div>
+                            </div>
+                        )}
+
+                        <div className="flex gap-3">
+                            <button
+                                onClick={() => setShowPostGenerator(false)}
+                                className="flex-1 px-4 py-2 text-sm text-zinc-400 hover:text-white transition-colors"
+                                disabled={generatingPosts}
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={generatePostsFromContent}
+                                disabled={generatingPosts}
+                                className="flex-1 bg-white text-black px-4 py-2 rounded-lg text-sm font-medium hover:bg-zinc-200 disabled:opacity-50 transition-colors"
+                            >
+                                {generatingPosts ? "Generating..." : "Generate Posts"}
                             </button>
                         </div>
                     </div>
