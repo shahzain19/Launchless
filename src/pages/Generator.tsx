@@ -292,7 +292,7 @@ export default function Generator() {
                 </div>
 
                 {/* Simplified Input Form */}
-                <div className="bg-zinc-900/50 rounded-xl p-4 sm:p-6 mb-6 border border-zinc-800/50">
+                <div className="bg-zinc-900 p-4 sm:p-6 mb-6 border border-zinc-800">
                     <div className="space-y-4">
                         {/* GitHub Input */}
                         <div>

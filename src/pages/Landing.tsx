@@ -2,10 +2,8 @@ export default function Landing() {
   return (
     <main className="min-h-screen bg-black text-white">
       {/* Hero Section */}
-      <section className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-zinc-900/20 to-transparent"></div>
-        
-        <div className="relative max-w-5xl mx-auto px-6 pt-32 pb-24 text-center">
+      <section className="relative">
+        <div className="max-w-5xl mx-auto px-6 pt-32 pb-24 text-center">
           {/* Logo */}
           <div className="mb-16">
             <img
@@ -32,16 +30,16 @@ export default function Landing() {
 
           {/* Feature Pills */}
           <div className="flex flex-wrap items-center justify-center gap-3 mb-16">
-            <div className="bg-zinc-900/50 border border-zinc-800 rounded-full px-4 py-2 text-sm text-zinc-300">
+            <div className="bg-zinc-900 border border-zinc-800 px-4 py-2 text-sm text-zinc-300">
               📝 Launch content
             </div>
-            <div className="bg-zinc-900/50 border border-zinc-800 rounded-full px-4 py-2 text-sm text-zinc-300">
+            <div className="bg-zinc-900 border border-zinc-800 px-4 py-2 text-sm text-zinc-300">
               🎬 Video scripts
             </div>
-            <div className="bg-zinc-900/50 border border-zinc-800 rounded-full px-4 py-2 text-sm text-zinc-300">
+            <div className="bg-zinc-900 border border-zinc-800 px-4 py-2 text-sm text-zinc-300">
               🔍 Signal finder
             </div>
-            <div className="bg-zinc-900/50 border border-zinc-800 rounded-full px-4 py-2 text-sm text-zinc-300">
+            <div className="bg-zinc-900 border border-zinc-800 px-4 py-2 text-sm text-zinc-300">
               🧠 AI insights
             </div>
           </div>
@@ -50,7 +48,7 @@ export default function Landing() {
           <div className="mb-12">
             <a
               href="/projects"
-              className="inline-flex items-center px-8 py-4 bg-white text-black text-lg font-medium rounded-full hover:bg-zinc-100 transition-all duration-300 hover:scale-105 shadow-2xl shadow-white/10"
+              className="inline-flex items-center px-8 py-4 bg-white text-black text-lg font-medium hover:bg-zinc-100 transition-colors"
             >
               Start your launch
               <svg className="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -91,7 +89,7 @@ export default function Landing() {
 
           <div className="grid md:grid-cols-3 gap-12">
             <div className="text-center group">
-              <div className="w-16 h-16 bg-zinc-900 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:bg-zinc-800 transition-colors">
+              <div className="w-16 h-16 bg-zinc-900 flex items-center justify-center mx-auto mb-6 group-hover:bg-zinc-800 transition-colors">
                 <span className="text-2xl">📝</span>
               </div>
               <h3 className="text-xl font-medium mb-3">Generate Content</h3>
@@ -101,7 +99,7 @@ export default function Landing() {
             </div>
 
             <div className="text-center group">
-              <div className="w-16 h-16 bg-zinc-900 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:bg-zinc-800 transition-colors">
+              <div className="w-16 h-16 bg-zinc-900 flex items-center justify-center mx-auto mb-6 group-hover:bg-zinc-800 transition-colors">
                 <span className="text-2xl">🔍</span>
               </div>
               <h3 className="text-xl font-medium mb-3">Find Customers</h3>
@@ -111,7 +109,7 @@ export default function Landing() {
             </div>
 
             <div className="text-center group">
-              <div className="w-16 h-16 bg-zinc-900 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:bg-zinc-800 transition-colors">
+              <div className="w-16 h-16 bg-zinc-900 flex items-center justify-center mx-auto mb-6 group-hover:bg-zinc-800 transition-colors">
                 <span className="text-2xl">🚀</span>
               </div>
               <h3 className="text-xl font-medium mb-3">Launch & Connect</h3>
@@ -131,10 +129,10 @@ export default function Landing() {
             <p className="text-zinc-500">See exactly who to contact and what to say</p>
           </div>
 
-          <div className="bg-zinc-950 border border-zinc-800 rounded-3xl p-8 max-w-2xl mx-auto">
+          <div className="bg-zinc-900 border border-zinc-800 p-8 max-w-2xl mx-auto">
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 bg-blue-500/20 rounded-full flex items-center justify-center">
+                <div className="w-8 h-8 bg-blue-500/20 flex items-center justify-center">
                   <span className="text-sm">🐙</span>
                 </div>
                 <div>
@@ -142,12 +140,12 @@ export default function Landing() {
                   <div className="text-sm text-zinc-500">GitHub • 2 hours ago</div>
                 </div>
               </div>
-              <div className="text-sm bg-green-500/20 text-green-400 px-3 py-1 rounded-full">
+              <div className="text-sm bg-green-500/20 text-green-400 px-3 py-1">
                 92% confidence
               </div>
             </div>
 
-            <div className="bg-zinc-900/50 rounded-2xl p-6 mb-6">
+            <div className="bg-zinc-800 p-6 mb-6">
               <div className="text-sm text-zinc-400 mb-4">
                 <span className="text-zinc-300 font-medium">Signal:</span> Recent deploy + live demo
               </div>
@@ -160,7 +158,7 @@ export default function Landing() {
             </div>
 
             <div className="flex gap-3">
-              <button className="flex-1 bg-white text-black py-3 rounded-xl font-medium hover:bg-zinc-100 transition-colors">
+              <button className="flex-1 bg-white text-black py-3 font-medium hover:bg-zinc-100 transition-colors">
                 Mark contacted
               </button>
               <button className="px-6 py-3 text-zinc-400 hover:text-zinc-200 transition-colors">
@@ -224,7 +222,7 @@ export default function Landing() {
             {/* Text Content */}
             <div>
               <div className="flex items-center gap-3 mb-8">
-                <div className="w-12 h-12 bg-zinc-900 rounded-2xl flex items-center justify-center">
+                <div className="w-12 h-12 bg-zinc-900 flex items-center justify-center">
                   <span className="text-xl">📝</span>
                 </div>
                 <div>
@@ -264,7 +262,7 @@ export default function Landing() {
             {/* Video Content */}
             <div>
               <div className="flex items-center gap-3 mb-8">
-                <div className="w-12 h-12 bg-zinc-900 rounded-2xl flex items-center justify-center">
+                <div className="w-12 h-12 bg-zinc-900 flex items-center justify-center">
                   <span className="text-xl">🎬</span>
                 </div>
                 <div>
@@ -303,9 +301,9 @@ export default function Landing() {
           </div>
 
           {/* Launchless Insights */}
-          <div className="mt-16 bg-gradient-to-r from-zinc-900/50 to-zinc-800/30 rounded-3xl p-8 border border-zinc-800">
+          <div className="mt-16 bg-zinc-900 p-8 border border-zinc-800">
             <div className="text-center mb-8">
-              <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
+              <div className="w-16 h-16 bg-blue-500 flex items-center justify-center mx-auto mb-4">
                 <span className="text-2xl">🧠</span>
               </div>
               <h3 className="text-2xl font-medium text-zinc-200 mb-2">Launchless Insights</h3>
@@ -349,21 +347,21 @@ export default function Landing() {
           
           <div className="flex justify-center gap-12">
             <div className="text-center">
-              <div className="w-16 h-16 bg-zinc-900 rounded-2xl flex items-center justify-center mx-auto mb-4">
+              <div className="w-16 h-16 bg-zinc-900 flex items-center justify-center mx-auto mb-4">
                 <span className="text-2xl">🐙</span>
               </div>
               <div className="font-medium mb-1">GitHub</div>
               <div className="text-sm text-zinc-500">Recent deploys</div>
             </div>
             <div className="text-center">
-              <div className="w-16 h-16 bg-zinc-900 rounded-2xl flex items-center justify-center mx-auto mb-4">
+              <div className="w-16 h-16 bg-zinc-900 flex items-center justify-center mx-auto mb-4">
                 <span className="text-2xl">🤖</span>
               </div>
               <div className="font-medium mb-1">Reddit</div>
               <div className="text-sm text-zinc-500">Launch posts</div>
             </div>
             <div className="text-center opacity-60">
-              <div className="w-16 h-16 bg-zinc-900 rounded-2xl flex items-center justify-center mx-auto mb-4">
+              <div className="w-16 h-16 bg-zinc-900 flex items-center justify-center mx-auto mb-4">
                 <span className="text-2xl">🐦</span>
               </div>
               <div className="font-medium mb-1">X (Twitter)</div>
@@ -385,7 +383,7 @@ export default function Landing() {
           
           <a
             href="/projects"
-            className="inline-flex items-center px-8 py-4 bg-white text-black text-lg font-medium rounded-full hover:bg-zinc-100 transition-all duration-300 hover:scale-105 shadow-2xl shadow-white/10"
+            className="inline-flex items-center px-8 py-4 bg-white text-black text-lg font-medium hover:bg-zinc-100 transition-colors"
           >
             Start finding signals
             <svg className="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
