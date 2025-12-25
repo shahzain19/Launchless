@@ -195,37 +195,35 @@ export default function Projects() {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-zinc-950 via-zinc-900 to-zinc-950 text-zinc-100">
+        <div className="min-h-screen bg-black text-white">
             <div className="max-w-6xl mx-auto px-6 py-12">
                 {/* Header */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-16 gap-8">
                     <div className="space-y-3">
-                        <h1 className="text-4xl font-bold text-white tracking-tight bg-gradient-to-r from-white to-zinc-300 bg-clip-text text-transparent">
+                        <h1 className="text-4xl font-bold text-white tracking-tight">
                             Your Projects
                         </h1>
-                        <p className="text-zinc-400 text-xl font-light">Ship faster, launch smarter</p>
+                        <p className="text-zinc-400 text-xl">Ship faster, launch smarter</p>
                     </div>
                     
                     <div className="flex items-center gap-6">
                         <button
                             onClick={() => setShowCreateForm(true)}
-                            className="group bg-white text-black px-8 py-4 rounded-2xl font-semibold hover:bg-zinc-100 transition-all duration-300 flex items-center gap-3 shadow-2xl hover:shadow-white/10 hover:scale-105"
+                            className="bg-white text-black px-8 py-4 font-semibold hover:bg-zinc-200 transition-colors flex items-center gap-3"
                         >
-                            <div className="w-5 h-5 rounded-full bg-black/10 flex items-center justify-center group-hover:rotate-90 transition-transform duration-300">
-                                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M12 4v16m8-8H4" />
-                                </svg>
-                            </div>
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                            </svg>
                             New Project
                         </button>
                         
-                        <div className="flex items-center gap-4 bg-white/5 backdrop-blur-sm rounded-2xl px-6 py-3 border border-white/10">
+                        <div className="flex items-center gap-4 bg-zinc-900 px-6 py-3 border border-zinc-800">
                             {user.avatarUrl && (
-                                <img src={user.avatarUrl} alt={user.username} className="w-10 h-10 rounded-full ring-2 ring-white/20" />
+                                <img src={user.avatarUrl} alt={user.username} className="w-10 h-10" />
                             )}
                             <div className="hidden sm:block">
                                 <div className="text-sm font-semibold text-white">{user.username}</div>
-                                <a href={`${API_URL}/auth/logout`} className="text-xs text-zinc-400 hover:text-white transition-colors font-medium">
+                                <a href={`${API_URL}/auth/logout`} className="text-xs text-zinc-400 hover:text-white transition-colors">
                                     Sign out
                                 </a>
                             </div>
@@ -235,13 +233,11 @@ export default function Projects() {
 
                 {/* Create Project Form */}
                 {showCreateForm && (
-                    <div className="bg-white/5 backdrop-blur-sm rounded-3xl p-8 mb-12 border border-white/10 shadow-2xl">
+                    <div className="bg-zinc-900 p-8 mb-12 border border-zinc-800">
                         <h2 className="text-2xl font-bold text-white mb-8 flex items-center gap-3">
-                            <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                                </svg>
-                            </div>
+                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                            </svg>
                             Create New Project
                         </h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
@@ -254,11 +250,11 @@ export default function Projects() {
                                         if (errors.name) setErrors({ ...errors, name: "" });
                                     }}
                                     placeholder="My Awesome Product"
-                                    className={`w-full px-4 py-4 bg-white/5 border rounded-2xl text-zinc-100 placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-transparent transition-all ${
-                                        errors.name ? 'border-red-500/50 bg-red-500/5' : 'border-white/10 hover:border-white/20'
+                                    className={`w-full px-4 py-4 bg-black border text-white placeholder:text-zinc-500 focus:outline-none focus:border-white transition-colors ${
+                                        errors.name ? 'border-red-500' : 'border-zinc-700'
                                     }`}
                                 />
-                                {errors.name && <p className="text-red-400 text-sm mt-2 font-medium">{errors.name}</p>}
+                                {errors.name && <p className="text-red-400 text-sm mt-2">{errors.name}</p>}
                             </div>
                             <div>
                                 <label className="text-sm font-semibold text-zinc-300 mb-3 block">Description</label>
@@ -269,11 +265,11 @@ export default function Projects() {
                                         if (errors.description) setErrors({ ...errors, description: "" });
                                     }}
                                     placeholder="Brief description of your product"
-                                    className={`w-full px-4 py-4 bg-white/5 border rounded-2xl text-zinc-100 placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-transparent transition-all ${
-                                        errors.description ? 'border-red-500/50 bg-red-500/5' : 'border-white/10 hover:border-white/20'
+                                    className={`w-full px-4 py-4 bg-black border text-white placeholder:text-zinc-500 focus:outline-none focus:border-white transition-colors ${
+                                        errors.description ? 'border-red-500' : 'border-zinc-700'
                                     }`}
                                 />
-                                {errors.description && <p className="text-red-400 text-sm mt-2 font-medium">{errors.description}</p>}
+                                {errors.description && <p className="text-red-400 text-sm mt-2">{errors.description}</p>}
                             </div>
                             <div>
                                 <label className="text-sm font-semibold text-zinc-300 mb-3 block">GitHub Repository</label>
@@ -284,11 +280,11 @@ export default function Projects() {
                                         if (errors.github) setErrors({ ...errors, github: "" });
                                     }}
                                     placeholder="https://github.com/owner/repo"
-                                    className={`w-full px-4 py-4 bg-white/5 border rounded-2xl text-zinc-100 placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-transparent transition-all ${
-                                        errors.github ? 'border-red-500/50 bg-red-500/5' : 'border-white/10 hover:border-white/20'
+                                    className={`w-full px-4 py-4 bg-black border text-white placeholder:text-zinc-500 focus:outline-none focus:border-white transition-colors ${
+                                        errors.github ? 'border-red-500' : 'border-zinc-700'
                                     }`}
                                 />
-                                {errors.github && <p className="text-red-400 text-sm mt-2 font-medium">{errors.github}</p>}
+                                {errors.github && <p className="text-red-400 text-sm mt-2">{errors.github}</p>}
                             </div>
                             <div>
                                 <label className="text-sm font-semibold text-zinc-300 mb-3 block">Website</label>
@@ -299,18 +295,18 @@ export default function Projects() {
                                         if (errors.website) setErrors({ ...errors, website: "" });
                                     }}
                                     placeholder="https://yourproduct.com"
-                                    className={`w-full px-4 py-4 bg-white/5 border rounded-2xl text-zinc-100 placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-transparent transition-all ${
-                                        errors.website ? 'border-red-500/50 bg-red-500/5' : 'border-white/10 hover:border-white/20'
+                                    className={`w-full px-4 py-4 bg-black border text-white placeholder:text-zinc-500 focus:outline-none focus:border-white transition-colors ${
+                                        errors.website ? 'border-red-500' : 'border-zinc-700'
                                     }`}
                                 />
-                                {errors.website && <p className="text-red-400 text-sm mt-2 font-medium">{errors.website}</p>}
+                                {errors.website && <p className="text-red-400 text-sm mt-2">{errors.website}</p>}
                             </div>
                         </div>
                         <div className="flex gap-4">
                             <button
                                 onClick={createProject}
                                 disabled={creating || !newProject.name.trim()}
-                                className="bg-white text-black px-8 py-4 rounded-2xl font-semibold hover:bg-zinc-100 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 flex items-center gap-3 shadow-xl hover:scale-105"
+                                className="bg-white text-black px-8 py-4 font-semibold hover:bg-zinc-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-3"
                             >
                                 {creating && <LoadingSpinner size="sm" />}
                                 {creating ? 'Creating...' : 'Create Project'}
@@ -321,7 +317,7 @@ export default function Projects() {
                                     setErrors({});
                                     setNewProject({ name: "", description: "", github: "", website: "" });
                                 }}
-                                className="px-8 py-4 text-zinc-400 hover:text-white transition-colors font-semibold rounded-2xl hover:bg-white/5"
+                                className="px-8 py-4 text-zinc-400 hover:text-white transition-colors font-semibold border border-zinc-700 hover:border-zinc-600"
                             >
                                 Cancel
                             </button>
@@ -333,20 +329,20 @@ export default function Projects() {
                 {loading ? (
                     <div className="text-center py-20">
                         <LoadingSpinner size="lg" className="mx-auto mb-6" />
-                        <div className="text-zinc-400 text-lg font-light">Loading your projects...</div>
+                        <div className="text-zinc-400 text-lg">Loading your projects...</div>
                     </div>
                 ) : projects.length === 0 ? (
                     <div className="text-center py-20">
-                        <div className="w-24 h-24 mx-auto mb-8 rounded-full bg-white/5 flex items-center justify-center">
+                        <div className="w-24 h-24 mx-auto mb-8 bg-zinc-900 flex items-center justify-center">
                             <svg className="w-12 h-12 text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                             </svg>
                         </div>
                         <h3 className="text-2xl font-bold text-white mb-4">No projects yet</h3>
-                        <p className="text-zinc-400 mb-8 text-lg font-light">Create your first project to get started</p>
+                        <p className="text-zinc-400 mb-8 text-lg">Create your first project to get started</p>
                         <button
                             onClick={() => setShowCreateForm(true)}
-                            className="bg-white text-black px-8 py-4 rounded-2xl font-semibold hover:bg-zinc-100 transition-all duration-300 hover:scale-105 shadow-xl"
+                            className="bg-white text-black px-8 py-4 font-semibold hover:bg-zinc-200 transition-colors"
                         >
                             Create your first project →
                         </button>
@@ -356,27 +352,24 @@ export default function Projects() {
                         {projects.map((project) => (
                             <div
                                 key={project.id}
-                                className="group bg-white/5 backdrop-blur-sm rounded-3xl p-8 border border-white/10 hover:border-white/20 transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-white/5 relative overflow-hidden"
+                                className="group bg-zinc-900 p-8 border border-zinc-800 hover:border-zinc-700 transition-colors relative"
                             >
-                                {/* Background gradient */}
-                                <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                                
-                                <Link to={`/projects/${project.id}`} className="block relative z-10">
+                                <Link to={`/projects/${project.id}`} className="block">
                                     <div className="flex items-start justify-between mb-6">
                                         <h3 className="font-bold text-xl text-white group-hover:text-white transition-colors leading-tight">
                                             {project.name}
                                         </h3>
-                                        <span className={`px-3 py-1 text-xs font-semibold rounded-full ${
-                                            project.status === 'published' ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' :
-                                            project.status === 'ready' ? 'bg-blue-500/20 text-blue-300 border border-blue-500/30' :
-                                            'bg-zinc-500/20 text-zinc-300 border border-zinc-500/30'
+                                        <span className={`px-3 py-1 text-xs font-semibold ${
+                                            project.status === 'published' ? 'bg-green-900 text-green-300 border border-green-800' :
+                                            project.status === 'ready' ? 'bg-blue-900 text-blue-300 border border-blue-800' :
+                                            'bg-zinc-800 text-zinc-300 border border-zinc-700'
                                         }`}>
                                             {project.status}
                                         </span>
                                     </div>
                                     
                                     {project.description && (
-                                        <p className="text-zinc-400 mb-6 line-clamp-2 font-light leading-relaxed">
+                                        <p className="text-zinc-400 mb-6 line-clamp-2 leading-relaxed">
                                             {project.description}
                                         </p>
                                     )}
@@ -400,7 +393,7 @@ export default function Projects() {
                                                 </span>
                                             )}
                                         </div>
-                                        <span className="text-zinc-500 font-medium">
+                                        <span className="text-zinc-500">
                                             {new Date(project.updatedAt).toLocaleDateString()}
                                         </span>
                                     </div>
@@ -412,7 +405,7 @@ export default function Projects() {
                                         e.preventDefault();
                                         setDeleteDialog({ isOpen: true, project });
                                     }}
-                                    className="absolute top-6 right-6 opacity-0 group-hover:opacity-100 transition-all duration-300 text-zinc-500 hover:text-red-400 p-2 rounded-full hover:bg-red-500/10 z-20"
+                                    className="absolute top-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity text-zinc-500 hover:text-red-400 p-2"
                                     title="Delete project"
                                 >
                                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
