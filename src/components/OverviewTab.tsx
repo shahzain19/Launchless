@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import GenerationCard from "./GenerationCard";
 
 interface Generation {
@@ -7,10 +6,6 @@ interface Generation {
     content: any;
     launchlessInsights: any;
     createdAt: string;
-}
-
-interface Post {
-    status: string;
 }
 
 interface OverviewTabProps {
@@ -24,7 +19,6 @@ export default function OverviewTab({
     generations, 
     postsCount, 
     publishedPostsCount,
-    projectId 
 }: OverviewTabProps) {
     return (
         <div className="space-y-6">
