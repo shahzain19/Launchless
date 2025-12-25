@@ -189,11 +189,11 @@ export default function ProjectDetail() {
                     <div className="flex items-center gap-3">
                         <Link
                             to={`/generate?projectId=${project.id}`}
-                            className="bg-white text-black px-4 py-2 font-medium hover:bg-zinc-200 transition-colors"
+                            className="bg-white text-black px-4 py-2 rounded-lg font-medium hover:bg-zinc-200 transition-colors"
                         >
                             Generate Content
                         </Link>
-                        <span className={`px-3 py-1 text-sm rounded ${
+                        <span className={`px-3 py-1 text-sm rounded-full ${
                             project.status === 'published' ? 'bg-green-500/20 text-green-400' :
                             project.status === 'ready' ? 'bg-blue-500/20 text-blue-400' :
                             'bg-zinc-500/20 text-zinc-400'
@@ -204,7 +204,7 @@ export default function ProjectDetail() {
                 </div>
 
                 {/* Project Info */}
-                <div className="bg-zinc-900 p-6 mb-8 border border-zinc-800">
+                <div className="bg-zinc-900 p-6 mb-8 border border-zinc-800 rounded-xl">
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div>
                             <div className="text-sm text-zinc-500 mb-1">GitHub Repository</div>
@@ -246,10 +246,10 @@ export default function ProjectDetail() {
                 </div>
 
                 {/* Tabs */}
-                <div className="flex gap-1 mb-6 bg-zinc-900 p-1">
+                <div className="flex gap-1 mb-6 bg-zinc-900 p-1 rounded-xl">
                     <button
                         onClick={() => setActiveTab('overview')}
-                        className={`flex-1 py-2 px-4 text-sm rounded-md transition-all ${
+                        className={`flex-1 py-2 px-4 text-sm rounded-lg transition-all ${
                             activeTab === 'overview'
                                 ? "bg-white text-black font-medium"
                                 : "text-zinc-400 hover:text-zinc-200"
@@ -259,7 +259,7 @@ export default function ProjectDetail() {
                     </button>
                     <button
                         onClick={() => setActiveTab('signals')}
-                        className={`flex-1 py-2 px-4 text-sm rounded-md transition-all ${
+                        className={`flex-1 py-2 px-4 text-sm rounded-lg transition-all ${
                             activeTab === 'signals'
                                 ? "bg-white text-black font-medium"
                                 : "text-zinc-400 hover:text-zinc-200"
@@ -269,7 +269,7 @@ export default function ProjectDetail() {
                     </button>
                     <button
                         onClick={() => setActiveTab('generations')}
-                        className={`flex-1 py-2 px-4 text-sm rounded-md transition-all ${
+                        className={`flex-1 py-2 px-4 text-sm rounded-lg transition-all ${
                             activeTab === 'generations'
                                 ? "bg-white text-black font-medium"
                                 : "text-zinc-400 hover:text-zinc-200"
@@ -279,7 +279,7 @@ export default function ProjectDetail() {
                     </button>
                     <button
                         onClick={() => setActiveTab('posts')}
-                        className={`flex-1 py-2 px-4 text-sm rounded-md transition-all ${
+                        className={`flex-1 py-2 px-4 text-sm rounded-lg transition-all ${
                             activeTab === 'posts'
                                 ? "bg-white text-black font-medium"
                                 : "text-zinc-400 hover:text-zinc-200"
@@ -293,15 +293,15 @@ export default function ProjectDetail() {
                 {activeTab === 'overview' && (
                     <div className="space-y-6">
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            <div className="bg-zinc-900 p-6 border border-zinc-800">
+                            <div className="bg-zinc-900 p-6 border border-zinc-800 rounded-xl">
                                 <div className="text-2xl font-bold text-white mb-1">{generations.length}</div>
                                 <div className="text-sm text-zinc-400">Content Generations</div>
                             </div>
-                            <div className="bg-zinc-900 p-6 border border-zinc-800">
+                            <div className="bg-zinc-900 p-6 border border-zinc-800 rounded-xl">
                                 <div className="text-2xl font-bold text-white mb-1">{posts.length}</div>
                                 <div className="text-sm text-zinc-400">Posts Created</div>
                             </div>
-                            <div className="bg-zinc-900 p-6 border border-zinc-800">
+                            <div className="bg-zinc-900 p-6 border border-zinc-800 rounded-xl">
                                 <div className="text-2xl font-bold text-white mb-1">
                                     {posts.filter(p => p.status === 'published').length}
                                 </div>
@@ -353,17 +353,17 @@ export default function ProjectDetail() {
                             </div>
                         ) : (
                             posts.map((post) => (
-                                <div key={post.id} className="bg-zinc-900 p-6 border border-zinc-800">
+                                <div key={post.id} className="bg-zinc-900 p-6 border border-zinc-800 rounded-xl">
                                     <div className="flex items-center justify-between mb-3">
                                         <div className="flex items-center gap-3">
-                                            <span className="px-2 py-1 text-xs bg-purple-500/20 text-purple-400 rounded">
+                                            <span className="px-2 py-1 text-xs bg-purple-500/20 text-purple-400 rounded-full">
                                                 {post.platform}
                                             </span>
                                             {post.title && (
                                                 <span className="font-medium text-white">{post.title}</span>
                                             )}
                                         </div>
-                                        <span className={`px-2 py-1 text-xs rounded ${
+                                        <span className={`px-2 py-1 text-xs rounded-full ${
                                             post.status === 'published' ? 'bg-green-500/20 text-green-400' :
                                             post.status === 'scheduled' ? 'bg-yellow-500/20 text-yellow-400' :
                                             'bg-zinc-500/20 text-zinc-400'
@@ -398,23 +398,23 @@ function GenerationCard({ generation }: { generation: Generation }) {
     const [activeTab, setActiveTab] = useState<'content' | 'insights'>('content');
     
     return (
-        <div className="bg-zinc-900 border border-zinc-800 overflow-hidden">
+        <div className="bg-zinc-900 border border-zinc-800 rounded-xl overflow-hidden">
             {/* Header */}
             <div className="flex items-center justify-between p-4 border-b border-zinc-800/50">
                 <div className="flex items-center gap-3">
                     <span className="text-sm text-zinc-400">
                         {new Date(generation.createdAt).toLocaleDateString()}
                     </span>
-                    <span className="px-2 py-1 text-xs bg-blue-500/20 text-blue-400 rounded">
+                    <span className="px-2 py-1 text-xs bg-blue-500/20 text-blue-400 rounded-full">
                         {generation.type}
                     </span>
                 </div>
                 
                 {/* Tab Toggle */}
-                <div className="flex bg-zinc-800 rounded p-1">
+                <div className="flex bg-zinc-800 rounded-lg p-1">
                     <button
                         onClick={() => setActiveTab('content')}
-                        className={`px-3 py-1 text-xs rounded transition-all ${
+                        className={`px-3 py-1 text-xs rounded-md transition-all ${
                             activeTab === 'content'
                                 ? 'bg-white text-black font-medium'
                                 : 'text-zinc-400 hover:text-zinc-200'
@@ -424,7 +424,7 @@ function GenerationCard({ generation }: { generation: Generation }) {
                     </button>
                     <button
                         onClick={() => setActiveTab('insights')}
-                        className={`px-3 py-1 text-xs rounded transition-all ${
+                        className={`px-3 py-1 text-xs rounded-md transition-all ${
                             activeTab === 'insights'
                                 ? 'bg-white text-black font-medium'
                                 : 'text-zinc-400 hover:text-zinc-200'
@@ -516,22 +516,22 @@ function VideoContent({ content }: { content: Generation['content'] }) {
                 <div>
                     <div className="flex items-center justify-between mb-4">
                         <h3 className="font-medium text-white">Shot List</h3>
-                        <span className="text-xs text-zinc-400 bg-zinc-800 px-2 py-1 rounded">
+                        <span className="text-xs text-zinc-400 bg-zinc-800 px-2 py-1 rounded-full">
                             {content.total_estimated_duration || '60s'}
                         </span>
                     </div>
                     <div className="space-y-3">
                         {content.shot_list.map((shot, idx) => (
-                            <div key={idx} className="flex gap-3 p-4 bg-zinc-950/50 rounded-lg border border-zinc-800/50">
+                            <div key={idx} className="flex gap-3 p-4 bg-zinc-950/50 rounded-xl border border-zinc-800/50">
                                 <div className="flex flex-col items-center min-w-[50px]">
                                     <span className="text-lg font-bold text-zinc-500">#{idx + 1}</span>
-                                    <span className="text-xs text-zinc-400 bg-zinc-800 px-2 py-1 rounded mt-1">
+                                    <span className="text-xs text-zinc-400 bg-zinc-800 px-2 py-1 rounded-full mt-1">
                                         {shot.duration}
                                     </span>
                                 </div>
                                 <div className="flex-1 space-y-2">
                                     <div className="flex items-center gap-2">
-                                        <span className={`text-xs font-bold uppercase px-2 py-1 rounded ${
+                                        <span className={`text-xs font-bold uppercase px-2 py-1 rounded-full ${
                                             shot.type.includes('Head')
                                                 ? 'bg-purple-500/20 text-purple-300'
                                                 : 'bg-blue-500/20 text-blue-300'
@@ -577,12 +577,12 @@ function VideoContent({ content }: { content: Generation['content'] }) {
 // Content Section Component
 function ContentSection({ title, content }: { title: string; content: string }) {
     return (
-        <div className="bg-zinc-950/30 rounded-lg p-4 border border-zinc-800/50">
+        <div className="bg-zinc-950/30 rounded-xl p-4 border border-zinc-800/50">
             <div className="flex items-center justify-between mb-3">
                 <h4 className="font-medium text-zinc-200 text-sm">{title}</h4>
                 <button
                     onClick={() => navigator.clipboard.writeText(content)}
-                    className="text-xs text-zinc-500 hover:text-zinc-300 px-2 py-1 rounded hover:bg-zinc-800/50 transition-colors"
+                    className="text-xs text-zinc-500 hover:text-zinc-300 px-2 py-1 rounded-md hover:bg-zinc-800/50 transition-colors"
                 >
                     Copy
                 </button>

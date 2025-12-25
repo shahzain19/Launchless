@@ -185,7 +185,7 @@ export default function Projects() {
                     <p className="text-zinc-400 mb-6">Sign in to manage your launch projects</p>
                     <a
                         href={`${API_URL}/auth/github`}
-                        className="bg-white text-black px-6 py-3 font-medium hover:bg-zinc-200 transition-colors"
+                        className="bg-white text-black px-6 py-3 rounded-lg font-medium hover:bg-zinc-200 transition-colors"
                     >
                         Sign in with GitHub
                     </a>
@@ -212,7 +212,7 @@ export default function Projects() {
         <div className="flex items-center gap-4">
           <button
             onClick={() => setShowCreateForm(true)}
-            className="bg-white text-black px-5 py-2.5 text-sm font-medium hover:bg-zinc-200 transition"
+            className="bg-white text-black px-5 py-2.5 text-sm font-medium rounded-lg hover:bg-zinc-200 transition"
           >
             New project
           </button>
@@ -251,7 +251,7 @@ export default function Projects() {
               onChange={(e) =>
                 setNewProject({ ...newProject, name: e.target.value })
               }
-              className="w-full bg-zinc-900 px-4 py-3 text-sm border border-zinc-800 focus:border-white outline-none"
+              className="w-full bg-zinc-900 px-4 py-3 text-sm border border-zinc-800 rounded-lg focus:border-white outline-none"
             />
 
             <input
@@ -260,7 +260,7 @@ export default function Projects() {
               onChange={(e) =>
                 setNewProject({ ...newProject, description: e.target.value })
               }
-              className="w-full bg-zinc-900 px-4 py-3 text-sm border border-zinc-800 focus:border-white outline-none"
+              className="w-full bg-zinc-900 px-4 py-3 text-sm border border-zinc-800 rounded-lg focus:border-white outline-none"
             />
 
             <input
@@ -269,7 +269,7 @@ export default function Projects() {
               onChange={(e) =>
                 setNewProject({ ...newProject, github: e.target.value })
               }
-              className="w-full bg-zinc-900 px-4 py-3 text-sm border border-zinc-800 focus:border-white outline-none"
+              className="w-full bg-zinc-900 px-4 py-3 text-sm border border-zinc-800 rounded-lg focus:border-white outline-none"
             />
 
             <input
@@ -278,14 +278,14 @@ export default function Projects() {
               onChange={(e) =>
                 setNewProject({ ...newProject, website: e.target.value })
               }
-              className="w-full bg-zinc-900 px-4 py-3 text-sm border border-zinc-800 focus:border-white outline-none"
+              className="w-full bg-zinc-900 px-4 py-3 text-sm border border-zinc-800 rounded-lg focus:border-white outline-none"
             />
 
             <div className="flex gap-3 pt-2">
               <button
                 onClick={createProject}
                 disabled={creating}
-                className="bg-white text-black px-5 py-2.5 text-sm font-medium hover:bg-zinc-200 disabled:opacity-50 transition"
+                className="bg-white text-black px-5 py-2.5 text-sm font-medium rounded-lg hover:bg-zinc-200 disabled:opacity-50 transition"
               >
                 {creating ? "Creating…" : "Create"}
               </button>
@@ -314,7 +314,7 @@ export default function Projects() {
           </p>
           <button
             onClick={() => setShowCreateForm(true)}
-            className="bg-white text-black px-5 py-2.5 text-sm font-medium hover:bg-zinc-200 transition"
+            className="bg-white text-black px-5 py-2.5 text-sm font-medium rounded-lg hover:bg-zinc-200 transition"
           >
             Create your first project
           </button>
@@ -324,7 +324,7 @@ export default function Projects() {
           {projects.map((project) => (
             <div
               key={project.id}
-              className="relative group bg-zinc-900 p-6 border border-zinc-800 hover:border-zinc-700 transition-colors"
+              className="relative group bg-zinc-900 p-6 border border-zinc-800 rounded-xl hover:border-zinc-700 transition-colors"
             >
               <Link to={`/projects/${project.id}`}>
                 <h3 className="font-medium text-lg mb-2">
