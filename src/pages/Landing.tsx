@@ -2,55 +2,58 @@ export default function Landing() {
   return (
     <main className="min-h-screen bg-white">
       {/* Hero Section */}
-      <section className="relative">
-        <div className="max-w-4xl mx-auto px-6 pt-20 pb-16 text-center">
+      <section className="relative overflow-hidden">
+        {/* Subtle gradient background */}
+        <div className="absolute inset-0 bg-gradient-to-b from-blue-50/50 to-white pointer-events-none"></div>
+        
+        <div className="relative max-w-5xl mx-auto px-6 pt-24 pb-20 text-center">
           {/* Logo */}
-          <div className="mb-12">
-            <img
-              src="/Logo.png"
-              alt="Launchless"
-              className="w-10 h-10 mx-auto opacity-80"
-            />
+          <div className="mb-12 fade-in">
+            <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-blue-700 rounded-2xl flex items-center justify-center mx-auto shadow-lg">
+              <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+            </div>
           </div>
 
           {/* Hero Text */}
-          <h1 className="text-4xl md:text-6xl font-light tracking-tight mb-6 leading-tight text-black">
+          <h1 className="heading-font text-5xl md:text-7xl font-bold mb-6 leading-tight text-gray-900 fade-in">
             Ship your SaaS.
             <br />
-            <span className="text-gray-500">We handle the launch.</span>
+            <span className="gradient-text">We handle the launch.</span>
           </h1>
 
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-12 leading-relaxed">
+          <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-12 leading-relaxed fade-in">
             AI generates launch content for all platforms, then finds people who already need your product.
             <br />
             <span className="text-gray-500">Zero marketing experience required.</span>
           </p>
 
           {/* CTA */}
-          <div className="mb-16">
+          <div className="mb-16 fade-in">
             <a
               href="/projects"
-              className="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors"
+              className="btn-primary inline-flex items-center gap-2 text-lg"
             >
               Start your launch
-              <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
               </svg>
             </a>
           </div>
 
           {/* Trust Indicators */}
-          <div className="flex items-center justify-center gap-6 text-sm text-gray-500">
+          <div className="flex items-center justify-center gap-8 text-sm text-gray-500 fade-in">
             <span className="flex items-center gap-2">
-              <div className="w-1.5 h-1.5 bg-green-500 rounded-full"></div>
+              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
               Real APIs
             </span>
             <span className="flex items-center gap-2">
-              <div className="w-1.5 h-1.5 bg-green-500 rounded-full"></div>
+              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
               No automation
             </span>
             <span className="flex items-center gap-2">
-              <div className="w-1.5 h-1.5 bg-green-500 rounded-full"></div>
+              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
               GitHub sign-in
             </span>
           </div>
@@ -58,40 +61,40 @@ export default function Landing() {
       </section>
 
       {/* How It Works */}
-      <section className="py-20 border-t border-gray-100">
-        <div className="max-w-5xl mx-auto px-6">
+      <section className="py-24 bg-gray-50">
+        <div className="max-w-6xl mx-auto px-6">
           <div className="text-center mb-16">
-            <h2 className="text-2xl font-light text-black mb-3">How it works</h2>
-            <p className="text-gray-600">Three steps to launch</p>
+            <h2 className="heading-font text-4xl font-bold text-gray-900 mb-4">How it works</h2>
+            <p className="text-lg text-gray-600">Three steps to launch</p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
-            <div className="text-center">
-              <div className="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-xl">📝</span>
+            <div className="card card-hover text-center">
+              <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
+                <span className="text-3xl">📝</span>
               </div>
-              <h3 className="font-medium mb-2">Generate Content</h3>
-              <p className="text-gray-600 text-sm leading-relaxed">
+              <h3 className="text-xl font-semibold mb-3 text-gray-900">Generate Content</h3>
+              <p className="text-gray-600 leading-relaxed">
                 AI creates launch content for Product Hunt, Twitter, LinkedIn, and video scripts.
               </p>
             </div>
 
-            <div className="text-center">
-              <div className="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-xl">🔍</span>
+            <div className="card card-hover text-center">
+              <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
+                <span className="text-3xl">🔍</span>
               </div>
-              <h3 className="font-medium mb-2">Find Customers</h3>
-              <p className="text-gray-600 text-sm leading-relaxed">
+              <h3 className="text-xl font-semibold mb-3 text-gray-900">Find Customers</h3>
+              <p className="text-gray-600 leading-relaxed">
                 Signal Finder scans GitHub and Reddit to find people who need your product.
               </p>
             </div>
 
-            <div className="text-center">
-              <div className="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-xl">🚀</span>
+            <div className="card card-hover text-center">
+              <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-green-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
+                <span className="text-3xl">🚀</span>
               </div>
-              <h3 className="font-medium mb-2">Launch & Connect</h3>
-              <p className="text-gray-600 text-sm leading-relaxed">
+              <h3 className="text-xl font-semibold mb-3 text-gray-900">Launch & Connect</h3>
+              <p className="text-gray-600 leading-relaxed">
                 Post your content and reach out to leads with AI-generated conversation starters.
               </p>
             </div>
