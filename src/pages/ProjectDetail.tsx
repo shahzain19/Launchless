@@ -67,8 +67,8 @@ export default function ProjectDetail() {
                 credentials: 'include'
             });
             if (response.ok) {
-                const data = await response.json();
-                setProject(data);
+                const result = await response.json();
+                setProject(result.data || result);
             }
         } catch (err) {
             console.error('Error fetching project:', err);
@@ -84,8 +84,8 @@ export default function ProjectDetail() {
                 credentials: 'include'
             });
             if (response.ok) {
-                const data = await response.json();
-                setGenerations(data);
+                const result = await response.json();
+                setGenerations(result.data || result);
             }
         } catch (err) {
             console.error('Error fetching generations:', err);
@@ -98,8 +98,8 @@ export default function ProjectDetail() {
                 credentials: 'include'
             });
             if (response.ok) {
-                const data = await response.json();
-                setPosts(data);
+                const result = await response.json();
+                setPosts(result.data || result);
             }
         } catch (err) {
             console.error('Error fetching posts:', err);
@@ -112,8 +112,8 @@ export default function ProjectDetail() {
                 credentials: 'include'
             });
             if (response.ok) {
-                const data = await response.json();
-                setScripts(data);
+                const result = await response.json();
+                setScripts(result.data || result);
             }
         } catch (err) {
             console.error('Error fetching scripts:', err);
