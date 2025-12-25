@@ -13,6 +13,7 @@ import PostsTab from "../components/PostsTab";
 import ScriptsTab from "../components/ScriptsTab";
 import StatusDialog from "../components/StatusDialog";
 import PostGeneratorDialog from "../components/PostGeneratorDialog";
+import { useApi } from "../hooks/useApi";
 
 interface Project {
     id: number;
@@ -53,6 +54,7 @@ export default function ProjectDetail() {
     const [statusDialog, setStatusDialog] = useState(false);
     const [showPostGenerator, setShowPostGenerator] = useState(false);
     const { success, error, toasts, removeToast } = useToast();
+    const { apiCall } = useApi();
 
     useEffect(() => {
         fetchProject();
@@ -63,13 +65,8 @@ export default function ProjectDetail() {
 
     const fetchProject = async () => {
         try {
-            const response = await fetch(`/api/projects/${id}`, {
-                credentials: 'include'
-            });
-            if (response.ok) {
-                const result = await response.json();
-                setProject(result.data || result);
-            }
+            const result = await apiCall(`/api/projects/${id}`);
+            setProject(result.data || result);
         } catch (err) {
             console.error('Error fetching project:', err);
             error('Failed to load project');
@@ -80,13 +77,8 @@ export default function ProjectDetail() {
 
     const fetchGenerations = async () => {
         try {
-            const response = await fetch(`/api/projects/${id}/generations`, {
-                credentials: 'include'
-            });
-            if (response.ok) {
-                const result = await response.json();
-                setGenerations(result.data || result);
-            }
+            const result = await apiCall(`/api/projects/${id}/generations`);
+            setGenerations(result.data || result);
         } catch (err) {
             console.error('Error fetching generations:', err);
         }
@@ -94,13 +86,8 @@ export default function ProjectDetail() {
 
     const fetchPosts = async () => {
         try {
-            const response = await fetch(`/api/projects/${id}/posts`, {
-                credentials: 'include'
-            });
-            if (response.ok) {
-                const result = await response.json();
-                setPosts(result.data || result);
-            }
+            const result = await apiCall(`/api/projects/${id}/posts`);
+            setPosts(result.data || result);
         } catch (err) {
             console.error('Error fetching posts:', err);
         }
@@ -108,13 +95,8 @@ export default function ProjectDetail() {
 
     const fetchScripts = async () => {
         try {
-            const response = await fetch(`/api/projects/${id}/scripts`, {
-                credentials: 'include'
-            });
-            if (response.ok) {
-                const result = await response.json();
-                setScripts(result.data || result);
-            }
+            const result = await apiCall(`/api/projects/${id}/scripts`);
+            setScripts(result.data || result);
         } catch (err) {
             console.error('Error fetching scripts:', err);
         }
@@ -122,18 +104,14 @@ export default function ProjectDetail() {
 
     const handleStatusChange = async (newStatus: string) => {
         try {
-            const response = await fetch(`/api/projects/${id}/status`, {
+            await apiCall(`/api/projects/${id}`, {
                 method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                credentials: 'include',
                 body: JSON.stringify({ status: newStatus })
             });
 
-            if (response.ok) {
-                setProject(prev => prev ? { ...prev, status: newStatus } : null);
-                success('Status updated successfully');
-                setStatusDialog(false);
-            }
+            setProject(prev => prev ? { ...prev, status: newStatus } : null);
+            success('Status updated successfully');
+            setStatusDialog(false);
         } catch (err) {
             console.error('Error updating status:', err);
             error('Failed to update status');
@@ -142,16 +120,12 @@ export default function ProjectDetail() {
 
     const handleDuplicate = async () => {
         try {
-            const response = await fetch(`/api/projects/${id}/duplicate`, {
-                method: 'POST',
-                credentials: 'include'
+            const result = await apiCall(`/api/projects/${id}/duplicate`, {
+                method: 'POST'
             });
 
-            if (response.ok) {
-                const newProject = await response.json();
-                success('Project duplicated successfully');
-                window.location.href = `/projects/${newProject.id}`;
-            }
+            success('Project duplicated successfully');
+            window.location.href = `/projects/${result.data?.id || result.id}`;
         } catch (err) {
             console.error('Error duplicating project:', err);
             error('Failed to duplicate project');
@@ -169,16 +143,14 @@ export default function ProjectDetail() {
 
     const handlePostGenerate = async () => {
         try {
-            const response = await fetch(`/api/projects/${id}/posts/generate`, {
+            await apiCall(`/api/projects/${id}/generate-posts-from-project`, {
                 method: 'POST',
-                credentials: 'include'
+                body: JSON.stringify({ platforms: ['twitter', 'linkedin', 'facebook', 'instagram'] })
             });
 
-            if (response.ok) {
-                await fetchPosts();
-                success('Posts generated successfully');
-                setShowPostGenerator(false);
-            }
+            await fetchPosts();
+            success('Posts generated successfully');
+            setShowPostGenerator(false);
         } catch (err) {
             console.error('Error generating posts:', err);
             error('Failed to generate posts');
