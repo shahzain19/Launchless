@@ -281,10 +281,10 @@ export default function ProjectDetail() {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-zinc-950 text-zinc-100 flex items-center justify-center">
+            <div className="min-h-screen bg-white text-black flex items-center justify-center">
                 <div className="text-center">
                     <LoadingSpinner size="lg" className="mx-auto mb-4" />
-                    <div className="text-zinc-400">Loading project...</div>
+                    <div className="text-gray-600">Loading project...</div>
                 </div>
             </div>
         );
@@ -292,10 +292,10 @@ export default function ProjectDetail() {
 
     if (!project) {
         return (
-            <div className="min-h-screen bg-zinc-950 text-zinc-100 flex items-center justify-center">
+            <div className="min-h-screen bg-white text-black flex items-center justify-center">
                 <div className="text-center">
-                    <div className="text-zinc-400 mb-4">Project not found</div>
-                    <Link to="/projects" className="text-blue-400 hover:text-blue-300">
+                    <div className="text-gray-600 mb-4">Project not found</div>
+                    <Link to="/projects" className="text-blue-600 hover:text-blue-700">
                         ← Back to Projects
                     </Link>
                 </div>
@@ -304,42 +304,42 @@ export default function ProjectDetail() {
     }
 
     return (
-        <div className="min-h-screen bg-zinc-950 text-zinc-100">
+        <div className="min-h-screen bg-white text-black">
             <div className="max-w-6xl mx-auto px-6 py-8">
                 {/* Header */}
                 <div className="flex items-center justify-between mb-8">
                     <div>
                         <div className="flex items-center gap-3 mb-2">
-                            <Link to="/projects" className="text-zinc-400 hover:text-zinc-200">
+                            <Link to="/projects" className="text-gray-600 hover:text-black">
                                 ← Projects
                             </Link>
-                            <span className="text-zinc-600">/</span>
-                            <h1 className="text-2xl font-bold text-white">{project.name}</h1>
+                            <span className="text-gray-400">/</span>
+                            <h1 className="text-2xl font-bold text-black">{project.name}</h1>
                         </div>
                         {project.description && (
-                            <p className="text-zinc-400">{project.description}</p>
+                            <p className="text-gray-600">{project.description}</p>
                         )}
                     </div>
                     
                     <div className="flex items-center gap-3">
                         <button
                             onClick={duplicateProject}
-                            className="px-3 py-2 text-sm text-zinc-400 hover:text-white border border-zinc-700 rounded-lg hover:border-zinc-600 transition-colors"
+                            className="px-3 py-2 text-sm text-gray-600 hover:text-black border border-gray-300 rounded-lg hover:border-gray-400 transition-colors"
                         >
                             Duplicate
                         </button>
                         <Link
                             to={`/generate?projectId=${project.id}`}
-                            className="bg-white text-black px-4 py-2 rounded-lg font-medium hover:bg-zinc-200 transition-colors"
+                            className="bg-blue-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors"
                         >
                             Generate Content
                         </Link>
                         <button
                             onClick={() => setStatusDialog(true)}
                             className={`px-3 py-1 text-sm rounded-full cursor-pointer hover:opacity-80 transition-opacity ${
-                                project.status === 'published' ? 'bg-green-500/20 text-green-400' :
-                                project.status === 'ready' ? 'bg-blue-500/20 text-blue-400' :
-                                'bg-zinc-500/20 text-zinc-400'
+                                project.status === 'published' ? 'bg-green-100 text-green-700' :
+                                project.status === 'ready' ? 'bg-blue-100 text-blue-700' :
+                                'bg-gray-100 text-gray-700'
                             }`}
                         >
                             {project.status}
@@ -348,41 +348,41 @@ export default function ProjectDetail() {
                 </div>
 
                 {/* Project Info */}
-                <div className="bg-zinc-900 p-6 mb-8 border border-zinc-800 rounded-xl">
+                <div className="bg-gray-50 border border-gray-200 p-6 mb-8 rounded-xl">
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div>
-                            <div className="text-sm text-zinc-500 mb-1">GitHub Repository</div>
+                            <div className="text-sm text-gray-500 mb-1">GitHub Repository</div>
                             {project.github ? (
                                 <a 
                                     href={project.github} 
                                     target="_blank" 
                                     rel="noopener noreferrer"
-                                    className="text-blue-400 hover:text-blue-300 text-sm"
+                                    className="text-blue-600 hover:text-blue-700 text-sm"
                                 >
                                     {project.github.replace('https://github.com/', '')}
                                 </a>
                             ) : (
-                                <span className="text-zinc-500 text-sm">Not set</span>
+                                <span className="text-gray-500 text-sm">Not set</span>
                             )}
                         </div>
                         <div>
-                            <div className="text-sm text-zinc-500 mb-1">Website</div>
+                            <div className="text-sm text-gray-500 mb-1">Website</div>
                             {project.website ? (
                                 <a 
                                     href={project.website} 
                                     target="_blank" 
                                     rel="noopener noreferrer"
-                                    className="text-blue-400 hover:text-blue-300 text-sm"
+                                    className="text-blue-600 hover:text-blue-700 text-sm"
                                 >
                                     {project.website}
                                 </a>
                             ) : (
-                                <span className="text-zinc-500 text-sm">Not set</span>
+                                <span className="text-gray-500 text-sm">Not set</span>
                             )}
                         </div>
                         <div>
-                            <div className="text-sm text-zinc-500 mb-1">Last Updated</div>
-                            <span className="text-zinc-300 text-sm">
+                            <div className="text-sm text-gray-500 mb-1">Last Updated</div>
+                            <span className="text-black text-sm">
                                 {new Date(project.updatedAt).toLocaleDateString()}
                             </span>
                         </div>
@@ -390,13 +390,13 @@ export default function ProjectDetail() {
                 </div>
 
                 {/* Tabs */}
-                <div className="flex gap-1 mb-6 bg-zinc-900 p-1 rounded-xl">
+                <div className="flex gap-1 mb-6 bg-gray-100 p-1 rounded-xl">
                     <button
                         onClick={() => setActiveTab('overview')}
                         className={`flex-1 py-2 px-4 text-sm rounded-lg transition-all ${
                             activeTab === 'overview'
-                                ? "bg-white text-black font-medium"
-                                : "text-zinc-400 hover:text-zinc-200"
+                                ? "bg-blue-600 text-white font-medium"
+                                : "text-gray-600 hover:text-black"
                         }`}
                     >
                         Overview
@@ -405,8 +405,8 @@ export default function ProjectDetail() {
                         onClick={() => setActiveTab('signals')}
                         className={`flex-1 py-2 px-4 text-sm rounded-lg transition-all ${
                             activeTab === 'signals'
-                                ? "bg-white text-black font-medium"
-                                : "text-zinc-400 hover:text-zinc-200"
+                                ? "bg-blue-600 text-white font-medium"
+                                : "text-gray-600 hover:text-black"
                         }`}
                     >
                         Signal Finder
@@ -415,8 +415,8 @@ export default function ProjectDetail() {
                         onClick={() => setActiveTab('generations')}
                         className={`flex-1 py-2 px-4 text-sm rounded-lg transition-all ${
                             activeTab === 'generations'
-                                ? "bg-white text-black font-medium"
-                                : "text-zinc-400 hover:text-zinc-200"
+                                ? "bg-blue-600 text-white font-medium"
+                                : "text-gray-600 hover:text-black"
                         }`}
                     >
                         Generations ({generations.length})
@@ -425,8 +425,8 @@ export default function ProjectDetail() {
                         onClick={() => setActiveTab('posts')}
                         className={`flex-1 py-2 px-4 text-sm rounded-lg transition-all ${
                             activeTab === 'posts'
-                                ? "bg-white text-black font-medium"
-                                : "text-zinc-400 hover:text-zinc-200"
+                                ? "bg-blue-600 text-white font-medium"
+                                : "text-gray-600 hover:text-black"
                         }`}
                     >
                         Posts ({posts.length})
@@ -435,8 +435,8 @@ export default function ProjectDetail() {
                         onClick={() => setActiveTab('scripts')}
                         className={`flex-1 py-2 px-4 text-sm rounded-lg transition-all ${
                             activeTab === 'scripts'
-                                ? "bg-white text-black font-medium"
-                                : "text-zinc-400 hover:text-zinc-200"
+                                ? "bg-blue-600 text-white font-medium"
+                                : "text-gray-600 hover:text-black"
                         }`}
                     >
                         Scripts ({scripts.length})
@@ -447,25 +447,25 @@ export default function ProjectDetail() {
                 {activeTab === 'overview' && (
                     <div className="space-y-6">
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            <div className="bg-zinc-900 p-6 border border-zinc-800 rounded-xl">
-                                <div className="text-2xl font-bold text-white mb-1">{generations.length}</div>
-                                <div className="text-sm text-zinc-400">Content Generations</div>
+                            <div className="bg-gray-50 border border-gray-200 p-6 rounded-xl">
+                                <div className="text-2xl font-bold text-black mb-1">{generations.length}</div>
+                                <div className="text-sm text-gray-600">Content Generations</div>
                             </div>
-                            <div className="bg-zinc-900 p-6 border border-zinc-800 rounded-xl">
-                                <div className="text-2xl font-bold text-white mb-1">{posts.length}</div>
-                                <div className="text-sm text-zinc-400">Posts Created</div>
+                            <div className="bg-gray-50 border border-gray-200 p-6 rounded-xl">
+                                <div className="text-2xl font-bold text-black mb-1">{posts.length}</div>
+                                <div className="text-sm text-gray-600">Posts Created</div>
                             </div>
-                            <div className="bg-zinc-900 p-6 border border-zinc-800 rounded-xl">
-                                <div className="text-2xl font-bold text-white mb-1">
+                            <div className="bg-gray-50 border border-gray-200 p-6 rounded-xl">
+                                <div className="text-2xl font-bold text-black mb-1">
                                     {posts.filter(p => p.status === 'published').length}
                                 </div>
-                                <div className="text-sm text-zinc-400">Posts Published</div>
+                                <div className="text-sm text-gray-600">Posts Published</div>
                             </div>
                         </div>
 
                         {generations.length > 0 && (
                             <div>
-                                <h2 className="text-lg font-medium text-white mb-4">Latest Generation</h2>
+                                <h2 className="text-lg font-medium text-black mb-4">Latest Generation</h2>
                                 <GenerationCard generation={generations[0]} />
                             </div>
                         )}
@@ -480,10 +480,10 @@ export default function ProjectDetail() {
                     <div className="space-y-4">
                         {generations.length === 0 ? (
                             <div className="text-center py-12">
-                                <div className="text-zinc-400 mb-4">No content generated yet</div>
+                                <div className="text-gray-600 mb-4">No content generated yet</div>
                                 <Link
                                     to={`/generate?projectId=${project.id}`}
-                                    className="text-blue-400 hover:text-blue-300"
+                                    className="text-blue-600 hover:text-blue-700"
                                 >
                                     Generate your first content →
                                 </Link>
@@ -500,12 +500,12 @@ export default function ProjectDetail() {
                     <div className="space-y-4">
                         {/* Posts Header with Generate Button */}
                         <div className="flex items-center justify-between">
-                            <h2 className="text-lg font-medium text-white">Posts</h2>
+                            <h2 className="text-lg font-medium text-black">Posts</h2>
                             <div className="flex items-center gap-3">
                                 {generations.length > 0 && (
                                     <button
                                         onClick={() => setShowPostGenerator(true)}
-                                        className="bg-white text-black px-4 py-2 rounded-lg text-sm font-medium hover:bg-zinc-200 transition-colors"
+                                        className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors"
                                     >
                                         Generate Posts
                                     </button>
@@ -515,55 +515,55 @@ export default function ProjectDetail() {
 
                         {posts.length === 0 ? (
                             <div className="text-center py-12">
-                                <div className="text-zinc-400 mb-4">No posts created yet</div>
+                                <div className="text-gray-600 mb-4">No posts created yet</div>
                                 {generations.length > 0 ? (
                                     <button
                                         onClick={() => setShowPostGenerator(true)}
-                                        className="bg-white text-black px-4 py-2 rounded-lg text-sm font-medium hover:bg-zinc-200 transition-colors"
+                                        className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors"
                                     >
                                         Generate Posts from Content
                                     </button>
                                 ) : (
-                                    <div className="text-sm text-zinc-500">
+                                    <div className="text-sm text-gray-500">
                                         Generate content first, then create posts from it
                                     </div>
                                 )}
                             </div>
                         ) : (
                             posts.map((post) => (
-                                <div key={post.id} className="bg-zinc-900 p-6 border border-zinc-800 rounded-xl">
+                                <div key={post.id} className="bg-gray-50 border border-gray-200 p-6 rounded-xl">
                                     <div className="flex items-center justify-between mb-3">
                                         <div className="flex items-center gap-3">
-                                            <span className="px-2 py-1 text-xs bg-purple-500/20 text-purple-400 rounded-full">
+                                            <span className="px-2 py-1 text-xs bg-purple-100 text-purple-700 rounded-full">
                                                 {post.platform}
                                             </span>
                                             {post.title && (
-                                                <span className="font-medium text-white">{post.title}</span>
+                                                <span className="font-medium text-black">{post.title}</span>
                                             )}
                                         </div>
                                         <div className="flex items-center gap-2">
                                             <button
                                                 onClick={() => navigator.clipboard.writeText(post.content)}
-                                                className="text-xs text-zinc-500 hover:text-zinc-300 px-2 py-1 rounded-md hover:bg-zinc-800/50 transition-colors"
+                                                className="text-xs text-gray-500 hover:text-gray-700 px-2 py-1 rounded-md hover:bg-gray-100 transition-colors"
                                             >
                                                 Copy
                                             </button>
                                             <span className={`px-2 py-1 text-xs rounded-full ${
-                                                post.status === 'published' ? 'bg-green-500/20 text-green-400' :
-                                                post.status === 'scheduled' ? 'bg-yellow-500/20 text-yellow-400' :
-                                                'bg-zinc-500/20 text-zinc-400'
+                                                post.status === 'published' ? 'bg-green-100 text-green-700' :
+                                                post.status === 'scheduled' ? 'bg-yellow-100 text-yellow-700' :
+                                                'bg-gray-100 text-gray-700'
                                             }`}>
                                                 {post.status}
                                             </span>
                                         </div>
                                     </div>
-                                    <div className="text-sm text-zinc-300 whitespace-pre-wrap">
+                                    <div className="text-sm text-black whitespace-pre-wrap">
                                         {post.content.length > 200 
                                             ? `${post.content.substring(0, 200)}...` 
                                             : post.content
                                         }
                                     </div>
-                                    <div className="text-xs text-zinc-500 mt-3">
+                                    <div className="text-xs text-gray-500 mt-3">
                                         Created {new Date(post.createdAt).toLocaleDateString()}
                                     </div>
                                 </div>
@@ -575,35 +575,35 @@ export default function ProjectDetail() {
                 {activeTab === 'scripts' && (
                     <div className="space-y-4">
                         <div className="flex items-center justify-between">
-                            <h2 className="text-lg font-medium text-white">Video Scripts</h2>
-                            <span className="text-sm text-zinc-400">
+                            <h2 className="text-lg font-medium text-black">Video Scripts</h2>
+                            <span className="text-sm text-gray-600">
                                 {scripts.length} script{scripts.length !== 1 ? 's' : ''} available
                             </span>
                         </div>
 
                         {scripts.length === 0 ? (
                             <div className="text-center py-12">
-                                <div className="text-zinc-400 mb-4">No video scripts found</div>
-                                <div className="text-sm text-zinc-500">
+                                <div className="text-gray-600 mb-4">No video scripts found</div>
+                                <div className="text-sm text-gray-500">
                                     Generate video content to see scripts here
                                 </div>
                                 <Link
                                     to={`/generate?projectId=${project.id}&mode=video`}
-                                    className="inline-block mt-4 bg-white text-black px-4 py-2 rounded-lg text-sm font-medium hover:bg-zinc-200 transition-colors"
+                                    className="inline-block mt-4 bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors"
                                 >
                                     Generate Video Content
                                 </Link>
                             </div>
                         ) : (
                             scripts.map((script) => (
-                                <div key={script.id} className="bg-zinc-900 border border-zinc-800 rounded-xl overflow-hidden">
-                                    <div className="p-4 border-b border-zinc-800/50">
+                                <div key={script.id} className="bg-gray-50 border border-gray-200 rounded-xl overflow-hidden">
+                                    <div className="p-4 border-b border-gray-200">
                                         <div className="flex items-center justify-between">
                                             <div className="flex items-center gap-3">
-                                                <span className="text-sm text-zinc-400">
+                                                <span className="text-sm text-gray-600">
                                                     {new Date(script.createdAt).toLocaleDateString()}
                                                 </span>
-                                                <span className="px-2 py-1 text-xs bg-purple-500/20 text-purple-400 rounded-full">
+                                                <span className="px-2 py-1 text-xs bg-purple-100 text-purple-700 rounded-full">
                                                     Video Script
                                                 </span>
                                             </div>
@@ -667,8 +667,8 @@ export default function ProjectDetail() {
             {/* Status Change Dialog */}
             {statusDialog && project && (
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-                    <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 max-w-md w-full mx-4">
-                        <h3 className="text-lg font-medium text-white mb-4">
+                    <div className="bg-white border border-gray-200 rounded-xl p-6 max-w-md w-full mx-4">
+                        <h3 className="text-lg font-medium text-black mb-4">
                             Change Status: {project.name}
                         </h3>
                         <div className="space-y-2 mb-6">
@@ -678,8 +678,8 @@ export default function ProjectDetail() {
                                     onClick={() => updateProjectStatus(status)}
                                     className={`w-full text-left px-3 py-2 rounded-lg transition-colors ${
                                         project.status === status
-                                            ? 'bg-white text-black'
-                                            : 'text-zinc-300 hover:bg-zinc-800'
+                                            ? 'bg-blue-600 text-white'
+                                            : 'text-black hover:bg-gray-100'
                                     }`}
                                 >
                                     <span className="capitalize">{status}</span>
@@ -692,7 +692,7 @@ export default function ProjectDetail() {
                         <div className="flex gap-3">
                             <button
                                 onClick={() => setStatusDialog(false)}
-                                className="flex-1 px-4 py-2 text-sm text-zinc-400 hover:text-white transition-colors"
+                                className="flex-1 px-4 py-2 text-sm text-gray-600 hover:text-black transition-colors"
                             >
                                 Cancel
                             </button>
@@ -704,25 +704,25 @@ export default function ProjectDetail() {
             {/* Post Generation Dialog */}
             {showPostGenerator && (
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-                    <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 max-w-lg w-full mx-4">
-                        <h3 className="text-lg font-medium text-white mb-4">
+                    <div className="bg-white border border-gray-200 rounded-xl p-6 max-w-lg w-full mx-4">
+                        <h3 className="text-lg font-medium text-black mb-4">
                             Generate Social Media Posts
                         </h3>
-                        <p className="text-sm text-zinc-400 mb-6">
+                        <p className="text-sm text-gray-600 mb-6">
                             Create platform-specific posts from your latest content generation. 
                             This will generate optimized posts for Twitter, LinkedIn, Facebook, and Instagram.
                         </p>
                         
                         {generations.length > 0 && (
-                            <div className="bg-zinc-950/50 rounded-lg p-4 mb-6">
-                                <div className="text-sm text-zinc-300 mb-2">
+                            <div className="bg-gray-50 rounded-lg p-4 mb-6">
+                                <div className="text-sm text-black mb-2">
                                     <strong>Source Content:</strong>
                                 </div>
                                 <div className="flex items-center gap-2">
-                                    <span className="px-2 py-1 text-xs bg-blue-500/20 text-blue-400 rounded-full">
+                                    <span className="px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded-full">
                                         {generations[0].type}
                                     </span>
-                                    <span className="text-xs text-zinc-500">
+                                    <span className="text-xs text-gray-500">
                                         {new Date(generations[0].createdAt).toLocaleDateString()}
                                     </span>
                                 </div>
@@ -732,7 +732,7 @@ export default function ProjectDetail() {
                         <div className="flex gap-3">
                             <button
                                 onClick={() => setShowPostGenerator(false)}
-                                className="flex-1 px-4 py-2 text-sm text-zinc-400 hover:text-white transition-colors"
+                                className="flex-1 px-4 py-2 text-sm text-gray-600 hover:text-black transition-colors"
                                 disabled={generatingPosts}
                             >
                                 Cancel
@@ -740,7 +740,7 @@ export default function ProjectDetail() {
                             <button
                                 onClick={generatePostsFromContent}
                                 disabled={generatingPosts}
-                                className="flex-1 bg-white text-black px-4 py-2 rounded-lg text-sm font-medium hover:bg-zinc-200 disabled:opacity-50 transition-colors"
+                                className="flex-1 bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 disabled:opacity-50 transition-colors"
                             >
                                 {generatingPosts ? "Generating..." : "Generate Posts"}
                             </button>
@@ -760,26 +760,26 @@ function GenerationCard({ generation }: { generation: Generation }) {
     const [activeTab, setActiveTab] = useState<'content' | 'insights'>('content');
     
     return (
-        <div className="bg-zinc-900 border border-zinc-800 rounded-xl overflow-hidden">
+        <div className="bg-gray-50 border border-gray-200 rounded-xl overflow-hidden">
             {/* Header */}
-            <div className="flex items-center justify-between p-4 border-b border-zinc-800/50">
+            <div className="flex items-center justify-between p-4 border-b border-gray-200">
                 <div className="flex items-center gap-3">
-                    <span className="text-sm text-zinc-400">
+                    <span className="text-sm text-gray-600">
                         {new Date(generation.createdAt).toLocaleDateString()}
                     </span>
-                    <span className="px-2 py-1 text-xs bg-blue-500/20 text-blue-400 rounded-full">
+                    <span className="px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded-full">
                         {generation.type}
                     </span>
                 </div>
                 
                 {/* Tab Toggle */}
-                <div className="flex bg-zinc-800 rounded-lg p-1">
+                <div className="flex bg-gray-200 rounded-lg p-1">
                     <button
                         onClick={() => setActiveTab('content')}
                         className={`px-3 py-1 text-xs rounded-md transition-all ${
                             activeTab === 'content'
-                                ? 'bg-white text-black font-medium'
-                                : 'text-zinc-400 hover:text-zinc-200'
+                                ? 'bg-blue-600 text-white font-medium'
+                                : 'text-gray-600 hover:text-black'
                         }`}
                     >
                         Content
@@ -788,8 +788,8 @@ function GenerationCard({ generation }: { generation: Generation }) {
                         onClick={() => setActiveTab('insights')}
                         className={`px-3 py-1 text-xs rounded-md transition-all ${
                             activeTab === 'insights'
-                                ? 'bg-white text-black font-medium'
-                                : 'text-zinc-400 hover:text-zinc-200'
+                                ? 'bg-blue-600 text-white font-medium'
+                                : 'text-gray-600 hover:text-black'
                         }`}
                     >
                         Insights
@@ -939,17 +939,17 @@ function VideoContent({ content }: { content: Generation['content'] }) {
 // Content Section Component
 function ContentSection({ title, content }: { title: string; content: string }) {
     return (
-        <div className="bg-zinc-950/30 rounded-xl p-4 border border-zinc-800/50">
+        <div className="bg-white border border-gray-200 rounded-xl p-4">
             <div className="flex items-center justify-between mb-3">
-                <h4 className="font-medium text-zinc-200 text-sm">{title}</h4>
+                <h4 className="font-medium text-black text-sm">{title}</h4>
                 <button
                     onClick={() => navigator.clipboard.writeText(content)}
-                    className="text-xs text-zinc-500 hover:text-zinc-300 px-2 py-1 rounded-md hover:bg-zinc-800/50 transition-colors"
+                    className="text-xs text-gray-500 hover:text-gray-700 px-2 py-1 rounded-md hover:bg-gray-100 transition-colors"
                 >
                     Copy
                 </button>
             </div>
-            <div className="text-sm text-zinc-300 whitespace-pre-wrap leading-relaxed">
+            <div className="text-sm text-black whitespace-pre-wrap leading-relaxed">
                 {content}
             </div>
         </div>
