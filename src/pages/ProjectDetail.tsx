@@ -62,8 +62,9 @@ export default function ProjectDetail() {
     const [posts, setPosts] = useState<Post[]>([]);
     const [activeTab, setActiveTab] = useState<'overview' | 'generations' | 'posts' | 'signals'>('overview');
     const [loading, setLoading] = useState(true);
+    const [statusDialog, setStatusDialog] = useState(false);
 
-    const { toasts, removeToast, error } = useToast();
+    const { toasts, removeToast, error, success } = useToast();
     const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001";
 
     useEffect(() => {
@@ -144,6 +145,65 @@ export default function ProjectDetail() {
         }
     }
 
+    async function duplicateProject() {
+        if (!project) return;
+        
+        try {
+            const duplicatedProject = {
+                name: `${project.name} (Copy)`,
+                description: project.description,
+                github: project.github,
+                website: project.website
+            };
+
+            const res = await fetch(`${API_URL}/api/projects`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+                body: JSON.stringify(duplicatedProject)
+            });
+
+            const data = await res.json();
+
+            if (!res.ok) {
+                throw new Error(data.message || "Failed to duplicate project");
+            }
+
+            success("Project duplicated successfully!");
+        } catch (err) {
+            console.error("Failed to duplicate project", err);
+            error("Failed to duplicate project. Please try again.");
+        }
+    }
+
+    async function updateProjectStatus(newStatus: string) {
+        if (!project) return;
+        
+        try {
+            const res = await fetch(`${API_URL}/api/projects/${project.id}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+                body: JSON.stringify({ ...project, status: newStatus })
+            });
+
+            if (!res.ok) {
+                const data = await res.json();
+                throw new Error(data.message || "Failed to update project status");
+            }
+
+            const data = await res.json();
+            const updatedProject = data.success ? data.data : data;
+            
+            setProject(updatedProject);
+            setStatusDialog(false);
+            success(`Project status updated to ${newStatus}`);
+        } catch (err) {
+            console.error("Failed to update project status", err);
+            error("Failed to update project status. Please try again.");
+        }
+    }
+
     if (loading) {
         return (
             <div className="min-h-screen bg-zinc-950 text-zinc-100 flex items-center justify-center">
@@ -187,19 +247,28 @@ export default function ProjectDetail() {
                     </div>
                     
                     <div className="flex items-center gap-3">
+                        <button
+                            onClick={duplicateProject}
+                            className="px-3 py-2 text-sm text-zinc-400 hover:text-white border border-zinc-700 rounded-lg hover:border-zinc-600 transition-colors"
+                        >
+                            Duplicate
+                        </button>
                         <Link
                             to={`/generate?projectId=${project.id}`}
                             className="bg-white text-black px-4 py-2 rounded-lg font-medium hover:bg-zinc-200 transition-colors"
                         >
                             Generate Content
                         </Link>
-                        <span className={`px-3 py-1 text-sm rounded-full ${
-                            project.status === 'published' ? 'bg-green-500/20 text-green-400' :
-                            project.status === 'ready' ? 'bg-blue-500/20 text-blue-400' :
-                            'bg-zinc-500/20 text-zinc-400'
-                        }`}>
+                        <button
+                            onClick={() => setStatusDialog(true)}
+                            className={`px-3 py-1 text-sm rounded-full cursor-pointer hover:opacity-80 transition-opacity ${
+                                project.status === 'published' ? 'bg-green-500/20 text-green-400' :
+                                project.status === 'ready' ? 'bg-blue-500/20 text-blue-400' :
+                                'bg-zinc-500/20 text-zinc-400'
+                            }`}
+                        >
                             {project.status}
-                        </span>
+                        </button>
                     </div>
                 </div>
 
@@ -386,6 +455,43 @@ export default function ProjectDetail() {
                     </div>
                 )}
             </div>
+
+            {/* Status Change Dialog */}
+            {statusDialog && project && (
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+                    <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 max-w-md w-full mx-4">
+                        <h3 className="text-lg font-medium text-white mb-4">
+                            Change Status: {project.name}
+                        </h3>
+                        <div className="space-y-2 mb-6">
+                            {['draft', 'ready', 'published', 'archived'].map((status) => (
+                                <button
+                                    key={status}
+                                    onClick={() => updateProjectStatus(status)}
+                                    className={`w-full text-left px-3 py-2 rounded-lg transition-colors ${
+                                        project.status === status
+                                            ? 'bg-white text-black'
+                                            : 'text-zinc-300 hover:bg-zinc-800'
+                                    }`}
+                                >
+                                    <span className="capitalize">{status}</span>
+                                    {project.status === status && (
+                                        <span className="text-xs ml-2">(current)</span>
+                                    )}
+                                </button>
+                            ))}
+                        </div>
+                        <div className="flex gap-3">
+                            <button
+                                onClick={() => setStatusDialog(false)}
+                                className="flex-1 px-4 py-2 text-sm text-zinc-400 hover:text-white transition-colors"
+                            >
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {/* Toast Notifications */}
             <ToastContainer toasts={toasts} removeToast={removeToast} />
