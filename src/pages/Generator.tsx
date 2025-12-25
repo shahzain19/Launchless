@@ -330,7 +330,7 @@ export default function Generator() {
                     </div>
 
                     {/* Mode Toggle */}
-                    <div className="flex bg-gray-100 rounded-lg p-1 mb-6 max-w-sm mx-auto">
+                    <div className="flex bg-gray-100 rounded-lg p-1 mb-6 max-w-md mx-auto">
                         <button
                             onClick={() => setMode('text')}
                             className={`flex-1 py-2 px-3 text-sm rounded-md transition-all ${mode === 'text'
@@ -338,7 +338,7 @@ export default function Generator() {
                                 : "text-gray-600 hover:text-black"
                                 }`}
                         >
-                            Text Launch
+                            📝 Text Launch
                         </button>
                         <button
                             onClick={() => setMode('video')}
@@ -347,7 +347,7 @@ export default function Generator() {
                                 : "text-gray-600 hover:text-black"
                                 }`}
                         >
-                            Video Plan
+                            🎬 Video Scripts
                         </button>
                     </div>
 
@@ -534,8 +534,22 @@ export default function Generator() {
                                             onRegenerate={(instr) => handleRegenerate('shot_list', JSON.stringify(result.shot_list), instr)}
                                         />
 
+                                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                                            <EnhancedSection
+                                                title="📱 Short-form Script (60s)"
+                                                text={result.shorts_script || "No script generated."}
+                                                onRegenerate={(instr) => handleRegenerate('shorts_script', result.shorts_script || '', instr)}
+                                            />
+
+                                            <EnhancedSection
+                                                title="🎥 Long-form Script (3-5min)"
+                                                text={result.youtube_script || "No script generated."}
+                                                onRegenerate={(instr) => handleRegenerate('youtube_script', result.youtube_script || '', instr)}
+                                            />
+                                        </div>
+
                                         <EnhancedSection
-                                            title="Teleprompter Notes"
+                                            title="📋 Teleprompter Notes"
                                             text={
                                                 Array.isArray(result.teleprompter)
                                                     ? result.teleprompter.map(b => `• ${b}`).join("\n")
@@ -544,16 +558,12 @@ export default function Generator() {
                                             onRegenerate={(instr) => handleRegenerate('teleprompter', JSON.stringify(result.teleprompter), instr)}
                                         />
 
-                                        <EnhancedSection
-                                            title="Short-form Script"
-                                            text={result.shorts_script || "No script generated."}
-                                            onRegenerate={(instr) => handleRegenerate('shorts_script', result.shorts_script || '', instr)}
-                                        />
-
-                                        <EnhancedSection
-                                            title="Long-form Script"
-                                            text={result.youtube_script || "No script generated."}
-                                            onRegenerate={(instr) => handleRegenerate('youtube_script', result.youtube_script || '', instr)}
+                                        {/* Video Production Tools */}
+                                        <VideoProductionTools 
+                                            shotList={result.shot_list || []}
+                                            shortsScript={result.shorts_script || ''}
+                                            youtubeScript={result.youtube_script || ''}
+                                            teleprompter={result.teleprompter || []}
                                         />
                                     </>
                                 )}
@@ -674,7 +684,12 @@ function EnhancedShotList({ shots, duration, onRegenerate }: { shots: Shot[]; du
     return (
         <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 hover:border-gray-300 transition-colors group">
             <div className="flex items-center justify-between mb-3">
-                <h3 className="font-medium text-black text-sm">Shot List ({duration})</h3>
+                <h3 className="font-medium text-black text-sm flex items-center gap-2">
+                    🎬 Shot List 
+                    <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full">
+                        {duration}
+                    </span>
+                </h3>
                 <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                     <button
                         onClick={() => setIsEditing(!isEditing)}
@@ -730,11 +745,21 @@ function EnhancedShotList({ shots, duration, onRegenerate }: { shots: Shot[]; du
                             </span>
                         </div>
                         <div className="flex-1 space-y-1">
-                            <div className="text-xs font-medium text-blue-600 uppercase">
-                                {shot.type}
+                            <div className="flex items-center gap-2">
+                                <span className={`text-xs font-medium uppercase px-2 py-1 rounded-full ${
+                                    shot.type.includes('Head')
+                                        ? 'bg-purple-100 text-purple-700'
+                                        : 'bg-blue-100 text-blue-700'
+                                }`}>
+                                    {shot.type === 'Talking Head' ? '👤' : '🖥️'} {shot.type}
+                                </span>
                             </div>
-                            <div className="text-sm text-black">{shot.visual}</div>
-                            <div className="text-sm text-gray-600 italic">"{shot.audio}"</div>
+                            <div className="text-sm text-black">
+                                <span className="text-gray-500 font-medium">Visual:</span> {shot.visual}
+                            </div>
+                            <div className="text-sm text-gray-600 italic">
+                                <span className="text-gray-500 font-medium">Audio:</span> "{shot.audio}"
+                            </div>
                         </div>
                     </div>
                 )) : (
@@ -743,6 +768,285 @@ function EnhancedShotList({ shots, duration, onRegenerate }: { shots: Shot[]; du
                     </div>
                 )}
             </div>
+        </div>
+    );
+}
+
+// Video Production Tools Component
+function VideoProductionTools({ 
+    shotList, 
+    shortsScript, 
+    youtubeScript, 
+    teleprompter 
+}: { 
+    shotList: Shot[]; 
+    shortsScript: string; 
+    youtubeScript: string; 
+    teleprompter: string[] | string; 
+}) {
+    const [activeView, setActiveView] = useState<'overview' | 'teleprompter' | 'export'>('overview');
+    const [fontSize, setFontSize] = useState(18);
+    const [scrollSpeed, setScrollSpeed] = useState(2);
+    const [isScrolling, setIsScrolling] = useState(false);
+
+    const teleprompterText = Array.isArray(teleprompter) 
+        ? teleprompter.join('\n\n') 
+        : teleprompter || '';
+
+    const totalDuration = shotList.reduce((acc, shot) => {
+        const seconds = parseInt(shot.duration.replace(/[^0-9]/g, '')) || 0;
+        return acc + seconds;
+    }, 0);
+
+    const exportData = {
+        project_info: {
+            total_duration: `${totalDuration}s`,
+            shot_count: shotList.length,
+            generated_at: new Date().toISOString()
+        },
+        shot_list: shotList,
+        scripts: {
+            shorts: shortsScript,
+            youtube: youtubeScript
+        },
+        teleprompter: teleprompterText
+    };
+
+    return (
+        <div className="bg-gradient-to-br from-purple-50 to-blue-50 border border-purple-200 rounded-xl p-6">
+            <div className="flex items-center justify-between mb-4">
+                <h3 className="font-medium text-black flex items-center gap-2">
+                    🎬 Video Production Tools
+                </h3>
+                <div className="flex bg-white rounded-lg p-1 border border-gray-200">
+                    <button
+                        onClick={() => setActiveView('overview')}
+                        className={`px-3 py-1 text-xs rounded-md transition-all ${
+                            activeView === 'overview'
+                                ? 'bg-purple-600 text-white font-medium'
+                                : 'text-gray-600 hover:text-black'
+                        }`}
+                    >
+                        Overview
+                    </button>
+                    <button
+                        onClick={() => setActiveView('teleprompter')}
+                        className={`px-3 py-1 text-xs rounded-md transition-all ${
+                            activeView === 'teleprompter'
+                                ? 'bg-purple-600 text-white font-medium'
+                                : 'text-gray-600 hover:text-black'
+                        }`}
+                    >
+                        Teleprompter
+                    </button>
+                    <button
+                        onClick={() => setActiveView('export')}
+                        className={`px-3 py-1 text-xs rounded-md transition-all ${
+                            activeView === 'export'
+                                ? 'bg-purple-600 text-white font-medium'
+                                : 'text-gray-600 hover:text-black'
+                        }`}
+                    >
+                        Export
+                    </button>
+                </div>
+            </div>
+
+            {activeView === 'overview' && (
+                <div className="space-y-4">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <div className="bg-white rounded-lg p-3 text-center border border-gray-200">
+                            <div className="text-lg font-bold text-purple-600">{shotList.length}</div>
+                            <div className="text-xs text-gray-600">Shots</div>
+                        </div>
+                        <div className="bg-white rounded-lg p-3 text-center border border-gray-200">
+                            <div className="text-lg font-bold text-blue-600">{totalDuration}s</div>
+                            <div className="text-xs text-gray-600">Duration</div>
+                        </div>
+                        <div className="bg-white rounded-lg p-3 text-center border border-gray-200">
+                            <div className="text-lg font-bold text-green-600">
+                                {shotList.filter(s => s.type === 'Talking Head').length}
+                            </div>
+                            <div className="text-xs text-gray-600">Face Cam</div>
+                        </div>
+                        <div className="bg-white rounded-lg p-3 text-center border border-gray-200">
+                            <div className="text-lg font-bold text-orange-600">
+                                {shotList.filter(s => s.type === 'Screen Record').length}
+                            </div>
+                            <div className="text-xs text-gray-600">Screen</div>
+                        </div>
+                    </div>
+
+                    <div className="bg-white rounded-lg p-4 border border-gray-200">
+                        <h4 className="font-medium text-black mb-3 flex items-center gap-2">
+                            📋 Quick Actions
+                        </h4>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <button
+                                onClick={() => navigator.clipboard.writeText(shortsScript)}
+                                className="flex items-center gap-2 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors text-left"
+                            >
+                                <span className="text-lg">📱</span>
+                                <div>
+                                    <div className="text-sm font-medium text-black">Copy Short Script</div>
+                                    <div className="text-xs text-gray-600">For TikTok, Reels, Shorts</div>
+                                </div>
+                            </button>
+                            <button
+                                onClick={() => navigator.clipboard.writeText(youtubeScript)}
+                                className="flex items-center gap-2 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors text-left"
+                            >
+                                <span className="text-lg">🎥</span>
+                                <div>
+                                    <div className="text-sm font-medium text-black">Copy Long Script</div>
+                                    <div className="text-xs text-gray-600">For YouTube, detailed videos</div>
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {activeView === 'teleprompter' && (
+                <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                        <h4 className="font-medium text-black">📋 Teleprompter</h4>
+                        <div className="flex items-center gap-3">
+                            <div className="flex items-center gap-2">
+                                <label className="text-xs text-gray-600">Size:</label>
+                                <input
+                                    type="range"
+                                    min="12"
+                                    max="32"
+                                    value={fontSize}
+                                    onChange={(e) => setFontSize(Number(e.target.value))}
+                                    className="w-16"
+                                />
+                                <span className="text-xs text-gray-600 w-8">{fontSize}px</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <label className="text-xs text-gray-600">Speed:</label>
+                                <input
+                                    type="range"
+                                    min="1"
+                                    max="5"
+                                    value={scrollSpeed}
+                                    onChange={(e) => setScrollSpeed(Number(e.target.value))}
+                                    className="w-16"
+                                />
+                            </div>
+                            <button
+                                onClick={() => setIsScrolling(!isScrolling)}
+                                className={`px-3 py-1 text-xs rounded-md font-medium transition-colors ${
+                                    isScrolling 
+                                        ? 'bg-red-600 text-white hover:bg-red-700' 
+                                        : 'bg-green-600 text-white hover:bg-green-700'
+                                }`}
+                            >
+                                {isScrolling ? 'Stop' : 'Start'}
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div 
+                        className="bg-black text-white rounded-lg p-6 h-64 overflow-hidden relative"
+                        style={{ fontSize: `${fontSize}px`, lineHeight: 1.5 }}
+                    >
+                        <div 
+                            className={`whitespace-pre-wrap ${isScrolling ? 'animate-scroll' : ''}`}
+                            style={{
+                                animationDuration: `${20 / scrollSpeed}s`,
+                                animationIterationCount: 'infinite',
+                                animationTimingFunction: 'linear'
+                            }}
+                        >
+                            {teleprompterText || 'No teleprompter text available'}
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {activeView === 'export' && (
+                <div className="space-y-4">
+                    <h4 className="font-medium text-black flex items-center gap-2">
+                        📤 Export Options
+                    </h4>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <button
+                            onClick={() => {
+                                const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+                                const url = URL.createObjectURL(blob);
+                                const a = document.createElement('a');
+                                a.href = url;
+                                a.download = 'video-production-plan.json';
+                                a.click();
+                                URL.revokeObjectURL(url);
+                            }}
+                            className="flex items-center gap-3 p-4 bg-white rounded-lg border border-gray-200 hover:border-gray-300 transition-colors text-left"
+                        >
+                            <span className="text-2xl">📄</span>
+                            <div>
+                                <div className="font-medium text-black">Export JSON</div>
+                                <div className="text-xs text-gray-600">Complete production data</div>
+                            </div>
+                        </button>
+                        
+                        <button
+                            onClick={() => {
+                                const csvContent = shotList.map((shot, idx) => 
+                                    `${idx + 1},"${shot.type}","${shot.duration}","${shot.visual}","${shot.audio}"`
+                                ).join('\n');
+                                const csv = `Shot,Type,Duration,Visual,Audio\n${csvContent}`;
+                                const blob = new Blob([csv], { type: 'text/csv' });
+                                const url = URL.createObjectURL(blob);
+                                const a = document.createElement('a');
+                                a.href = url;
+                                a.download = 'shot-list.csv';
+                                a.click();
+                                URL.revokeObjectURL(url);
+                            }}
+                            className="flex items-center gap-3 p-4 bg-white rounded-lg border border-gray-200 hover:border-gray-300 transition-colors text-left"
+                        >
+                            <span className="text-2xl">📊</span>
+                            <div>
+                                <div className="font-medium text-black">Export CSV</div>
+                                <div className="text-xs text-gray-600">Shot list for spreadsheets</div>
+                            </div>
+                        </button>
+                    </div>
+
+                    <div className="bg-white rounded-lg p-4 border border-gray-200">
+                        <h5 className="font-medium text-black mb-2">📋 Production Checklist</h5>
+                        <div className="space-y-2 text-sm">
+                            <label className="flex items-center gap-2">
+                                <input type="checkbox" className="rounded" />
+                                <span>Camera/phone positioned and tested</span>
+                            </label>
+                            <label className="flex items-center gap-2">
+                                <input type="checkbox" className="rounded" />
+                                <span>Screen recording software ready</span>
+                            </label>
+                            <label className="flex items-center gap-2">
+                                <input type="checkbox" className="rounded" />
+                                <span>Audio levels checked</span>
+                            </label>
+                            <label className="flex items-center gap-2">
+                                <input type="checkbox" className="rounded" />
+                                <span>Lighting setup complete</span>
+                            </label>
+                            <label className="flex items-center gap-2">
+                                <input type="checkbox" className="rounded" />
+                                <span>Background/environment prepared</span>
+                            </label>
+                            <label className="flex items-center gap-2">
+                                <input type="checkbox" className="rounded" />
+                                <span>Script reviewed and practiced</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

@@ -575,56 +575,295 @@ export default function ProjectDetail() {
                 {activeTab === 'scripts' && (
                     <div className="space-y-4">
                         <div className="flex items-center justify-between">
-                            <h2 className="text-lg font-medium text-black">Video Scripts</h2>
-                            <span className="text-sm text-gray-600">
-                                {scripts.length} script{scripts.length !== 1 ? 's' : ''} available
-                            </span>
+                            <h2 className="text-lg font-medium text-black flex items-center gap-2">
+                                🎬 Video Scripts & Production
+                            </h2>
+                            <div className="flex items-center gap-3">
+                                <span className="text-sm text-gray-600">
+                                    {scripts.length} script{scripts.length !== 1 ? 's' : ''} available
+                                </span>
+                                {scripts.length === 0 && (
+                                    <Link
+                                        to={`/generate?projectId=${project.id}&mode=video`}
+                                        className="bg-purple-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-purple-700 transition-colors"
+                                    >
+                                        Generate Video Content
+                                    </Link>
+                                )}
+                            </div>
                         </div>
 
                         {scripts.length === 0 ? (
-                            <div className="text-center py-12">
-                                <div className="text-gray-600 mb-4">No video scripts found</div>
-                                <div className="text-sm text-gray-500">
-                                    Generate video content to see scripts here
+                            <div className="text-center py-16 bg-gradient-to-br from-purple-50 to-blue-50 rounded-xl border border-purple-200">
+                                <div className="text-6xl mb-4">🎬</div>
+                                <div className="text-xl font-medium text-gray-900 mb-2">Ready to create video content?</div>
+                                <div className="text-gray-600 mb-6 max-w-md mx-auto">
+                                    Generate professional video scripts, shot lists, and teleprompter notes for your product launch.
                                 </div>
-                                <Link
-                                    to={`/generate?projectId=${project.id}&mode=video`}
-                                    className="inline-block mt-4 bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors"
-                                >
-                                    Generate Video Content
-                                </Link>
+                                <div className="space-y-3">
+                                    <Link
+                                        to={`/generate?projectId=${project.id}&mode=video`}
+                                        className="inline-block bg-purple-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-purple-700 transition-colors"
+                                    >
+                                        🎥 Generate Video Scripts
+                                    </Link>
+                                    <div className="text-sm text-gray-500">
+                                        Creates shot lists, scripts, and teleprompter notes
+                                    </div>
+                                </div>
                             </div>
                         ) : (
                             scripts.map((script) => (
-                                <div key={script.id} className="bg-gray-50 border border-gray-200 rounded-xl overflow-hidden">
-                                    <div className="p-4 border-b border-gray-200">
+                                <div key={script.id} className="bg-gradient-to-br from-gray-50 to-blue-50 border border-gray-200 rounded-xl overflow-hidden">
+                                    <div className="p-4 border-b border-gray-200 bg-white">
                                         <div className="flex items-center justify-between">
                                             <div className="flex items-center gap-3">
                                                 <span className="text-sm text-gray-600">
                                                     {new Date(script.createdAt).toLocaleDateString()}
                                                 </span>
                                                 <span className="px-2 py-1 text-xs bg-purple-100 text-purple-700 rounded-full">
-                                                    Video Script
+                                                    🎬 Video Production Plan
                                                 </span>
+                                            </div>
+                                            <div className="flex items-center gap-2">
+                                                <button
+                                                    onClick={() => {
+                                                        const exportData = {
+                                                            project: project.name,
+                                                            generated: script.createdAt,
+                                                            shot_list: script.shot_list,
+                                                            scripts: {
+                                                                shorts: script.shorts_script,
+                                                                youtube: script.youtube_script
+                                                            },
+                                                            teleprompter: script.teleprompter
+                                                        };
+                                                        const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+                                                        const url = URL.createObjectURL(blob);
+                                                        const a = document.createElement('a');
+                                                        a.href = url;
+                                                        a.download = `${project.name}-video-plan.json`;
+                                                        a.click();
+                                                        URL.revokeObjectURL(url);
+                                                    }}
+                                                    className="text-xs text-purple-600 hover:text-purple-700 px-2 py-1 rounded-md hover:bg-purple-50 transition-colors"
+                                                >
+                                                    📤 Export
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
                                     
                                     <div className="p-6 space-y-6">
+                                        {/* Production Overview */}
+                                        <div className="bg-white rounded-lg p-4 border border-gray-200">
+                                            <h4 className="font-medium text-black mb-3 flex items-center gap-2">
+                                                📊 Production Overview
+                                            </h4>
+                                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                                <div className="text-center">
+                                                    <div className="text-lg font-bold text-purple-600">
+                                                        {script.shot_list?.length || 0}
+                                                    </div>
+                                                    <div className="text-xs text-gray-600">Shots</div>
+                                                </div>
+                                                <div className="text-center">
+                                                    <div className="text-lg font-bold text-blue-600">
+                                                        {script.shot_list?.reduce((acc: number, shot: any) => {
+                                                            const seconds = parseInt(shot.duration?.replace(/[^0-9]/g, '') || '0');
+                                                            return acc + seconds;
+                                                        }, 0) || 0}s
+                                                    </div>
+                                                    <div className="text-xs text-gray-600">Duration</div>
+                                                </div>
+                                                <div className="text-center">
+                                                    <div className="text-lg font-bold text-green-600">
+                                                        {script.shot_list?.filter((s: any) => s.type === 'Talking Head').length || 0}
+                                                    </div>
+                                                    <div className="text-xs text-gray-600">Face Cam</div>
+                                                </div>
+                                                <div className="text-center">
+                                                    <div className="text-lg font-bold text-orange-600">
+                                                        {script.shot_list?.filter((s: any) => s.type === 'Screen Record').length || 0}
+                                                    </div>
+                                                    <div className="text-xs text-gray-600">Screen</div>
+                                                </div>
+                                            </div>
+                                        </div>
+
                                         {/* Shot List */}
                                         {script.shot_list && script.shot_list.length > 0 && (
-                                            <div>
-                                                <h4 className="font-medium text-white mb-3">Shot List</h4>
-                                                <div className="space-y-2">
+                                            <div className="bg-white rounded-lg p-4 border border-gray-200">
+                                                <div className="flex items-center justify-between mb-4">
+                                                    <h4 className="font-medium text-black flex items-center gap-2">
+                                                        🎬 Shot List
+                                                    </h4>
+                                                    <button
+                                                        onClick={() => {
+                                                            const csvContent = script.shot_list.map((shot: any, idx: number) => 
+                                                                `${idx + 1},"${shot.type}","${shot.duration}","${shot.visual}","${shot.audio}"`
+                                                            ).join('\n');
+                                                            const csv = `Shot,Type,Duration,Visual,Audio\n${csvContent}`;
+                                                            const blob = new Blob([csv], { type: 'text/csv' });
+                                                            const url = URL.createObjectURL(blob);
+                                                            const a = document.createElement('a');
+                                                            a.href = url;
+                                                            a.download = `${project.name}-shot-list.csv`;
+                                                            a.click();
+                                                            URL.revokeObjectURL(url);
+                                                        }}
+                                                        className="text-xs text-gray-500 hover:text-gray-700 px-2 py-1 rounded-md hover:bg-gray-100 transition-colors"
+                                                    >
+                                                        📊 Export CSV
+                                                    </button>
+                                                </div>
+                                                <div className="space-y-3">
                                                     {script.shot_list.map((shot: any, idx: number) => (
-                                                        <div key={idx} className="flex gap-3 p-3 bg-zinc-950/50 rounded-lg border border-zinc-800/50">
-                                                            <div className="flex flex-col items-center min-w-[40px]">
-                                                                <span className="text-sm font-bold text-zinc-500">#{idx + 1}</span>
-                                                                <span className="text-xs text-zinc-400 bg-zinc-800 px-1 py-0.5 rounded mt-1">
+                                                        <div key={idx} className="flex gap-3 p-3 bg-gray-50 rounded-lg border border-gray-200">
+                                                            <div className="flex flex-col items-center min-w-[50px]">
+                                                                <span className="text-lg font-bold text-gray-600">#{idx + 1}</span>
+                                                                <span className="text-xs text-gray-500 bg-white px-2 py-1 rounded-full border">
                                                                     {shot.duration}
                                                                 </span>
                                                             </div>
-                                                            <div className="flex-1 space-y-1">
+                                                            <div className="flex-1 space-y-2">
+                                                                <div className="flex items-center gap-2">
+                                                                    <span className={`text-xs font-medium uppercase px-2 py-1 rounded-full ${
+                                                                        shot.type.includes('Head')
+                                                                            ? 'bg-purple-100 text-purple-700'
+                                                                            : 'bg-blue-100 text-blue-700'
+                                                                    }`}>
+                                                                        {shot.type === 'Talking Head' ? '👤' : '🖥️'} {shot.type}
+                                                                    </span>
+                                                                </div>
+                                                                <div className="text-sm text-black">
+                                                                    <span className="text-gray-500 font-medium">Visual:</span> {shot.visual}
+                                                                </div>
+                                                                <div className="text-sm text-gray-600 italic">
+                                                                    <span className="text-gray-500 font-medium">Audio:</span> "{shot.audio}"
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        {/* Scripts Grid */}
+                                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                            {script.shorts_script && (
+                                                <div className="bg-white rounded-lg p-4 border border-gray-200">
+                                                    <div className="flex items-center justify-between mb-3">
+                                                        <h4 className="font-medium text-black text-sm flex items-center gap-2">
+                                                            📱 Short-form Script (60s)
+                                                        </h4>
+                                                        <button
+                                                            onClick={() => navigator.clipboard.writeText(script.shorts_script)}
+                                                            className="text-xs text-gray-500 hover:text-gray-700 px-2 py-1 rounded-md hover:bg-gray-100 transition-colors"
+                                                        >
+                                                            Copy
+                                                        </button>
+                                                    </div>
+                                                    <div className="text-sm text-black whitespace-pre-wrap leading-relaxed bg-gray-50 p-3 rounded-lg border">
+                                                        {script.shorts_script}
+                                                    </div>
+                                                    <div className="mt-2 text-xs text-gray-500">
+                                                        Perfect for TikTok, Instagram Reels, YouTube Shorts
+                                                    </div>
+                                                </div>
+                                            )}
+                                            
+                                            {script.youtube_script && (
+                                                <div className="bg-white rounded-lg p-4 border border-gray-200">
+                                                    <div className="flex items-center justify-between mb-3">
+                                                        <h4 className="font-medium text-black text-sm flex items-center gap-2">
+                                                            🎥 Long-form Script (3-5min)
+                                                        </h4>
+                                                        <button
+                                                            onClick={() => navigator.clipboard.writeText(script.youtube_script)}
+                                                            className="text-xs text-gray-500 hover:text-gray-700 px-2 py-1 rounded-md hover:bg-gray-100 transition-colors"
+                                                        >
+                                                            Copy
+                                                        </button>
+                                                    </div>
+                                                    <div className="text-sm text-black whitespace-pre-wrap leading-relaxed bg-gray-50 p-3 rounded-lg border max-h-64 overflow-y-auto">
+                                                        {script.youtube_script}
+                                                    </div>
+                                                    <div className="mt-2 text-xs text-gray-500">
+                                                        Perfect for YouTube, detailed product demos
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        {/* Teleprompter */}
+                                        {script.teleprompter && script.teleprompter.length > 0 && (
+                                            <div className="bg-white rounded-lg p-4 border border-gray-200">
+                                                <div className="flex items-center justify-between mb-3">
+                                                    <h4 className="font-medium text-black text-sm flex items-center gap-2">
+                                                        📋 Teleprompter Notes
+                                                    </h4>
+                                                    <button
+                                                        onClick={() => navigator.clipboard.writeText(
+                                                            Array.isArray(script.teleprompter) 
+                                                                ? script.teleprompter.map((note: string) => `• ${note}`).join('\n')
+                                                                : script.teleprompter
+                                                        )}
+                                                        className="text-xs text-gray-500 hover:text-gray-700 px-2 py-1 rounded-md hover:bg-gray-100 transition-colors"
+                                                    >
+                                                        Copy
+                                                    </button>
+                                                </div>
+                                                <div className="text-sm text-black whitespace-pre-wrap leading-relaxed bg-gray-50 p-3 rounded-lg border">
+                                                    {Array.isArray(script.teleprompter) 
+                                                        ? script.teleprompter.map((note: string) => `• ${note}`).join('\n')
+                                                        : script.teleprompter
+                                                    }
+                                                </div>
+                                                <div className="mt-2 text-xs text-gray-500">
+                                                    Key talking points for smooth recording
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        {/* Production Checklist */}
+                                        <div className="bg-white rounded-lg p-4 border border-gray-200">
+                                            <h4 className="font-medium text-black mb-3 flex items-center gap-2">
+                                                ✅ Production Checklist
+                                            </h4>
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                                <label className="flex items-center gap-2 text-sm">
+                                                    <input type="checkbox" className="rounded" />
+                                                    <span>Camera/phone positioned and tested</span>
+                                                </label>
+                                                <label className="flex items-center gap-2 text-sm">
+                                                    <input type="checkbox" className="rounded" />
+                                                    <span>Screen recording software ready</span>
+                                                </label>
+                                                <label className="flex items-center gap-2 text-sm">
+                                                    <input type="checkbox" className="rounded" />
+                                                    <span>Audio levels checked</span>
+                                                </label>
+                                                <label className="flex items-center gap-2 text-sm">
+                                                    <input type="checkbox" className="rounded" />
+                                                    <span>Lighting setup complete</span>
+                                                </label>
+                                                <label className="flex items-center gap-2 text-sm">
+                                                    <input type="checkbox" className="rounded" />
+                                                    <span>Background/environment prepared</span>
+                                                </label>
+                                                <label className="flex items-center gap-2 text-sm">
+                                                    <input type="checkbox" className="rounded" />
+                                                    <span>Script reviewed and practiced</span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))
+                        )}
+                    </div>
+                )}ex-1 space-y-1">
                                                                 <div className="text-xs text-zinc-200">
                                                                     <span className="text-zinc-500">Visual:</span> {shot.visual}
                                                                 </div>
