@@ -1,15 +1,14 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import Landing from "./pages/Landing";
-import Auth from "./pages/Auth";
 import Generator from "./pages/Generator";
 import Projects from "./pages/Projects";
 import ProjectDetail from "./pages/ProjectDetail";
 import Debug from "./pages/Debug";
 
-// Protected Route wrapper
+// Protected Route wrapper - auto redirects to GitHub
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  const { isAuthenticated, loading } = useAuth();
+  const { isAuthenticated, loading, login } = useAuth();
 
   if (loading) {
     return (
@@ -20,7 +19,13 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
   }
 
   if (!isAuthenticated) {
-    return <Navigate to="/auth" replace />;
+    // Auto redirect to GitHub login
+    login();
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-gray-600">Redirecting to GitHub...</div>
+      </div>
+    );
   }
 
   return <>{children}</>;
@@ -29,16 +34,18 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 function AppRoutes() {
   return (
     <Routes>
-      {/* Public routes */}
+      {/* Public landing page */}
       <Route path="/" element={<Landing />} />
-      <Route path="/auth" element={<Auth />} />
       
-      {/* Protected routes */}
+      {/* Protected routes - auto redirect to GitHub if not authenticated */}
       <Route path="/app" element={<ProtectedRoute><Generator /></ProtectedRoute>} />
       <Route path="/generate" element={<ProtectedRoute><Generator /></ProtectedRoute>} />
       <Route path="/projects" element={<ProtectedRoute><Projects /></ProtectedRoute>} />
       <Route path="/projects/:id" element={<ProtectedRoute><ProjectDetail /></ProtectedRoute>} />
       <Route path="/debug" element={<ProtectedRoute><Debug /></ProtectedRoute>} />
+      
+      {/* Catch all - redirect to landing */}
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 }

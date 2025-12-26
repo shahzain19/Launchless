@@ -19,7 +19,7 @@ export function useApi() {
 
       // Handle 401 Unauthorized
       if (response.status === 401) {
-        navigate('/auth');
+        navigate('/');
         throw new Error('Unauthorized - Please sign in');
       }
 
