@@ -1,5 +1,3 @@
-import { useState } from "react";
-import Sidebar from "./Sidebar";
 import Navbar from "./Navbar";
 
 interface LayoutProps {
@@ -7,14 +5,11 @@ interface LayoutProps {
 }
 
 export default function Layout({ children }: LayoutProps) {
-    const [sidebarOpen, setSidebarOpen] = useState(false);
-
     return (
         <div className="min-h-screen bg-gray-50">
-            <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-            <Navbar onMenuClick={() => setSidebarOpen(true)} />
+            <Navbar />
             <main className="main-content">
-                <div className="p-8">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                     {children}
                 </div>
             </main>

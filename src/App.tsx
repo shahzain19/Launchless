@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./contexts/AuthContext";
 import Layout from "./components/Layout";
 import Landing from "./pages/Landing";
+import Auth from "./pages/Auth";
 import Generator from "./pages/Generator";
 import Projects from "./pages/Projects";
 import ProjectDetail from "./pages/ProjectDetail";
@@ -12,8 +13,9 @@ export default function App() {
     <AuthProvider>
       <BrowserRouter>
         <Routes>
-          {/* Landing page without layout */}
+          {/* Public routes */}
           <Route path="/" element={<Landing />} />
+          <Route path="/auth" element={<Auth />} />
           
           {/* App routes with layout */}
           <Route path="/app" element={<Layout><Generator /></Layout>} />
