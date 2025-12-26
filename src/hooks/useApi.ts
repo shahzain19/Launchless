@@ -1,8 +1,6 @@
-import { useAuth } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
 export function useApi() {
-  const { token, logout } = useAuth();
   const navigate = useNavigate();
   const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001";
 
@@ -12,20 +10,15 @@ export function useApi() {
       ...(options.headers as Record<string, string> || {}),
     };
 
-    if (token) {
-      headers['Authorization'] = `Bearer ${token}`;
-    }
-
     try {
       const response = await fetch(`${API_URL}${endpoint}`, {
         ...options,
         headers,
-        credentials: 'include',
+        credentials: 'include', // Use cookies for session
       });
 
       // Handle 401 Unauthorized
       if (response.status === 401) {
-        logout();
         navigate('/auth');
         throw new Error('Unauthorized - Please sign in');
       }
