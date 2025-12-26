@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { useAuth } from "../contexts/AuthContext";
 import { useApi } from "../hooks/useApi";
 import ConfirmDialog from "../components/ConfirmDialog";
 import LoadingSpinner from "../components/LoadingSpinner";
@@ -46,17 +45,12 @@ export default function Projects() {
     Record<number, { generations: number; posts: number; lastActivity: string }>
   >({});
 
-  const { user, isAuthenticated, logout } = useAuth();
-  const { apiCall, API_URL } = useApi();
+  const { apiCall } = useApi();
   const { toasts, removeToast, success, error } = useToast();
 
   useEffect(() => {
-    if (isAuthenticated) {
-      fetchProjects();
-    } else {
-      setLoading(false);
-    }
-  }, [isAuthenticated]);
+    fetchProjects();
+  }, []);
 
   useEffect(() => {
     if (projects.length > 0) {
@@ -253,44 +247,8 @@ export default function Projects() {
     return date.toLocaleDateString();
   }
 
-  if (!user) {
-    return (
-      <div className="min-h-screen bg-white text-black flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold mb-4">Welcome to Launchless</h1>
-          <p className="text-gray-600 mb-6">
-            Sign in to manage your launch projects
-          </p>
-          <a
-            href={`${API_URL}/auth/github`}
-            className="bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors"
-          >
-            Sign in with GitHub
-          </a>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Simple Header */}
-      <div className="bg-white border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-          <h1 className="heading-font text-2xl font-bold gradient-text">Launchless</h1>
-          <div className="flex items-center gap-4">
-            <span className="text-sm text-gray-600">{user.username}</span>
-            <button
-              onClick={logout}
-              className="text-sm text-gray-600 hover:text-red-600 transition-colors"
-            >
-              Sign out
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* Main Content */}
       <div className="max-w-7xl mx-auto px-6 py-8">
         {/* Header */}
         <div className="flex items-center justify-between mb-14">
@@ -310,28 +268,6 @@ export default function Projects() {
             >
               New project
             </button>
-
-            {user && (
-              <div className="flex items-center gap-3 text-sm text-gray-600">
-                {user.avatarUrl && (
-                  <img
-                    src={user.avatarUrl}
-                    alt={user.username}
-                    className="w-8 h-8 rounded-full"
-                  />
-                )}
-                <a
-                  href={`${API_URL}/auth/logout`}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    logout();
-                  }}
-                  className="hover:text-black transition"
-                >
-                  Sign out
-                </a>
-              </div>
-            )}
           </div>
         </div>
 

@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { useSearchParams, useNavigate, Link } from "react-router-dom";
-import { useAuth } from "../contexts/AuthContext";
 import LaunchlessInsights from "../components/LaunchlessInsights";
 import LaunchlessDemo from "../components/LaunchlessDemo";
 import LoadingSpinner from "../components/LoadingSpinner";
@@ -61,10 +60,7 @@ export default function Generator() {
     const [error, setError] = useState("");
     const [success, setSuccess] = useState(false);
     const [myRepos, setMyRepos] = useState<Repo[]>([]);
-    const [loadingRepos, setLoadingRepos] = useState(false);
     const [mode, setMode] = useState<'text' | 'video'>('text');
-
-    const { user, logout } = useAuth();
     const { toasts, removeToast, success: showSuccess, error: showError, handleError: showErrorWithContext } = useToast();
     const networkStatus = useNetworkStatus();
 
@@ -128,25 +124,6 @@ export default function Generator() {
             handleError(error, 'project fetch');
         }
     }, [projectId, handleError]);
-
-    const fetchMyRepos = useCallback(async () => {
-        if (!user) {
-            showError("Please log in to access your repositories.");
-            return;
-        }
-
-        setLoadingRepos(true);
-        setError("");
-        
-        try {
-            const data = await apiClient.get('/api/my-repos');
-            setMyRepos(data);
-        } catch (error) {
-            handleError(error, 'repositories fetch');
-        } finally {
-            setLoadingRepos(false);
-        }
-    }, [user, handleError, showError]);
 
     const handleGenerate = useCallback(async () => {
         if (!isFormValid) {
@@ -252,12 +229,6 @@ export default function Generator() {
                             <Link to="/projects" className="text-sm text-gray-600 hover:text-blue-600 transition-colors">
                                 My Projects
                             </Link>
-                            <button
-                                onClick={logout}
-                                className="text-sm text-gray-600 hover:text-red-600 transition-colors"
-                            >
-                                Sign out
-                            </button>
                         </div>
                     </div>
                 </div>
@@ -314,28 +285,6 @@ export default function Generator() {
                         <p className="text-gray-600 text-sm sm:text-base">
                             {project ? `Generate launch content for ${project.name}` : 'Founder-grade launch content in seconds'}
                         </p>
-                        
-                        {/* Auth in top right - mobile friendly */}
-                        <div className="absolute top-4 right-4 sm:top-6 sm:right-6">
-                            {user ? (
-                                <div className="flex items-center gap-2">
-                                    {user.avatarUrl && (
-                                        <img src={user.avatarUrl} alt={user.username} className="w-6 h-6 rounded-full" />
-                                    )}
-                                    <span className="text-sm text-gray-600 hidden sm:inline">{user.username}</span>
-                                    <a href="/auth/logout" className="text-xs text-gray-500 hover:text-black transition-colors">
-                                        Sign out
-                                    </a>
-                                </div>
-                            ) : (
-                                <a
-                                    href="/auth/github"
-                                    className="text-sm text-gray-600 hover:text-black transition-colors"
-                                >
-                                    Login
-                                </a>
-                            )}
-                        </div>
                     </div>
 
                     {/* Mode Toggle */}
@@ -380,23 +329,12 @@ export default function Generator() {
                                         ))}
                                     </select>
                                 ) : (
-                                    <div className="relative">
-                                        <input
-                                            placeholder="https://github.com/owner/repo"
-                                            value={github}
-                                            onChange={(e) => setGithub(e.target.value)}
-                                            className="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-black text-sm placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 pr-16"
-                                        />
-                                        {user && (
-                                            <button
-                                                onClick={fetchMyRepos}
-                                                disabled={loadingRepos || !networkStatus.isOnline}
-                                                className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-blue-600 hover:text-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                                            >
-                                                {loadingRepos ? <LoadingSpinner size="sm" /> : "My repos"}
-                                            </button>
-                                        )}
-                                    </div>
+                                    <input
+                                        placeholder="https://github.com/owner/repo"
+                                        value={github}
+                                        onChange={(e) => setGithub(e.target.value)}
+                                        className="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-black text-sm placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                    />
                                 )}
                             </div>
 
