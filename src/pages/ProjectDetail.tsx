@@ -14,7 +14,6 @@ import ScriptsTab from "../components/ScriptsTab";
 import StatusDialog from "../components/StatusDialog";
 import PostGeneratorDialog from "../components/PostGeneratorDialog";
 import { useApi } from "../hooks/useApi";
-import { useAuth } from "../contexts/AuthContext";
 
 interface Project {
     id: number;
@@ -56,7 +55,6 @@ export default function ProjectDetail() {
     const [showPostGenerator, setShowPostGenerator] = useState(false);
     const { success, error, toasts, removeToast } = useToast();
     const { apiCall } = useApi();
-    const { logout } = useAuth();
 
     useEffect(() => {
         fetchProject();
@@ -185,12 +183,6 @@ export default function ProjectDetail() {
                         <Link to="/projects" className="text-sm text-gray-600 hover:text-blue-600 transition-colors">
                             My Projects
                         </Link>
-                        <button
-                            onClick={logout}
-                            className="text-sm text-gray-600 hover:text-red-600 transition-colors"
-                        >
-                            Sign out
-                        </button>
                     </div>
                 </div>
             </div>
