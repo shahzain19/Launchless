@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import SignalFinder from "../components/SignalFinder";
 import LoadingSpinner from "../components/LoadingSpinner";
 import { useToast } from "../hooks/useToast";
@@ -14,6 +14,7 @@ import ScriptsTab from "../components/ScriptsTab";
 import StatusDialog from "../components/StatusDialog";
 import PostGeneratorDialog from "../components/PostGeneratorDialog";
 import { useApi } from "../hooks/useApi";
+import { useAuth } from "../contexts/AuthContext";
 
 interface Project {
     id: number;
@@ -55,6 +56,7 @@ export default function ProjectDetail() {
     const [showPostGenerator, setShowPostGenerator] = useState(false);
     const { success, error, toasts, removeToast } = useToast();
     const { apiCall } = useApi();
+    const { logout } = useAuth();
 
     useEffect(() => {
         fetchProject();
@@ -174,7 +176,26 @@ export default function ProjectDetail() {
     }
 
     return (
-        <div className="min-h-screen bg-white">
+        <div className="min-h-screen bg-gray-50">
+            {/* Simple Header */}
+            <div className="bg-white border-b border-gray-200">
+                <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+                    <h1 className="heading-font text-2xl font-bold gradient-text">Launchless</h1>
+                    <div className="flex items-center gap-4">
+                        <Link to="/projects" className="text-sm text-gray-600 hover:text-blue-600 transition-colors">
+                            My Projects
+                        </Link>
+                        <button
+                            onClick={logout}
+                            className="text-sm text-gray-600 hover:text-red-600 transition-colors"
+                        >
+                            Sign out
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            {/* Main Content */}
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 <ProjectHeader 
                     project={project}

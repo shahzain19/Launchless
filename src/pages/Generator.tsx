@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { useSearchParams, useNavigate } from "react-router-dom";
+import { useSearchParams, useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import LaunchlessInsights from "../components/LaunchlessInsights";
 import LaunchlessDemo from "../components/LaunchlessDemo";
@@ -64,7 +64,7 @@ export default function Generator() {
     const [loadingRepos, setLoadingRepos] = useState(false);
     const [mode, setMode] = useState<'text' | 'video'>('text');
 
-    const { user } = useAuth();
+    const { user, logout } = useAuth();
     const { toasts, removeToast, success: showSuccess, error: showError, handleError: showErrorWithContext } = useToast();
     const networkStatus = useNetworkStatus();
 
@@ -243,8 +243,27 @@ export default function Generator() {
 
     return (
         <ErrorBoundary>
-            <div className="min-h-screen bg-white text-black">
-                <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8">
+            <div className="min-h-screen bg-gray-50">
+                {/* Simple Header */}
+                <div className="bg-white border-b border-gray-200">
+                    <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+                        <h1 className="heading-font text-2xl font-bold gradient-text">Launchless</h1>
+                        <div className="flex items-center gap-4">
+                            <Link to="/projects" className="text-sm text-gray-600 hover:text-blue-600 transition-colors">
+                                My Projects
+                            </Link>
+                            <button
+                                onClick={logout}
+                                className="text-sm text-gray-600 hover:text-red-600 transition-colors"
+                            >
+                                Sign out
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Main Content */}
+                <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
                     {/* Network Status Indicator */}
                     {!networkStatus.isOnline && (
                         <div className="bg-yellow-50 border border-yellow-200 rounded-lg px-4 py-3 text-yellow-800 text-sm mb-6 flex items-center gap-2">

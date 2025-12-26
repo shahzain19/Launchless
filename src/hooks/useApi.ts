@@ -1,7 +1,9 @@
 import { useAuth } from '../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 export function useApi() {
-  const { token } = useAuth();
+  const { token, logout } = useAuth();
+  const navigate = useNavigate();
   const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001";
 
   const apiCall = async (endpoint: string, options: RequestInit = {}) => {
@@ -14,18 +16,30 @@ export function useApi() {
       headers['Authorization'] = `Bearer ${token}`;
     }
 
-    const response = await fetch(`${API_URL}${endpoint}`, {
-      ...options,
-      headers,
-      credentials: 'include', // Keep for backward compatibility with session-based auth
-    });
+    try {
+      const response = await fetch(`${API_URL}${endpoint}`, {
+        ...options,
+        headers,
+        credentials: 'include',
+      });
 
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.message || `HTTP ${response.status}: ${response.statusText}`);
+      // Handle 401 Unauthorized
+      if (response.status === 401) {
+        logout();
+        navigate('/auth');
+        throw new Error('Unauthorized - Please sign in');
+      }
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || `HTTP ${response.status}: ${response.statusText}`);
+      }
+
+      return response.json();
+    } catch (error) {
+      console.error('API call error:', error);
+      throw error;
     }
-
-    return response.json();
   };
 
   return { apiCall, API_URL };

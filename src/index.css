@@ -207,25 +207,9 @@ a {
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
 }
 
-/* Navbar styles - simplified */
-.navbar {
-  background: white;
-  border-bottom: 1px solid #e5e7eb;
-  height: 4rem;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 30;
-  display: flex;
-  align-items: center;
-  padding: 0 2rem;
-}
-
-/* Main content area - no sidebar */
+/* Main content area - no navbar, no sidebar */
 .main-content {
-  margin-top: 4rem;
-  min-height: calc(100vh - 4rem);
+  min-height: 100vh;
   background: #fafafa;
 }
 
