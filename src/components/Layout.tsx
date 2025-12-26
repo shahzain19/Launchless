@@ -1,5 +1,3 @@
-import Navbar from "./Navbar";
-
 interface LayoutProps {
     children: React.ReactNode;
 }
